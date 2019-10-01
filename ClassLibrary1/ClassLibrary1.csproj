@@ -41,6 +41,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CAT10.cs" />
+    <Compile Include="CAT20.cs" />
+    <Compile Include="CAT21.cs" />
     <Compile Include="Fichero.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

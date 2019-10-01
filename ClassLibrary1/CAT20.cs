@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ClassLibrary1
 {
-    class CAT20
+    public class CAT20
     {
     }
 }
