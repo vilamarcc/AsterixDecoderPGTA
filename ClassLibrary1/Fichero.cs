@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Data;
+using AsterixDecoder;
 
 
-namespace LibreriaClases
+namespace AsterixDecoder
 {
     public class Fichero
     {
@@ -37,7 +38,7 @@ namespace LibreriaClases
             return listaCAT21;
         }
 
-        public void leer()
+        public void Read()
         {
 
             //StreamReader fichero = new StreamReader(path);
