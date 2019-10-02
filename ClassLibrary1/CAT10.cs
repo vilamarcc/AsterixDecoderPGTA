@@ -7,5 +7,9 @@ namespace ClassLibrary1
 {
     public class CAT10
     {
+
+        public CAT10()
+        {
+        }
     }
 }

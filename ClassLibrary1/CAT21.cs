@@ -7,5 +7,9 @@ namespace ClassLibrary1
 {
     public class CAT21
     {
+
+        public CAT21()
+        {
+        }
     }
 }
