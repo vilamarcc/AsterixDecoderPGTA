@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using AsterixDecoderClasses;
-
-namespace AsterixDecoderClasses
+namespace AsterixDecoder
 {
     public class CAT10
     {
