@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using AsterixDecoder;
 
-namespace AsterixDecoder;
+namespace AsterixDecoder
 {
     public class CAT10
     {

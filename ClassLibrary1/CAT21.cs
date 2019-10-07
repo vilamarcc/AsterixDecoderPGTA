@@ -8,5 +8,10 @@ namespace AsterixDecoder
 {
     public class CAT21
     {
+
+        public CAT21(string[] array)
+        {
+
+        }
     }
 }
