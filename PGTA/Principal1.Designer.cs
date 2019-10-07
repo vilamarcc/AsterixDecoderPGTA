@@ -1,6 +1,6 @@
 ﻿namespace WindowsFormsApplication1
 {
-    partial class Form1
+    partial class Principal1
     {
         /// <summary>
         /// Required designer variable.
@@ -28,12 +28,34 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            this.cargarArchivo = new System.Windows.Forms.Button();
+            this.SuspendLayout();
+            // 
+            // cargarArchivo
+            // 
+            this.cargarArchivo.Location = new System.Drawing.Point(261, 267);
+            this.cargarArchivo.Name = "cargarArchivo";
+            this.cargarArchivo.Size = new System.Drawing.Size(161, 52);
+            this.cargarArchivo.TabIndex = 0;
+            this.cargarArchivo.Text = "Cargar";
+            this.cargarArchivo.UseVisualStyleBackColor = true;
+            this.cargarArchivo.Click += new System.EventHandler(this.cargarArchivo_Click);
+            // 
+            // Principal1
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(1048, 582);
+            this.Controls.Add(this.cargarArchivo);
+            this.Name = "Principal1";
             this.Text = "Form1";
+            this.ResumeLayout(false);
+
         }
 
         #endregion
+
+        private System.Windows.Forms.Button cargarArchivo;
     }
 }
 

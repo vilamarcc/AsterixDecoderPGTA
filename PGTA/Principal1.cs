@@ -9,11 +9,16 @@ using System.Windows.Forms;
 
 namespace WindowsFormsApplication1
 {
-    public partial class Form1 : Form
+    public partial class Principal1 : Form
     {
-        public Form1()
+        public Principal1()
         {
             InitializeComponent();
+        }
+
+        private void cargarArchivo_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
