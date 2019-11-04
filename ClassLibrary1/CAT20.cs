@@ -2,49 +2,105 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using AsterixDecoder;
 
 namespace AsterixDecoder
 {
     public class CAT20
     {
-        //Los atributos se guardan en binario y solo se decodifican si son llamados
-        string SAC;
-        string SIC;
-        string TargetReport; //getTargetReport desglosa la informacion contenida dentro del data item
-        string TOD;
-        string LatWSG;
-        string LonWSG;
-        string X;
-        string Y;
-        string FSPEC;
-        string TrackNum;
-        string TrackStatus; //getTrackStatus devuelve todo los datos del data item desglosado
-        string Mode3A; // getMode3A desglosa la informacion
-        string Vx;
-        string Vy;
-        string FL;
-        string ModeC;
-        string TargetID; //getTargetID desglosa los datos en binario y devuelve la identificacion
-        string TargetAddress;
-        string MeasuredHeight;
-        string geoHeight;
-        string calcAccel;
-        string VehicleFleetID;
-        string PPMsg;
-        string DOP; //Forma parte del paquete 500 Position accuracy, la funcion getDOP lo desglosa y descifra
-        string SDP; //Forma parte del paquete 500 Position accuracy, la funcion getSDP lo desglosa y descifra
-        string SDH; //Forma parte del paquete 500 Position accuracy, la funcion getSDH lo desglosa y descifra
-        string ContributingDevices;
-        string ModeS;
-        int length;
+        public string FSPEC;
+
+        //010
+        public int SAC;
+        public int SIC;
+
+        //020
+        public string TargetReport;
+        
+        //140
+        public string TOD;
+        
+        //042
+        public string LatWSG;
+        public string LonWSG;
+        public string[] coordsWSG;
+        
+        //042
+        public double X;
+        public double Y;
+        public double[] coordscc;
+
+        //161
+        public string TrackNum;
+
+        //170 TrackStatus (en bin)
+        public string CNF;
+        public string TRE;
+        public string CST;
+        public string CDM;
+        public string MAH;
+        public string STH;
+        public string GHO;
+        public string[] TrackStatus;
+
+        //070
+        public string Mode3A; 
+
+        //202
+        public double Vx;
+        public double Vy;
+        public double[] Velocitycc;
+
+        //090
+        public string[] FL;
+
+        //100
+        public string ModeC;
+
+        //220
+        public string TargetAddress;
+
+        //245
+        public string[] TargetID;
+        public string callsign;
+
+        //110
+        public string MeasuredHeight;
+
+        //105
+        public string geoHeight;
+
+        //210
+        public string calcAccel;
+
+        //300
+        public string VehicleFleetID;
+
+        //310
+        public string PPMsg;
+
+        //500
+        public double[] DOP; 
+        public double[] SDP; 
+        public double SDH;
+
+        //400
+        public int Receivers;
+
+        //250
+        public string MB;
+        public string DATA;
+        public string BDS1;
+        public string BDS2;
+        public string[] ModeSData;
+
+        public int length;
 
         public CAT20(string[] array)
         {
             int Length = int.Parse(array[1] + array[2], System.Globalization.NumberStyles.HexNumber);
             this.length = Length + 3; // Las 3 primeras posiciones ya leidas
             computeFSPEC(array);
-
+            
             string FSPEC_copia = this.FSPEC;
             int LengthFSPEC = this.FSPEC.Length / 8; //Longitud del FSPEC
 
@@ -55,10 +111,12 @@ namespace AsterixDecoder
             //I020/010 DataSource IDentifier
             if (Convert.ToString(FSPEC_copia[i]) == "1")
             {
-                this.SAC = Convert.ToString(Convert.ToInt32(array[OctetoIndex], 16), 2).PadLeft(8, '0');
+                string Octeto_010_1 = Convert.ToString(Convert.ToInt32(array[OctetoIndex], 16), 2).PadLeft(8, '0');
                 OctetoIndex++;
-                this.SIC = Convert.ToString(Convert.ToInt32(array[OctetoIndex], 16), 2).PadLeft(8, '0');
+                string Octecto_010_2 = Convert.ToString(Convert.ToInt32(array[OctetoIndex], 16), 2).PadLeft(8, '0');
                 OctetoIndex++;
+                this.SAC = Convert.ToInt32(Octeto_010_1, 2);
+                this.SIC = Convert.ToInt32(Octecto_010_2, 2);
             }
             i++;
 
@@ -87,7 +145,8 @@ namespace AsterixDecoder
                 OctetoIndex++;
                 string Octeto_140_3 = Convert.ToString(Convert.ToInt32(array[OctetoIndex], 16), 2).PadLeft(8, '0');
                 OctetoIndex++;
-                this.TOD = Octeto_140_1 + Octeto_140_2 + Octeto_140_3;
+
+                this.TOD = computeTOD(Octeto_140_1,Octeto_140_2,Octeto_140_3);
             }
             i++;
 
@@ -113,6 +172,8 @@ namespace AsterixDecoder
 
                 this.LatWSG = Octeto_041_1 + Octeto_041_2 + Octeto_041_3 + Octeto_041_4;
                 this.LonWSG = Octeto_041_5 + Octeto_041_6 + Octeto_041_7 + Octeto_041_8;
+
+
             }
             i++;
 
@@ -132,11 +193,12 @@ namespace AsterixDecoder
                 string Octeto_042_6 = Convert.ToString(Convert.ToInt32(array[OctetoIndex], 16), 2).PadLeft(8, '0');
                 OctetoIndex++;
 
-                this.X = Octeto_042_1 + Octeto_042_2 + Octeto_042_3;
-                this.Y = Octeto_042_4 + Octeto_042_5 + Octeto_042_6;
+                this.X = computeX(Octeto_042_1,Octeto_042_2,Octeto_042_3);
+                this.Y = computeY(Octeto_042_4,Octeto_042_5,Octeto_042_6);
+                this.coordscc = new double[] { X, Y };
             }
             i++;
-
+          
             //I020/161 Track Number
             if (Convert.ToString(FSPEC_copia[i]) == "1")
             {
@@ -145,7 +207,7 @@ namespace AsterixDecoder
                 string Octeto_161_2 = Convert.ToString(Convert.ToInt32(array[OctetoIndex], 16), 2).PadLeft(8, '0');
                 OctetoIndex++;
 
-                this.TrackNum = Octeto_161_1 + Octeto_161_2;
+                this.TrackNum = computeTrackNumber(Octeto_161_1,Octeto_161_2);
             }
             i++;
 
@@ -154,7 +216,23 @@ namespace AsterixDecoder
             {
                 string Octeto_170 = Convert.ToString(Convert.ToInt32(array[OctetoIndex], 16), 2).PadLeft(8, '0');
                 OctetoIndex++;
-                this.TrackStatus = Octeto_170;
+                this.CNF = Convert.ToString(Octeto_170[0]);
+                this.TRE = Convert.ToString(Octeto_170[1]);
+                this.CST = Convert.ToString(Octeto_170[2]);
+                this.CDM = Convert.ToString(Octeto_170[3]) + Convert.ToString(Octeto_170[4]);
+                this.MAH = Convert.ToString(Octeto_170[5]);
+                this.STH = Convert.ToString(Octeto_170[6]);
+                if (Octeto_170[7] == '1')
+                {
+                    string Octeto_170_2 = Convert.ToString(Convert.ToInt32(array[OctetoIndex], 16), 2).PadLeft(8, '0');
+                    OctetoIndex++;
+                    this.GHO = Convert.ToString(Octeto_170_2[0]);
+                    this.TrackStatus = new string[]{ CNF, TRE, CST, CDM, MAH, STH, GHO};
+                }
+                else if (Octeto_170[7] == '0') 
+                { 
+                    this.TrackStatus = new string[]{CNF, TRE, CST, CDM, MAH, STH}; 
+                }
             }
             i++;
 
@@ -187,8 +265,9 @@ namespace AsterixDecoder
                     string Octeto_202_4 = Convert.ToString(Convert.ToInt32(array[OctetoIndex], 16), 2).PadLeft(8, '0');
                     OctetoIndex++;
 
-                    this.Vx = Octeto_202_1 + Octeto_202_2;
-                    this.Vy = Octeto_202_3 + Octeto_202_4;
+                    this.Vx = computeV(Octeto_202_1,Octeto_202_2);
+                    this.Vy = computeV(Octeto_202_3,Octeto_202_4);
+                    this.Velocitycc = new double[] { Vx, Vy };
                 }
                 i++;
 
@@ -200,7 +279,7 @@ namespace AsterixDecoder
                     string Octeto_090_2 = Convert.ToString(Convert.ToInt32(array[OctetoIndex], 16), 2).PadLeft(8, '0');
                     OctetoIndex++;
 
-                    this.FL = Octeto_090_1 + Octeto_090_2;
+                    this.FL = computeFL(Octeto_090_1 , Octeto_090_2);
                 }
                 i++;
 
@@ -252,7 +331,8 @@ namespace AsterixDecoder
                     string Octeto_245_7 = Convert.ToString(Convert.ToInt32(array[OctetoIndex], 16), 2).PadLeft(8, '0');
                     OctetoIndex++;
 
-                    this.TargetID = Octeto_245_1 + Octeto_245_2 + Octeto_245_3 + Octeto_245_4 + Octeto_245_5 + Octeto_245_6 + Octeto_245_7;
+                    this.TargetID = computeID(Octeto_245_1,Octeto_245_2,Octeto_245_3,Octeto_245_4,Octeto_245_5,Octeto_245_6,Octeto_245_7);
+                    this.callsign = this.TargetID[1];               
                 }
                 i++;
 
@@ -342,7 +422,7 @@ namespace AsterixDecoder
                             string Octeto_500_7 = Convert.ToString(Convert.ToInt32(array[OctetoIndex], 16), 2).PadLeft(8, '0');
                             OctetoIndex++;
 
-                            this.DOP = Octeto_500_2 + Octeto_500_3 + Octeto_500_4 + Octeto_500_5 + Octeto_500_6 + Octeto_500_7;
+                            this.DOP = computeDOP(Octeto_500_2,Octeto_500_3,Octeto_500_4,Octeto_500_5,Octeto_500_6,Octeto_500_7);
 
                         }
 
@@ -361,7 +441,7 @@ namespace AsterixDecoder
                             string Octeto_500_7 = Convert.ToString(Convert.ToInt32(array[OctetoIndex], 16), 2).PadLeft(8, '0');
                             OctetoIndex++;
 
-                            this.SDP = Octeto_500_2 + Octeto_500_3 + Octeto_500_4 + Octeto_500_5 + Octeto_500_6 + Octeto_500_7;
+                            this.SDP = computeDOP(Octeto_500_2, Octeto_500_3, Octeto_500_4, Octeto_500_5, Octeto_500_6, Octeto_500_7); //Usamos la misma funcion porque tienen estructura identica
                         }
 
                         if (subfield_3 == "1")
@@ -371,125 +451,343 @@ namespace AsterixDecoder
                             string Octeto_500_3 = Convert.ToString(Convert.ToInt32(array[OctetoIndex], 16), 2).PadLeft(8, '0');
                             OctetoIndex++;
 
-                            this.SDH = Octeto_500_2 + Octeto_500_3;
+                            this.SDH = computeSDH(Octeto_500_2,Octeto_500_3);
                         }
-
+                            
                     }
                     i++;
 
-                    //I020/400 Contributing Devices (No entiendo como es su estrutuctura)
+                    //I020/400 Contributing Devices 
                     if (Convert.ToString(FSPEC_copia[i]) == "1")
                     {
-                        string Octeto_400_1 = Convert.ToString(Convert.ToInt32(array[OctetoIndex], 16), 2).PadLeft(8, '0');
+                        string Octeto_400_1 = Convert.ToString(Convert.ToInt32(array[OctetoIndex], 16), 2).PadLeft(8, '0'); //Repetition Factor
                         OctetoIndex++;
+                        int Repetition_Factor = Convert.ToInt32(Octeto_400_1, 2);
+                        int rf = 0;
+                        int recep = 0;
+                        while (rf < Repetition_Factor)
+                        {
+                            string Octeto_400_x = Convert.ToString(Convert.ToInt32(array[OctetoIndex], 16), 2).PadLeft(8, '0');
+                            OctetoIndex++;
+                            int cont = 0;
+                            while (cont < 8)
+                            {
+                                if (Convert.ToString(Octeto_400_x[cont]) == "1") { recep++; }
+                                cont++;
+                            }
+                            rf++;
+                        }
+                        this.Receivers = recep;
                     }
                     i++;
 
-                    //I020/250 Mode S MB Data (0 idea de su estructura)
+                    //I020/250 Mode S MB Data 
                     if (Convert.ToString(FSPEC_copia[i]) == "1")
                     {
                         string Octeto_250_1 = Convert.ToString(Convert.ToInt32(array[OctetoIndex], 16), 2).PadLeft(8, '0');
                         OctetoIndex++;
+                        string Octeto_250_2 = Convert.ToString(Convert.ToInt32(array[OctetoIndex], 16), 2).PadLeft(8, '0');
+                        OctetoIndex++;
+                        string Octeto_250_3 = Convert.ToString(Convert.ToInt32(array[OctetoIndex], 16), 2).PadLeft(8, '0');
+                        OctetoIndex++;
+                        this.MB = Octeto_250_2 + Octeto_250_3;
+                        string Octeto_250_4 = Convert.ToString(Convert.ToInt32(array[OctetoIndex], 16), 2).PadLeft(8, '0');
+                        OctetoIndex++;
+                        string Octeto_250_5 = Convert.ToString(Convert.ToInt32(array[OctetoIndex], 16), 2).PadLeft(8, '0');
+                        OctetoIndex++;
+                        string Octeto_250_6 = Convert.ToString(Convert.ToInt32(array[OctetoIndex], 16), 2).PadLeft(8, '0');
+                        OctetoIndex++;
+                        string Octeto_250_7 = Convert.ToString(Convert.ToInt32(array[OctetoIndex], 16), 2).PadLeft(8, '0');
+                        OctetoIndex++;
+                        string Octeto_250_8 = Convert.ToString(Convert.ToInt32(array[OctetoIndex], 16), 2).PadLeft(8, '0');
+                        OctetoIndex++;
+                        this.DATA = Octeto_250_4 + Octeto_250_5 + Octeto_250_6 + Octeto_250_7 + Octeto_250_8;
+
+                        string Octeto_250_9 = Convert.ToString(Convert.ToInt32(array[OctetoIndex], 16), 2).PadLeft(8, '0');
+                        OctetoIndex++;
+                        this.BDS1 = Octeto_250_9.Substring(0, 4);
+                        this.BDS2 = Octeto_250_9.Substring(4, 4);
                     }
                     i++;
+                        
+                }
+
+                
+                    }
 
                 }
 
-
-            }
-
-        }
-
-
-
-
-
-        public void computeFSPEC(string[] paquete)
+        private void computeFSPEC(string[] paquete)
         {
             //Leemos los dos primeros octetos
-            string FSPEC_1 = Convert.ToString(Convert.ToInt32(paquete[3], 16), 2).PadLeft(8, '0');
-
+            string FSPEC_1 = Convert.ToString(Convert.ToInt32(paquete[3], 16), 2).PadLeft(8,'0');
+            
             string FX = Convert.ToString(FSPEC_1[FSPEC_1.Length - 1]);
 
             //Sacamos los campos hasta que el bit de FX sea 0 y nos indique que el FX se termina
             int i = 4;
             while (FX == "1")
             {
-                FSPEC_1 = FSPEC_1 + Convert.ToString(Convert.ToInt32(paquete[i], 16), 2).PadLeft(8, '0');
+                FSPEC_1 = FSPEC_1 + Convert.ToString(Convert.ToInt32(paquete[i], 16), 2).PadLeft(8,'0');
                 FX = Convert.ToString(FSPEC_1[FSPEC_1.Length - 1]);
                 i++;
             }
             this.FSPEC = FSPEC_1;
         }
 
-        public string getFSPEC()
+        private double computeX(string oct_1, string oct_2, string oct_3)
         {
-            return this.FSPEC;
-        }
-
-        public string getSAC()
-        {
-            return this.SAC;
-        }
-
-        public string getSIC()
-        {
-            return this.SIC;
-        }
-
-
-        public string getTrackStatus()
-        {
-            return this.TrackStatus;
-        }
-        public string getMode3A()
-        {
-            return this.Mode3A;
-        }
-
-        public double getX()
-        {
-            double Xx;
-            if (this.X[0] == '1')
+            string xx = oct_1 + oct_2 + oct_3;
+            StringBuilder str = new StringBuilder(xx);
+            double Xx = 0.0;
+            if (oct_1[0] == '1')
             {
-                Xx = (-1) * Convert.ToDouble(Convert.ToInt32(this.X, 2)) * 0.5;
+                xx = findTwoscomplement(str);
+                Xx = (-1) * Convert.ToDouble(Convert.ToInt32(xx, 2)) * 0.5;
             }
             else
             {
-                Xx = Convert.ToDouble(Convert.ToInt32(this.X, 2)) * 0.5;
+                Xx = Convert.ToDouble(Convert.ToInt32(xx, 2)) * 0.5;
             }
 
             return Xx;
         }
 
-        public double getY()
+        private string findTwoscomplement(StringBuilder bits) //Converter de internet
         {
+            int n = bits.Length;
 
-            double Yy;
-            if (this.Y[0] == '1')
+            // Traverse the string to get  
+            // first '1' from the last of string  
+            int i;
+            for (i = n - 1; i >= 0; i--)
             {
-                Yy = (-1) * Convert.ToDouble(Convert.ToInt32(this.Y, 2)) * 0.5;
+                if (bits[i] == '1')
+                {
+                    break;
+                }
+            }
+
+            // If there exists no '1' concat 1  
+            // at the starting of string  
+            if (i == -1)
+            {
+                return "1" + bits;
+            }
+
+            // Continue traversal after the 
+            // position of first '1'  
+            for (int k = i - 1; k >= 0; k--)
+            {
+                // Just flip the values  
+                if (bits[k] == '1')
+                {
+                    bits.Remove(k, k + 1 - k).Insert(k, "0");
+                }
+                else
+                {
+                    bits.Remove(k, k + 1 - k).Insert(k, "1");
+                }
+            }
+
+            // return the modified string  
+            return bits.ToString();
+        }  
+
+        private double computeY(string oct_1, string oct_2,string oct_3)
+        {
+            string yy = oct_1 + oct_2 + oct_3;
+            StringBuilder str = new StringBuilder(yy);
+            double Yy;
+
+            if (oct_1[0] == '1')
+            {
+                yy = findTwoscomplement(str);
+                Yy = (-1) * Convert.ToDouble(Convert.ToInt32(yy,2)) * 0.5;
             }
             else
             {
-                Yy = Convert.ToDouble(Convert.ToInt32(this.Y, 2)) * 0.5;
+                Yy = Convert.ToDouble(Convert.ToInt32(yy, 2)) * 0.5;
             }
 
             return Yy;
         }
 
-        public string getTOD()
+        private string computeTOD(string oct_1, string oct_2 ,string oct_3)
         {
-            string[] tod = new string[3];
 
-            double sect = Convert.ToDouble(Convert.ToInt32(this.TOD, 2) / 128);
+            string TOD = oct_1 + oct_2 + oct_3;
+            double sect = Convert.ToDouble(Convert.ToInt32(TOD, 2) / 128);
             TimeSpan time = TimeSpan.FromSeconds(sect);
 
             //here backslash is must to tell that colon is
             //not the part of format, it just a character that we want in output
-            string str = time.ToString(@"hh\:mm\:ss\:fff");
+            string tod = time.ToString(@"hh\:mm\:ss\:fff");
 
-            return str;
+            return tod;
+
+        }
+
+        private string[] computeID(string oct_1, string oct_2, string oct_3, string oct_4, string oct_5, string oct_6,string oct_7)
+        {
+            string OctetoT = oct_1+oct_2+oct_3+oct_4+oct_5+oct_6+oct_7;
+            string STI_1 = Convert.ToString(OctetoT[0]);
+            string STI_2 = Convert.ToString(OctetoT[1]);
+            string STI = STI_1 + STI_2;
+
+            if (STI == "00")
+            {
+                STI = "Callsign or registration not downlinked from transponder";
+            }
+            else if (STI == "01")
+            {
+                STI = "Registration downlinked from transponder";
+            }
+            else if (STI == "10")
+            {
+                STI = "Callsign downlinked from transponder";
+            }
+            else if (STI == "11")
+            {
+                STI = "Not defined";
+            }
+
+
+            string characters = Convert.ToString(OctetoT.Substring(8));
+
+            int h = characters.Length;
+
+            int c = 0;
+
+            string code = "";
+            while (c < characters.Length)
+            {
+               
+                string character = Convert.ToString(characters.Substring(c, 6));
+                string b6_b5 = Convert.ToString(character.Substring(0,2));
+                string b4_b3_b2_b1 = Convert.ToString(character.Substring(2,4));
+
+                if (b6_b5 == "00")
+                {
+                    if (b4_b3_b2_b1 == "0001") { code = code + "A"; }
+                    if (b4_b3_b2_b1 == "0010") { code = code + "B"; }
+                    if (b4_b3_b2_b1 == "0011") { code = code + "C"; }
+                    if (b4_b3_b2_b1 == "0100") { code = code + "D"; }
+                    if (b4_b3_b2_b1 == "0101") { code = code + "E"; }
+                    if (b4_b3_b2_b1 == "0110") { code = code + "F"; }
+                    if (b4_b3_b2_b1 == "0111") { code = code + "G"; }
+                    if (b4_b3_b2_b1 == "1000") { code = code + "H"; }
+                    if (b4_b3_b2_b1 == "1001") { code = code + "I"; }
+                    if (b4_b3_b2_b1 == "1010") { code = code + "J"; }
+                    if (b4_b3_b2_b1 == "1011") { code = code + "K"; }
+                    if (b4_b3_b2_b1 == "1100") { code = code + "L"; }
+                    if (b4_b3_b2_b1 == "1101") { code = code + "M"; }
+                    if (b4_b3_b2_b1 == "1110") { code = code + "N"; }
+                    if (b4_b3_b2_b1 == "1111") { code = code + "O"; }
+                }
+                if (b6_b5 == "01")
+                {
+                    if (b4_b3_b2_b1 == "0000") { code = code + "P"; }
+                    if (b4_b3_b2_b1 == "0001") { code = code + "Q"; }
+                    if (b4_b3_b2_b1 == "0010") { code = code + "R"; }
+                    if (b4_b3_b2_b1 == "0011") { code = code + "S"; }
+                    if (b4_b3_b2_b1 == "0100") { code = code + "T"; }
+                    if (b4_b3_b2_b1 == "0101") { code = code + "U"; }
+                    if (b4_b3_b2_b1 == "0110") { code = code + "V"; }
+                    if (b4_b3_b2_b1 == "0111") { code = code + "W"; }
+                    if (b4_b3_b2_b1 == "1000") { code = code + "X"; }
+                    if (b4_b3_b2_b1 == "1001") { code = code + "Y"; }
+                    if (b4_b3_b2_b1 == "1010") { code = code + "Z"; }
+                }
+
+                if (b6_b5 == "10")
+                {
+                    if (b4_b3_b2_b1 == "0000") { code = code + " "; }
+                }
+
+                if (b6_b5 == "11")
+                {
+                    if (b4_b3_b2_b1 == "0000") { code = code + "1"; }
+                    if (b4_b3_b2_b1 == "0001") { code = code + "2"; }
+                    if (b4_b3_b2_b1 == "0010") { code = code + "3"; }
+                    if (b4_b3_b2_b1 == "0011") { code = code + "4"; }
+                    if (b4_b3_b2_b1 == "0100") { code = code + "5"; }
+                    if (b4_b3_b2_b1 == "0101") { code = code + "6"; }
+                    if (b4_b3_b2_b1 == "0110") { code = code + "7"; }
+                    if (b4_b3_b2_b1 == "0111") { code = code + "8"; }
+                    if (b4_b3_b2_b1 == "1000") { code = code + "9"; }
+                }
+
+                c = c + 6;
+            }
+
+
+            string [] TIDs = {STI, code};
+            return TIDs;
+        }
+
+        private string[] computeFL(string oct_1,string oct_2)
+        {
+            string V = "";
+            if (Convert.ToString(oct_1[0]) == "0") { V = "Code validated"; }
+            else if (Convert.ToString(oct_1[0]) == "1") { V = "Code not validated"; }
+
+            string G = "";
+            if (Convert.ToString(oct_1[1]) == "0") { G = "Default"; }
+            else if (Convert.ToString(oct_1[1]) == "1") { G = "Garbled code"; }
+
+            string FL_bit = oct_1.Substring(2) + oct_2;
+            string FL = Convert.ToString(Convert.ToDouble(Convert.ToInt32(FL_bit, 2)) * 0.25);
+
+            string[] FLBR = {V,G,FL};
+            return FLBR;
+        }
+
+        private string computeTrackNumber(string oct_1, string oct_2)
+        {
+            string TN = Convert.ToString(Convert.ToInt32(oct_1.Substring(2) + oct_2,2));
+            return TN;
+        }
+
+        private double computeV(string oct_1, string oct_2)
+        {
+            string v = oct_1 + oct_2;
+            StringBuilder str = new StringBuilder(v);
+
+            double V;
+            if (oct_1[0] == '1')
+            {
+                v = findTwoscomplement(str);
+                V = (-1) * Convert.ToDouble(Convert.ToInt32(v, 2)) * 0.25;
+            }
+            else
+            {
+                V = Convert.ToDouble(Convert.ToInt32(v, 2)) * 0.25;
+            }
+
+            return V;
+        }
+
+        private double[] computeDOP(string oct_1, string oct_2, string oct_3, string oct_4, string oct_5, string oct_6)
+        {
+            string dop_x = oct_1 + oct_2;
+            string dop_y = oct_3 + oct_4;
+            string dop_xy = oct_5 + oct_6;
+
+            double dop_x_double = Convert.ToDouble(Convert.ToInt32(dop_x, 2)) * 0.25;
+            double dop_y_double = Convert.ToDouble(Convert.ToInt32(dop_y, 2)) * 0.25;
+            double dop_xy_double = Convert.ToDouble(Convert.ToInt32(dop_xy, 2)) * 0.25;
+
+            double[] DOP = { dop_x_double, dop_y_double, dop_xy_double };
+
+            return DOP;
+        }
+
+        private double computeSDH(string oct_1,string oct_2)
+        {
+            string oct_t = oct_1 + oct_2;
+            double sdh = Convert.ToDouble(Convert.ToInt32(oct_t, 2)) * 0.5;
+            return sdh;
         }
     }
 }
