@@ -51,6 +51,8 @@ namespace AsterixDecoder
             tablaCAT20.Columns.Add(new DataColumn("Position Accuracy"));
             tablaCAT20.Columns.Add(new DataColumn("Contributing Devices (Receivers)"));
             tablaCAT20.Columns.Add(new DataColumn("Mode S MB Data"));
+            //CAT10
+            //CAT21
 
         }
 
