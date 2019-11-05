@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using AsterixDecoder;
+using System.IO;
 
 namespace AsterixDisplay
 {
@@ -30,6 +31,8 @@ namespace AsterixDisplay
         DataTable dataCAT21;
         DataTable dataCATsearch;
         Fichero f;
+        int cat;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -37,34 +40,51 @@ namespace AsterixDisplay
 
         private async void cargarbut_Click(object sender, RoutedEventArgs e)
         {
-            ofd.Filter = "AST |*.ast";
+            //per defecte mostrem cat 10:
+            this.cat = 10;
+            cat10_butt.IsChecked = true;
+
+            //mostramos la barra de progreso
             var progress = new Progress<int>(value => progressbar1.Value = value);
             progressbar1.Visibility = Visibility.Visible;
 
+            //que sea un archivo asterix
+            ofd.Filter = "AST |*.ast";
             if (ofd.ShowDialog() == true)
             {
                 await Task.Run(() =>
                 {
+                    //leemos fichero
                     this.fichero = ofd.FileName;
                     f = new Fichero(this.fichero);
                     ((IProgress<int>)progress).Report(10);
+                    //leemos los paquetes 
                     f.Read();
-                    ((IProgress<int>)progress).Report(60);
+                    ((IProgress<int>)progress).Report(70);
                     MessageBox.Show("Archivo cargado");
                     ((IProgress<int>)progress).Report(75);
+                    //guardamos las tablas y mostramos la que toque (this.cat)
                     dataCAT20 = f.getTablaCAT20();
-
-                    
+                    dataCAT10 = f.getTablaCAT10();
+                    dataCAT21 = f.getTablaCAT21();
+                    this.fillgridwithdata();
                     ((IProgress<int>)progress).Report(100);
-                    
                 });
-                fillgridwithdata(dataCAT20);
                 progressbar1.Visibility = Visibility.Hidden;
             }
         }
 
-        public void fillgridwithdata(DataTable data)
+        public void fillgridwithdata()
         {
+            DataTable data = new DataTable();
+
+            if (this.cat == 10)
+                data = dataCAT10;
+            if (this.cat == 20)
+                data = dataCAT20;
+            if (this.cat == 21)
+                data = dataCAT21;
+
             gridCAT.ItemsSource = data.DefaultView;
             gridCAT.Items.Refresh();
         }
@@ -90,6 +110,13 @@ namespace AsterixDisplay
 
             filldataexpandedCAT20(f);
         }
+
+        private void filldataexpandedCAT10(int index)
+        {
+            DataTable expanded = new DataTable();
+            CAT10 cat10exp = f.getCAT10(index);
+        }
+
         private void filldataexpandedCAT20(int index)
         {
             DataTable expanded = new DataTable();
@@ -126,6 +153,7 @@ namespace AsterixDisplay
             dataexpanded.Items.Refresh();
 
         }
+
         private void searchbut_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -162,6 +190,24 @@ namespace AsterixDisplay
         {
             SimulacionPanel sim = new SimulacionPanel();
             sim.ShowDialog();
+        }
+
+        private void cat10_butt_Click(object sender, RoutedEventArgs e)
+        {
+            this.cat = 10;
+            this.fillgridwithdata();
+        }
+
+        private void cat20_butt_Click(object sender, RoutedEventArgs e)
+        {
+            this.cat = 20;
+            this.fillgridwithdata();
+        }
+
+        private void cat21_butt_Click(object sender, RoutedEventArgs e)
+        {
+            this.cat = 21;
+            this.fillgridwithdata();
         }
     }
 }
