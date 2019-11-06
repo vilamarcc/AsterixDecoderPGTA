@@ -8,7 +8,9 @@
         xmlns:d3="http://research.microsoft.com/DynamicDataDisplay/1.0" x:Class="AsterixDisplay.SimulacionPanel"
         mc:Ignorable="d"
         Title="Simulation" Height="720" Width="1350" FontFamily="Lucida Sans Unicode">
-    <Grid Margin="20,20,460,20">
-        <gmaps:GMapControl x:Name="mapView" Loaded="mapView_Loaded"></gmaps:GMapControl>
+    <Grid>
+        <gmaps:GMapControl x:Name="mapView" Loaded="mapView_Loaded" Margin="20,20,460,20"></gmaps:GMapControl>
+        <TextBlock x:Name="clockbox" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="1006,83,0,0" Height="55" Width="223" FontSize="40"/>
+        <Button x:Name="playbut" Content="Play" HorizontalAlignment="Left" VerticalAlignment="Top" Width="87" Margin="1067,319,0,0" Height="33" Click="playbut_Click"/>
     </Grid>
 </Window>

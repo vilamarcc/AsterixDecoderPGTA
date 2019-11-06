@@ -23,7 +23,6 @@ namespace AsterixDecoder
 
         //tablas con los datos --> las cargamos cuando tengamos las listas
         DataTable tablaCAT10 = new DataTable();
-
         DataTable tablaCAT20 = new DataTable();
         DataTable tablaCAT21 = new DataTable();
 
@@ -106,6 +105,9 @@ namespace AsterixDecoder
             {
                 string[] arraystring = listahex[q];
                 int CAT = int.Parse(arraystring[0], System.Globalization.NumberStyles.HexNumber);
+                int contadorCAT10 = 1;
+                int contadorCAT20 = 1;
+                int contadorCAT21 = 1;
 
                 if (CAT == 10)
                 {
@@ -114,7 +116,8 @@ namespace AsterixDecoder
                     //afegim a la llista
                     listaCAT10.Add(newcat10);
                     //afegim a la taula
-                    tablaCAT10.Rows.Add(q + 1, newcat10.SAC, newcat10.SIC, newcat10.TargetReport, newcat10.TimeOfDay, "[" + newcat10.LatitudeWGS + "º," + newcat10.LongitudeWGS + "º]", "[" + newcat10.RHO + "m," + newcat10.Theta + "º]", "[" + newcat10.Xcomponent + "m," + newcat10.Ycomponent + "m]", "[" + newcat10.GroundSpeed + "NM/s," + newcat10.TrackAngle + "º]", "[" + newcat10.Vx + "m/s," + newcat10.Vy + "m/s]" + newcat10.TrackNumber, newcat10.TrackStatus, newcat10.Mode3ACode, newcat10.TargetAddress, newcat10.TargetID, "Click to show more", newcat10.VehicleFeetID, newcat10.FL, newcat10.Height, newcat10.TargetLength, newcat10.TargetOrientation, newcat10.TargetWidth, "Click to show more", newcat10.MSG, "[" + newcat10.DevX + "m," + newcat10.DevY + "m]", newcat10.Covariance + "m", "Click to show more", newcat10.PAM, "[" + newcat10.Ax + "m/s," + newcat10.Ay + "m/s]");
+                    tablaCAT10.Rows.Add(contadorCAT10, newcat10.SAC, newcat10.SIC, newcat10.TargetReport, newcat10.TimeOfDay, "[" + newcat10.LatitudeWGS + "º," + newcat10.LongitudeWGS + "º]", "[" + newcat10.RHO + "m," + newcat10.Theta + "º]", "[" + newcat10.Xcomponent + "," + newcat10.Ycomponent + "] m", "[" + newcat10.GroundSpeed + "NM/s," + newcat10.TrackAngle + "º]", "[" + newcat10.Vx + "," + newcat10.Vy + "] m/s" + newcat10.TrackNumber, newcat10.TrackStatus, newcat10.Mode3ACode, newcat10.TargetAddress, newcat10.TargetID, "Click to show more", newcat10.VehicleFeetID, newcat10.FL, newcat10.Height, newcat10.TargetLength, newcat10.TargetOrientation, newcat10.TargetWidth, "Click to show more", newcat10.MSG, "[" + newcat10.DevX + "," + newcat10.DevY + "] m", newcat10.Covariance + "m", "Click to show more", newcat10.PAM, "[" + newcat10.Ax + "," + newcat10.Ay + "] m/s");
+                    contadorCAT10++;
                 }
                 else if (CAT == 20)
                 {
@@ -123,7 +126,8 @@ namespace AsterixDecoder
                     //afegim a la llista
                     listaCAT20.Add(newcat20);
                     //afegim a la taula
-                    tablaCAT20.Rows.Add(q + 1, newcat20.SAC, newcat20.SIC, newcat20.TargetReport, newcat20.TOD, newcat20.LonWSG, "[" + newcat20.coordscc[0].ToString() + "," + newcat20.coordscc[1].ToString() + "] m", newcat20.TrackNum, "Click to expand", newcat20.Mode3A, "[" + newcat20.Velocitycc[0].ToString() + "," + newcat20.Velocitycc[1].ToString() + "] m/s", newcat20.FL[2], newcat20.ModeC, newcat20.TargetAddress, newcat20.callsign, newcat20.MeasuredHeight, newcat20.geoHeight, newcat20.calcAccel, newcat20.VehicleFleetID, newcat20.PPMsg, newcat20.DOP, newcat20.Receivers, newcat20.ModeSData);
+                    tablaCAT20.Rows.Add(contadorCAT20, newcat20.SAC, newcat20.SIC, newcat20.TargetReport, newcat20.TOD, newcat20.LonWSG, "[" + newcat20.coordscc[0].ToString() + "," + newcat20.coordscc[1].ToString() + "] m", newcat20.TrackNum, "Click to expand", newcat20.Mode3A, "[" + newcat20.Velocitycc[0].ToString() + "," + newcat20.Velocitycc[1].ToString() + "] m/s", newcat20.FL[2], newcat20.ModeC, newcat20.TargetAddress, newcat20.callsign, newcat20.MeasuredHeight, newcat20.geoHeight, newcat20.calcAccel, newcat20.VehicleFleetID, newcat20.PPMsg, newcat20.DOP, newcat20.Receivers, newcat20.ModeSData);
+                    contadorCAT20++;
                 }
                 else if (CAT == 21)
                 {
@@ -294,6 +298,15 @@ namespace AsterixDecoder
 
 
             return tablaCAT21i;
+        }
+
+        public int comprobarCAT()
+        {
+            int cat = 0;
+            if(this.listaCAT10.Count != 0) { cat = 10; }
+            if(this.listaCAT20.Count != 0) { cat = 20; }
+            if(this.listaCAT21.Count != 0) { cat = 21; }
+            return cat;
         }
     }
     }

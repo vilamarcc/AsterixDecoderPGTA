@@ -32,6 +32,7 @@ namespace AsterixDisplay
         DataTable dataCATsearch;
         Fichero f;
         int cat;
+        Boolean iscat20, iscat10, iscat21 = false;
 
         public MainWindow()
         {
@@ -64,27 +65,40 @@ namespace AsterixDisplay
                     MessageBox.Show("Archivo cargado");
                     ((IProgress<int>)progress).Report(75);
                     //guardamos las tablas y mostramos la que toque (this.cat)
-                    dataCAT20 = f.getTablaCAT20();
-                    dataCAT10 = f.getTablaCAT10();
-                    dataCAT21 = f.getTablaCAT21();
-                    this.fillgridwithdata();
+                    this.dataCAT20 = f.getTablaCAT20();
+                    this.dataCAT10 = f.getTablaCAT10();
+                    this.dataCAT21 = f.getTablaCAT21();
+                    ((IProgress<int>)progress).Report(85);
+                    this.cat = f.comprobarCAT();
+                    
+
                     ((IProgress<int>)progress).Report(100);
                 });
+
+                if (this.cat == 10)
+                {
+                    this.iscat10 = true;
+                    this.fillgridwithdata(this.dataCAT10);
+                }
+                if (this.cat == 20)
+                {
+                    this.iscat20 = true;
+                    this.fillgridwithdata(this.dataCAT20);
+                }
+                if (this.cat == 21)
+                {
+                    this.iscat21 = true;
+                    this.fillgridwithdata(this.dataCAT21);
+                }
+                else if (this.cat == 0) { MessageBox.Show("Decoded Category not available or file not valid"); }
                 progressbar1.Visibility = Visibility.Hidden;
             }
+            //Mostramos ya la que este disponible
+           
         }
 
-        public void fillgridwithdata()
+        public void fillgridwithdata(DataTable data)
         {
-            DataTable data = new DataTable();
-
-            if (this.cat == 10)
-                data = dataCAT10;
-            if (this.cat == 20)
-                data = dataCAT20;
-            if (this.cat == 21)
-                data = dataCAT21;
-
             gridCAT.ItemsSource = data.DefaultView;
             gridCAT.Items.Refresh();
         }
@@ -115,6 +129,10 @@ namespace AsterixDisplay
         {
             DataTable expanded = new DataTable();
             CAT10 cat10exp = f.getCAT10(index);
+
+            expanded.Columns.Add(new DataColumn());
+            expanded.Columns.Add(new DataColumn());
+            //Falta poner todo esto para cat10
         }
 
         private void filldataexpandedCAT20(int index)
@@ -188,26 +206,26 @@ namespace AsterixDisplay
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            SimulacionPanel sim = new SimulacionPanel();
+            SimulacionPanel sim = new SimulacionPanel(f.getListCAT20()); 
             sim.ShowDialog();
         }
 
         private void cat10_butt_Click(object sender, RoutedEventArgs e)
         {
             this.cat = 10;
-            this.fillgridwithdata();
+            //this.fillgridwithdata();
         }
 
         private void cat20_butt_Click(object sender, RoutedEventArgs e)
         {
             this.cat = 20;
-            this.fillgridwithdata();
+            //this.fillgridwithdata();
         }
 
         private void cat21_butt_Click(object sender, RoutedEventArgs e)
         {
             this.cat = 21;
-            this.fillgridwithdata();
+            //this.fillgridwithdata();
         }
     }
 }
