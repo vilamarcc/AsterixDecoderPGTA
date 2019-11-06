@@ -13,8 +13,10 @@ namespace AsterixDecoder
 
         public string MessageType;
 
-        public int SAC;
-        public int SIC;
+        public int SACnum;
+        public int SICnum;
+        public string SAC;
+        public string SIC;
 
         public string TYP;
         public string DCR;
@@ -26,8 +28,7 @@ namespace AsterixDecoder
         public string RAB;
         public string LOP;
         public string TOT;
-        public Boolean SPI;
-        public string TargetReport;
+        public string SPI;
 
         public string TimeOfDay;
 
@@ -153,9 +154,6 @@ namespace AsterixDecoder
             // Position in WGS-84 Co-ordinates
             if (Convert.ToString(FSPEC[4]) == "1")
             {
-                StringBuilder octetolat = new StringBuilder(paquete[pos] + paquete[pos + 1] + paquete[pos + 2] + paquete[pos + 3]);
-                StringBuilder octetolon = new StringBuilder(paquete[pos + 4] + paquete[pos + 5] + paquete[pos + 6] + paquete[pos + 7]);
-
                 this.ComputePositionInWGS84(paquete[pos] + paquete[pos + 1] + paquete[pos + 2] + paquete[pos + 3], paquete[pos + 4] + paquete[pos + 5] + paquete[pos + 6] + paquete[pos + 7]);
                 pos = pos + 8;
             }
@@ -332,9 +330,14 @@ namespace AsterixDecoder
             string SIC = Convert.ToString(Convert.ToInt32(octetoSIC, 16), 2).PadLeft(8, '0');
 
             //passem a número
-            this.SAC = Convert.ToInt32(SAC, 2);
-            this.SIC = Convert.ToInt32(SIC, 2);
-            //falta decodificar bits
+            this.SACnum = Convert.ToInt32(SAC, 2);
+            this.SICnum = Convert.ToInt32(SIC, 2);
+
+            //decodifiquem (hi ha més codis però aquests són els únics que sortiran)
+            if (this.SACnum == 0)
+                this.SAC = "Data flow local to the airport";
+            if (this.SICnum == 107)
+                this.SIC = "Barcelona airport - LEBL";
         }
 
         public void ComputeMessageType(string octetoMT) // Data Item I010/000
@@ -362,11 +365,47 @@ namespace AsterixDecoder
             string octeto1 = Convert.ToString(Convert.ToInt32(paquete[pos], 16), 2).PadLeft(8, '0');
 
             //analitzem el octeto 1 (First Part):
-            this.TYP = octeto1.Substring(0, 3);
-            this.DCR = octeto1.Substring(3, 1);
-            this.CHN = octeto1.Substring(4, 1);
-            this.GBS = octeto1.Substring(5, 1);
-            this.CRT = octeto1.Substring(6, 1);
+            string TYP = octeto1.Substring(0, 3);
+            if (TYP == "000")
+                this.TYP = "SSR multilateration";
+            if (TYP == "001")
+                this.TYP = "Mode S multilateration";
+            if (TYP == "010")
+                this.TYP = "ADS-B";
+            if (TYP == "011")
+                this.TYP = "PSR";
+            if (TYP == "100")
+                this.TYP = "Magnetic Loop System";
+            if (TYP == "101")
+                this.TYP = "HF multilateration";
+            if (TYP == "110")
+                this.TYP = "Not defined";
+            if (TYP == "111")
+                this.TYP = "Other types";
+
+            string DCR = octeto1.Substring(3, 1);
+            if (DCR == "0")
+                this.DCR = "No differential correction";
+            if (DCR == "1")
+                this.DCR = "Differential correction";
+
+            string CHN = octeto1.Substring(4, 1);
+            if (CHN == "1")
+                this.CHN = "Chain 2";
+            if (CHN == "0")
+                this.CHN = "Chain 1";
+
+            string GBS = octeto1.Substring(5, 1);
+            if (GBS == "0")
+                this.GBS = "Transponder Ground bit not set";
+            if (GBS == "1")
+                this.GBS = "Transponder Ground bit set";
+
+            string CRT = octeto1.Substring(6, 1);
+            if (CRT == "0")
+                this.CRT = "No Corrupted reply in multilateration";
+            if(CRT=="1")
+                this.CRT= "Corrupted replies in multilateration";
 
             //mirem el bit FX:
             string FX = Convert.ToString(octeto1[7]);
@@ -379,36 +418,55 @@ namespace AsterixDecoder
                 //analitzem el nou octeto:
                 if (cont == 2) //(First Extent):
                 {
-                    this.SIM = octeto1.Substring(0, 1);
-                    this.TST = octeto1.Substring(1, 1);
-                    this.RAB = octeto1.Substring(2, 1);
-                    this.LOP = octeto1.Substring(3, 2);
-                    this.TOT = octeto1.Substring(5, 2);
+                    string SIM = octeto1.Substring(0, 1);
+                    if (SIM == "0")
+                        this.SIM = "Actual target report";
+                    if (SIM == "1")
+                        this.SIM = "Simulated target report";
+
+                    string TST = octeto1.Substring(1, 1);
+                    if (TST == "0")
+                        this.TST = "Default";
+                    if (TST == "1")
+                        this.TST = "Test Target";
+
+                    string RAB = octeto1.Substring(2, 1);
+                    if (RAB == "0")
+                        this.RAB = "Report from target transponder";
+                    if (RAB == "1")
+                        this.RAB = "Report from field monitor (fixed transponder)";
+
+                    string LOP = octeto1.Substring(3, 2);
+                    if (LOP == "00")
+                        this.LOP = "Undetermined";
+                    if (LOP == "01")
+                        this.LOP = "Loop start";
+                    if (LOP == "10")
+                        this.LOP = "Loop finish";
+
+                    string TOT = octeto1.Substring(5, 2);
+                    if (TOT == "00")
+                        this.TOT = "Undetermined";
+                    if (TOT == "01")
+                        this.TOT = "Aircraft";
+                    if (TOT == "10")
+                        this.TOT = "Ground vehicle";
+                    if (TOT == "11")
+                        this.TOT = "Helicopter";
                 }
                 else //(Second &+ Extent):
                 {
                     //SPI
                     if (Convert.ToString(newoctet[0]) == "0")
-                        this.SPI = false;
+                        this.SPI = "Absence of SPI (Special Position Identification)";
                     if (Convert.ToString(newoctet[0]) == "1")
-                        this.SPI = true;
+                        this.SPI = "SPI (Special Position Identification)";
                 }
 
                 cont++;
             }
 
-            string targetreport = Convert.ToString(Convert.ToInt32(paquete[pos], 16), 2).PadLeft(8, '0');
-            int i = 1;
-            while (i <= cont)
-            {
-                targetreport = targetreport + Convert.ToString(Convert.ToInt32(paquete[pos + i], 16), 2).PadLeft(8, '0');
-                i++;
-            }
-            this.TargetReport = targetreport;
-
             return cont;
-
-            //falta decodificar bits
         }
 
         public void ComputeTimeOfDay(string octetoTimeOfDay) // Data Item I010/140

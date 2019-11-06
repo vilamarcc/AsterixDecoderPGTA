@@ -118,7 +118,7 @@ namespace AsterixDecoder
                     //afegim a la llista
                     listaCAT10.Add(newcat10);
                     //afegim a la taula
-                    tablaCAT10.Rows.Add(contadorCAT10, newcat10.MessageType, newcat10.SAC, newcat10.SIC, newcat10.TargetReport, newcat10.TimeOfDay, "[" + newcat10.LatitudeWGS + "º," + newcat10.LongitudeWGS + "º]", "[" + newcat10.RHO + "m," + newcat10.Theta + "º]", "[" + newcat10.Xcomponent + "," + newcat10.Ycomponent + "] m", "[" + newcat10.GroundSpeed + "NM/s," + newcat10.TrackAngle + "º]", "[" + newcat10.Vx + "," + newcat10.Vy + "] m/s" + newcat10.TrackNumber, newcat10.TrackStatus, newcat10.Mode3ACode, newcat10.TargetAddress, newcat10.TargetID, "Click to show more", newcat10.VehicleFeetID, newcat10.FL, newcat10.Height, newcat10.TargetLength, newcat10.TargetOrientation, newcat10.TargetWidth, "Click to show more", newcat10.MSG, "[" + newcat10.DevX + "," + newcat10.DevY + "] m", newcat10.Covariance + "m", "Click to show more", newcat10.PAM, "[" + newcat10.Ax + "," + newcat10.Ay + "] m/s");
+                    tablaCAT10.Rows.Add(contadorCAT10, newcat10.MessageType, newcat10.SACnum, newcat10.SICnum, "Click to expand", newcat10.TimeOfDay, "[" + newcat10.LatitudeWGS + "º," + newcat10.LongitudeWGS + "º]", "[" + newcat10.RHO + "m," + newcat10.Theta + "º]", "[" + newcat10.Xcomponent + "," + newcat10.Ycomponent + "] m", "[" + newcat10.GroundSpeed + "NM/s," + newcat10.TrackAngle + "º]", "[" + newcat10.Vx + "," + newcat10.Vy + "] m/s" + newcat10.TrackNumber, newcat10.TrackStatus, newcat10.Mode3ACode, newcat10.TargetAddress, newcat10.TargetID, "Click to show more", newcat10.VehicleFeetID, newcat10.FL, newcat10.Height, newcat10.TargetLength, newcat10.TargetOrientation, newcat10.TargetWidth, "Click to show more", newcat10.MSG, "[" + newcat10.DevX + "," + newcat10.DevY + "] m", newcat10.Covariance + "m", "Click to show more", newcat10.PAM, "[" + newcat10.Ax + "," + newcat10.Ay + "] m/s");
                 }
                 else if (CAT == 20)
                 {
@@ -230,7 +230,7 @@ namespace AsterixDecoder
             tablaCAT10i.Columns.Add(new DataColumn("Message type"));
             tablaCAT10i.Columns.Add(new DataColumn("SAC"));
             tablaCAT10i.Columns.Add(new DataColumn("SIC"));
-            tablaCAT10i.Columns.Add(new DataColumn("Target Report"));
+            tablaCAT10i.Columns.Add(new DataColumn("Target Report Descriptor"));
             tablaCAT10i.Columns.Add(new DataColumn("TOD"));
             tablaCAT10i.Columns.Add(new DataColumn("Position WSG-84"));
             tablaCAT10i.Columns.Add(new DataColumn("Position Polar Coords"));
@@ -257,7 +257,7 @@ namespace AsterixDecoder
             tablaCAT10i.Columns.Add(new DataColumn("Amplitude of Primary Plot"));
             tablaCAT10i.Columns.Add(new DataColumn("Calculated Acceleration"));
 
-            tablaCAT10i.Rows.Add(q + 1, newcat10.MessageType, newcat10.SAC, newcat10.SIC, newcat10.TargetReport, newcat10.TimeOfDay, "[" + newcat10.LatitudeWGS + "º," + newcat10.LongitudeWGS + "º]", "[" + newcat10.RHO + "m," + newcat10.Theta + "º]", "[" + newcat10.Xcomponent + "m," + newcat10.Ycomponent + "m]", "[" + newcat10.GroundSpeed + "NM/s," + newcat10.TrackAngle + "º]", "[" + newcat10.Vx + "m/s," + newcat10.Vy + "m/s]" + newcat10.TrackNumber, newcat10.TrackStatus, newcat10.Mode3ACode, newcat10.TargetAddress, newcat10.TargetID, "Click to show more", newcat10.VehicleFeetID, newcat10.FL, newcat10.Height, newcat10.TargetLength, newcat10.TargetOrientation, newcat10.TargetWidth, "Click to show more", newcat10.MSG, "[" + newcat10.DevX + "m," + newcat10.DevY + "m]", newcat10.Covariance + "m", "Click to show more", newcat10.PAM, "[" + newcat10.Ax + "m/s," + newcat10.Ay + "m/s]");
+            tablaCAT10i.Rows.Add(q + 1, newcat10.MessageType, newcat10.SACnum, newcat10.SICnum, "Click to expand", newcat10.TimeOfDay, "[" + newcat10.LatitudeWGS + "º," + newcat10.LongitudeWGS + "º]", "[" + newcat10.RHO + "m," + newcat10.Theta + "º]", "[" + newcat10.Xcomponent + "m," + newcat10.Ycomponent + "m]", "[" + newcat10.GroundSpeed + "NM/s," + newcat10.TrackAngle + "º]", "[" + newcat10.Vx + "m/s," + newcat10.Vy + "m/s]" + newcat10.TrackNumber, newcat10.TrackStatus, newcat10.Mode3ACode, newcat10.TargetAddress, newcat10.TargetID, "Click to show more", newcat10.VehicleFeetID, newcat10.FL, newcat10.Height, newcat10.TargetLength, newcat10.TargetOrientation, newcat10.TargetWidth, "Click to show more", newcat10.MSG, "[" + newcat10.DevX + "m," + newcat10.DevY + "m]", newcat10.Covariance + "m", "Click to show more", newcat10.PAM, "[" + newcat10.Ax + "m/s," + newcat10.Ay + "m/s]");
 
             return tablaCAT10i;
         }

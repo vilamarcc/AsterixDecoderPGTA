@@ -144,7 +144,8 @@ namespace AsterixDisplay
             if (this.cat == 21)
             {
                 //expandimos información:
-
+                if (c == 4)
+                    MessageBox.Show(" - ");
 
                 //mostramos las características de ese paquete a parte:
                 filldataexpandedCAT21(f);
@@ -164,10 +165,9 @@ namespace AsterixDisplay
             expanded.Columns.Add(new DataColumn());
 
             expanded.Rows.Add("Package #", index + 1);
-            expanded.Rows.Add("FSPEC", cat10exp.FSPEC);
             try { expanded.Rows.Add("Type of message", cat10exp.MessageType); } catch { }
-            try { expanded.Rows.Add("Data Source ID", "SAC: " + cat10exp.SAC + ", SIC: " + cat10exp.SIC); } catch { }
-            try { expanded.Rows.Add("Target Report:", cat10exp.TargetReport); } catch { }
+            try { expanded.Rows.Add("Data Source ID", cat10exp.SAC + ": " + cat10exp.SIC); } catch { }
+            //try { expanded.Rows.Add("Target Report:", cat10exp.TargetReport); } catch { } --- NO SÉ CÓMO PONERLO
             try { expanded.Rows.Add("Time of Day (UTC)", cat10exp.TimeOfDay); } catch { }
             try { expanded.Rows.Add("Position in WGS-84","Latitude: "+cat10exp.LatitudeWGS.ToString()+"º, Longitude: "+cat10exp.LongitudeWGS.ToString()+"º"); } catch { }
             try { expanded.Rows.Add("Position in Polar",cat10exp.RHO.ToString()+"m, "+cat10exp.Theta.ToString()+"º"); } catch { }
@@ -197,7 +197,7 @@ namespace AsterixDisplay
             //try { expanded.Rows.Add("System Status",); } catch { }             --- NO SÉ CÓMO PONERLO
             try { expanded.Rows.Add("Pre-programmed Message",cat10exp.MSG); } catch { }
             try { expanded.Rows.Add("Standard Deviation of Position","X component: "+cat10exp.DevX.ToString()+"m, Y component: "+cat10exp.DevY.ToString()+"m"); } catch { } //x and y
-            try { expanded.Rows.Add("Covariance of Deviation",cat10exp.Covariance.ToString()+"m^2"); } catch { }
+            try { expanded.Rows.Add("Covariance of Deviation",cat10exp.Covariance.ToString()+"m2"); } catch { }
             try
             {
                 int count = 1;
@@ -209,7 +209,7 @@ namespace AsterixDisplay
             }
             catch { }
             try { expanded.Rows.Add("Amplitude of Primary Plot",cat10exp.PAM.ToString()); } catch { }
-            try { expanded.Rows.Add("Calculated Acceleration","X component: "+cat10exp.Ax.ToString()+"m/s, Y component: "+cat10exp.Ay.ToString()+"m/s"); } catch { }
+            try { expanded.Rows.Add("Calculated Acceleration","X component: "+cat10exp.Ax.ToString()+"m/s2, Y component: "+cat10exp.Ay.ToString()+"m/s2"); } catch { }
 
             dataexpanded.ItemsSource = expanded.DefaultView;
             dataexpanded.Items.Refresh();
