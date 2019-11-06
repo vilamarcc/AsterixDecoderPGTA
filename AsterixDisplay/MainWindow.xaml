@@ -44,7 +44,7 @@
             </DataGrid.CellStyle>
         </DataGrid>
         <Menu IsMainMenu="True" Background="{x:Null}" Width="1350" Height="25" Grid.ColumnSpan="8" Grid.Row="0" Grid.Column="0">
-            <MenuItem Header="_Open" Click="cargarbut_Click"></MenuItem>
+            <MenuItem Header="_Open file" Click="cargarbut_Click"></MenuItem>
             <MenuItem Header="_Simulate" Click="MenuItem_Click"></MenuItem>
             <MenuItem Header="_Help"></MenuItem>
             <MenuItem Header="_About Us"></MenuItem>

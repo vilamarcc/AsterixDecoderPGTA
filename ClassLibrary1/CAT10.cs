@@ -13,8 +13,8 @@ namespace AsterixDecoder
 
         public string MessageType;
 
-        public string SAC;
-        public string SIC;
+        public int SAC;
+        public int SIC;
 
         public string TYP;
         public string DCR;
@@ -328,9 +328,12 @@ namespace AsterixDecoder
         public void ComputeDataSourceIdentifier(string octetoSAC, string octetoSIC) // Data Item I010/010
         {
             //passem a string de bits
-            this.SAC = Convert.ToString(Convert.ToInt32(octetoSAC, 16), 2).PadLeft(8, '0');
-            this.SIC = Convert.ToString(Convert.ToInt32(octetoSIC, 16), 2).PadLeft(8, '0');
+            string SAC = Convert.ToString(Convert.ToInt32(octetoSAC, 16), 2).PadLeft(8, '0');
+            string SIC = Convert.ToString(Convert.ToInt32(octetoSIC, 16), 2).PadLeft(8, '0');
 
+            //passem a número
+            this.SAC = Convert.ToInt32(SAC, 2);
+            this.SIC = Convert.ToInt32(SIC, 2);
             //falta decodificar bits
         }
 
