@@ -97,7 +97,11 @@ namespace AsterixDecoder
                 string[] arrayhex = new string[buffer.Length];
                 for (int y = 0; y < buffer.Length; y++)
                 {
-                    arrayhex[y] = buffer[y].ToString("X");
+                    string a = buffer[y].ToString("X");
+                    if (a.Length == 1)
+                        arrayhex[y] = "0" + a;
+                    if (a.Length == 2)
+                        arrayhex[y] = a;
                 }
                 listahex.Add(arrayhex);
             }
@@ -118,7 +122,7 @@ namespace AsterixDecoder
                     //afegim a la llista
                     listaCAT10.Add(newcat10);
                     //afegim a la taula
-                    tablaCAT10.Rows.Add(contadorCAT10, newcat10.MessageType, newcat10.SACnum, newcat10.SICnum, newcat10.TYP, "Click to expand", newcat10.TimeOfDay, newcat10.positionWGS, newcat10.positionPolar, newcat10.positionCartesian, newcat10.velocityPolar, newcat10.velocityCartesian, newcat10.TrackNumber, "Click to expand", newcat10.Mode3ACode, newcat10.TargetAddress, newcat10.TargetID, "Click to expand", newcat10.VehicleFeetID, newcat10.FlightLevel, newcat10.MeasuredHeight, newcat10.TargetSize, newcat10.TargetOrientation_, "Click to expand", newcat10.MSG, newcat10.deviation, newcat10.covariance, "Click to show more", newcat10.amplitudePP, newcat10.acceleration);
+                    tablaCAT10.Rows.Add(contadorCAT10, newcat10.MessageType, newcat10.SACnum, newcat10.SICnum, newcat10.TYP, "Click to expand", newcat10.TimeOfDay, newcat10.positionWGS, newcat10.positionPolar, newcat10.positionCartesian, newcat10.velocityPolar, newcat10.velocityCartesian, newcat10.TrackNumber, "Click to expand", newcat10.Mode3ACode, newcat10.TargetAddress, newcat10.TargetID, "Click to expand", newcat10.VFI, newcat10.FlightLevel, newcat10.MeasuredHeight, newcat10.TargetSize, newcat10.TargetOrientation_, "Click to expand", newcat10.MSG, newcat10.deviation, newcat10.covariance, "Click to expand", newcat10.amplitudePP, newcat10.acceleration);
                 }
                 else if (CAT == 20)
                 {
@@ -257,7 +261,7 @@ namespace AsterixDecoder
             tablaCAT10i.Columns.Add(new DataColumn("Amplitude of Primary Plot"));
             tablaCAT10i.Columns.Add(new DataColumn("Calculated Acceleration"));
 
-            tablaCAT10i.Rows.Add(q + 1, newcat10.MessageType, newcat10.SACnum, newcat10.SICnum, newcat10.TYP, "Click to expand", newcat10.TimeOfDay, newcat10.positionWGS, newcat10.positionPolar, newcat10.positionCartesian, newcat10.velocityPolar, newcat10.velocityCartesian, newcat10.TrackNumber, "Click to expand", newcat10.Mode3ACode, newcat10.TargetAddress, newcat10.TargetID, "Click to expand", newcat10.VehicleFeetID, newcat10.FlightLevel, newcat10.MeasuredHeight, newcat10.TargetSize, newcat10.TargetOrientation_, "Click to expand", newcat10.MSG, newcat10.deviation, newcat10.covariance, "Click to show more", newcat10.amplitudePP, newcat10.acceleration);
+            tablaCAT10i.Rows.Add(q + 1, newcat10.MessageType, newcat10.SACnum, newcat10.SICnum, newcat10.TYP, "Click to expand", newcat10.TimeOfDay, newcat10.positionWGS, newcat10.positionPolar, newcat10.positionCartesian, newcat10.velocityPolar, newcat10.velocityCartesian, newcat10.TrackNumber, "Click to expand", newcat10.Mode3ACode, newcat10.TargetAddress, newcat10.TargetID, "Click to expand", newcat10.VFI, newcat10.FlightLevel, newcat10.MeasuredHeight, newcat10.TargetSize, newcat10.TargetOrientation_, "Click to expand", newcat10.MSG, newcat10.deviation, newcat10.covariance, "Click to expand", newcat10.amplitudePP, newcat10.acceleration);
 
             return tablaCAT10i;
         }

@@ -79,8 +79,10 @@ namespace AsterixDecoder
         public string[] MBdata;
         public string[] BDS1;
         public string[] BDS2;
+        public string ModeS;
 
-        public string VehicleFeetID;
+        public int VehicleFeetID;
+        public string VFI;
 
         public string V_FL;
         public string G_FL;
@@ -101,6 +103,7 @@ namespace AsterixDecoder
         public string TSV;
         public string DIV;
         public string TTF;
+        public string SystemStatus;
 
         public string TRB;
         public int MSG_num;
@@ -114,6 +117,7 @@ namespace AsterixDecoder
 
         public double[] DRHO;
         public double[] DTHETA;
+        public string Presence;
 
         public string PAM;
         public string amplitudePP;
@@ -238,9 +242,7 @@ namespace AsterixDecoder
                 {
                     // Mode S MB Data
                     if (Convert.ToString(FSPEC[16]) == "1")
-                    {
                         pos = pos + this.ComputeModeS_MBdata(paquete, pos);
-                    }
 
                     // Vehicle Fleet Identification
                     if (Convert.ToString(FSPEC[17]) == "1")
@@ -853,6 +855,8 @@ namespace AsterixDecoder
                 this.BDS1[i] = octet8.Substring(0, 4);
                 this.BDS2[i] = octet8.Substring(4, 4);
 
+                this.ModeS = "Message: " + this.MBdata[i] + ", Address 1: " + this.BDS1[i] + ", Address 2: " + this.BDS2[i] + "\n";
+
                 cont = cont + 8;
 
                 i++;
@@ -867,7 +871,42 @@ namespace AsterixDecoder
             string octeto_stringbits = Convert.ToString(Convert.ToInt32(octeto, 16), 2);
 
             //passem a num
-            this.VehicleFeetID = Convert.ToString(int.Parse(octeto_stringbits, System.Globalization.NumberStyles.HexNumber));
+            this.VehicleFeetID = int.Parse(octeto_stringbits, System.Globalization.NumberStyles.HexNumber);
+
+            if (this.VehicleFeetID == 0)
+                this.VFI = "Unknown";
+            if (this.VehicleFeetID == 1)
+                this.VFI = "ATC equipment maintenance";
+            if (this.VehicleFeetID == 2)
+                this.VFI = "Airport maintenance";
+            if (this.VehicleFeetID == 3)
+                this.VFI = "Fire";
+            if (this.VehicleFeetID == 4)
+                this.VFI = "Bird scarer";
+            if (this.VehicleFeetID == 5)
+                this.VFI = "Snow plough";
+            if (this.VehicleFeetID == 6)
+                this.VFI = "Runway sweeper";
+            if (this.VehicleFeetID == 7)
+                this.VFI = "Emergency";
+            if (this.VehicleFeetID == 8)
+                this.VFI = "Police";
+            if (this.VehicleFeetID == 9)
+                this.VFI = "Bus";
+            if (this.VehicleFeetID == 10)
+                this.VFI = "Tug (push/tow)";
+            if (this.VehicleFeetID == 11)
+                this.VFI = "Grass cutter";
+            if (this.VehicleFeetID == 12) 
+                this.VFI = "Fuel";
+            if (this.VehicleFeetID == 13)
+                this.VFI = "Baggage";
+            if (this.VehicleFeetID == 14)
+                this.VFI = "Catering";
+            if (this.VehicleFeetID == 15)
+                this.VFI = "Aircraft maintenance";
+            if (this.VehicleFeetID == 16)
+                this.VFI = "Flyco (follow me)";
         }
 
         public void ComputeFL(string octetos) // Data Item I010/090
@@ -917,7 +956,7 @@ namespace AsterixDecoder
             {
                 int orientation = Convert.ToInt32(octO.Substring(0, 7), 2);
                 this.TargetOrientation = Convert.ToString(orientation * (360 / 128));
-                this.TargetOrientation_ = this.TargetLength + "º";
+                this.TargetOrientation_ = this.TargetOrientation + "º";
                 cont++;
 
                 if (octO.Substring(7, 1) == "1")
@@ -944,6 +983,7 @@ namespace AsterixDecoder
             this.DIV = octet_stringbits.Substring(4, 1);
             this.TTF = octet_stringbits.Substring(5, 1);
 
+            
             //falta decodificar bits
         }
 
@@ -1020,6 +1060,8 @@ namespace AsterixDecoder
                 //multipliquem per la resolució
                 this.DRHO[i] = rho * 1;
                 this.DTHETA[i] = dtheta * 0.15;
+
+                this.Presence = this.DRHO[i] + "m, " + this.DTHETA[i] + "º \n";
 
                 cont = cont + 2;
 

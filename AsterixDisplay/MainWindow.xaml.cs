@@ -130,6 +130,10 @@ namespace AsterixDisplay
                     MessageBox.Show(paquete.DataCharacteristics);
                 if (c == 13) // Track Status
                     MessageBox.Show(paquete.TrackStatus);
+                if (c == 27) // Presence
+                    MessageBox.Show(paquete.Presence);
+                if (c == 17) // Mode S MB Data
+                    MessageBox.Show(paquete.ModeS);
 
                 //mostramos las características de ese paquete a parte:
                 filldataexpandedCAT10(fil);
@@ -195,7 +199,7 @@ namespace AsterixDisplay
                 }
             }
             catch { }
-            if (cat10exp.VehicleFeetID != null) { expanded.Rows.Add("Vehicle Fleet ID", cat10exp.VehicleFeetID); }
+            if (cat10exp.VFI != null) { expanded.Rows.Add("Vehicle Fleet ID", cat10exp.VFI); }
             if (cat10exp.FlightLevel != null) { expanded.Rows.Add("Flight Level", cat10exp.FlightLevel); }
             if (cat10exp.MeasuredHeight != null) { expanded.Rows.Add("Measured Height", cat10exp.MeasuredHeight); }
             if (cat10exp.TargetSize != null) { expanded.Rows.Add("Target Size", cat10exp.TargetSize); }
