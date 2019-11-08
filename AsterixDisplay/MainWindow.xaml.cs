@@ -118,15 +118,21 @@ namespace AsterixDisplay
             DataGridCell cell = (DataGridCell)sender;
             int c = cell.Column.DisplayIndex; //número de columna
             DataGridRow r2 = DataGridRow.GetRowContainingElement(cell);
-            int f = r2.GetIndex(); //número de fila
+            int fil = r2.GetIndex(); //número de fila
 
             if(this.cat==10)
             {
-                //expandimos información:
+                //cojo el paquete
+                CAT10 paquete = f.getCAT10(fil);
 
+                //expandimos información:
+                if (c == 5) // Target Report - Data Characteristics
+                    MessageBox.Show(paquete.DataCharacteristics);
+                if (c == 13) // Track Status
+                    MessageBox.Show(paquete.TrackStatus);
 
                 //mostramos las características de ese paquete a parte:
-                filldataexpandedCAT10(f);
+                filldataexpandedCAT10(fil);
             }
             if (this.cat == 20)
             {
@@ -139,16 +145,15 @@ namespace AsterixDisplay
                     MessageBox.Show("Data Mode S aqui");
 
                 //mostramos las características de ese paquete a parte:
-                filldataexpandedCAT20(f);
+                filldataexpandedCAT20(fil);
             }
             if (this.cat == 21)
             {
                 //expandimos información:
-                if (c == 4)
-                    MessageBox.Show(" - ");
+                
 
                 //mostramos las características de ese paquete a parte:
-                filldataexpandedCAT21(f);
+                filldataexpandedCAT21(fil);
             }
         }
 
@@ -165,51 +170,52 @@ namespace AsterixDisplay
             expanded.Columns.Add(new DataColumn());
 
             expanded.Rows.Add("Package #", index + 1);
-            try { expanded.Rows.Add("Type of message", cat10exp.MessageType); } catch { }
-            try { expanded.Rows.Add("Data Source ID", cat10exp.SAC + ": " + cat10exp.SIC); } catch { }
-            //try { expanded.Rows.Add("Target Report:", cat10exp.TargetReport); } catch { } --- NO SÉ CÓMO PONERLO
-            try { expanded.Rows.Add("Time of Day (UTC)", cat10exp.TimeOfDay); } catch { }
-            try { expanded.Rows.Add("Position in WGS-84","Latitude: "+cat10exp.LatitudeWGS.ToString()+"º, Longitude: "+cat10exp.LongitudeWGS.ToString()+"º"); } catch { }
-            try { expanded.Rows.Add("Position in Polar",cat10exp.RHO.ToString()+"m, "+cat10exp.Theta.ToString()+"º"); } catch { }
-            try { expanded.Rows.Add("Position in Cartesian","Coord. X: "+cat10exp.Xcomponent.ToString()+"m, Coord. Y: "+cat10exp.Ycomponent.ToString()+"m"); } catch { }
-            try { expanded.Rows.Add("Track Velocity in Polar","Ground Speed :"+cat10exp.GroundSpeed.ToString()+"NM/s, Track Angle: "+cat10exp.TrackAngle.ToString()+"º"); } catch { }
-            try { expanded.Rows.Add("Track Velocity in Cartesian", "Coord. X: " + cat10exp.Vx.ToString() + "m/s, Coord. Y: " + cat10exp.Vy.ToString() + "m/s"); } catch { }
-            try { expanded.Rows.Add("Track Number",cat10exp.TrackAngle); } catch { }
-            try { expanded.Rows.Add("Track Status",cat10exp.TrackStatus); } catch { }
-            try { expanded.Rows.Add("Mode 3/A Code",cat10exp.Mode3ACode); } catch { }
-            try { expanded.Rows.Add("Target Address",cat10exp.TargetAddress); } catch { }
-            try { expanded.Rows.Add("Target ID",cat10exp.TargetID); } catch { }
+            if (cat10exp.MessageType != null) { expanded.Rows.Add("Type of message", cat10exp.MessageType); }
+            if (cat10exp.TrackNumber != null) { expanded.Rows.Add("Track Number", cat10exp.TrackNumber); }
+            if (cat10exp.DataSourceID != null) { expanded.Rows.Add("Data Source ID", cat10exp.DataSourceID); }
+            if (cat10exp.TYP != null) { expanded.Rows.Add("Data type", cat10exp.TYP); }
+            if (cat10exp.DataCharacteristics != null) { expanded.Rows.Add("Data characteristics", cat10exp.DataCharacteristics); }
+            if (cat10exp.TimeOfDay != null) { expanded.Rows.Add("Time of Day (UTC)", cat10exp.TimeOfDay); }
+            if (cat10exp.positionWGS != null) { expanded.Rows.Add("Position in WGS-84", cat10exp.positionWGS); }
+            if (cat10exp.positionPolar != null) { expanded.Rows.Add("Position in Polar", cat10exp.positionPolar); }
+            if (cat10exp.positionCartesian != null) { expanded.Rows.Add("Position in Cartesian", cat10exp.positionCartesian); }
+            if (cat10exp.velocityPolar != null) { expanded.Rows.Add("Track Velocity in Polar", cat10exp.velocityPolar); }
+            if (cat10exp.velocityCartesian != null) { expanded.Rows.Add("Track Velocity in Cartesian", cat10exp.velocityCartesian); }
+            if (cat10exp.TrackStatus != null) { expanded.Rows.Add("Track Status", cat10exp.TrackStatus); }
+            if (cat10exp.Mode3ACode != null) { expanded.Rows.Add("Mode 3/A Code", cat10exp.Mode3ACode); }
+            if (cat10exp.TargetAddress != null) { expanded.Rows.Add("Target Address", cat10exp.TargetAddress); }
+            if (cat10exp.TargetID != null) { expanded.Rows.Add("Target ID", cat10exp.TargetID); }
             try
             {
                 int cont = 1;
                 while (cont <= cat10exp.MBdata.Count())
                 {
-                    try { expanded.Rows.Add("Mode S MB Data #" + cont, "Message: " + cat10exp.MBdata[cont] + ", Address1: " + cat10exp.BDS1[cont] + ", Address 2: " + cat10exp.BDS2[cont]); } catch { }
+                    expanded.Rows.Add("Mode S MB Data #" + cont, "Message: " + cat10exp.MBdata[cont] + ", Address1: " + cat10exp.BDS1[cont] + ", Address 2: " + cat10exp.BDS2[cont]);
                     cont++;
                 }
             }
             catch { }
-            try { expanded.Rows.Add("Vehicle Fleet ID",cat10exp.VehicleFeetID); } catch { }
-            try { expanded.Rows.Add("Flight Level","FL"+cat10exp.FL.ToString()); } catch { }
-            try { expanded.Rows.Add("Measured Height",cat10exp.Height.ToString()+"ft"); } catch { }
-            try { expanded.Rows.Add("Target Size","Length: "+cat10exp.TargetLength.ToString()+"m, Width: "+cat10exp.TargetWidth.ToString()+"m"); } catch { } //length and width
-            try { expanded.Rows.Add("Target Orientation",cat10exp.TargetOrientation+"º"); } catch { }
-            //try { expanded.Rows.Add("System Status",); } catch { }             --- NO SÉ CÓMO PONERLO
-            try { expanded.Rows.Add("Pre-programmed Message",cat10exp.MSG); } catch { }
-            try { expanded.Rows.Add("Standard Deviation of Position","X component: "+cat10exp.DevX.ToString()+"m, Y component: "+cat10exp.DevY.ToString()+"m"); } catch { } //x and y
-            try { expanded.Rows.Add("Covariance of Deviation",cat10exp.Covariance.ToString()+"m2"); } catch { }
+            if (cat10exp.VehicleFeetID != null) { expanded.Rows.Add("Vehicle Fleet ID", cat10exp.VehicleFeetID); }
+            if (cat10exp.FlightLevel != null) { expanded.Rows.Add("Flight Level", cat10exp.FlightLevel); }
+            if (cat10exp.MeasuredHeight != null) { expanded.Rows.Add("Measured Height", cat10exp.MeasuredHeight); }
+            if (cat10exp.TargetSize != null) { expanded.Rows.Add("Target Size", cat10exp.TargetSize); }
+            if (cat10exp.TargetOrientation_ != null) { expanded.Rows.Add("Target Orientation", cat10exp.TargetOrientation_); }
+            // SYSTEM STATUS
+            if (cat10exp.MSG != null) { expanded.Rows.Add("Pre-programmed Message", cat10exp.MSG); }
+            if (cat10exp.deviation != null) { expanded.Rows.Add("Standard Deviation of Position", cat10exp.deviation); }
+            if (cat10exp.covariance != null) { expanded.Rows.Add("Covariance of Deviation", cat10exp.covariance); }
             try
             {
                 int count = 1;
                 while (count <= cat10exp.DRHO.Count())
                 {
-                    try { expanded.Rows.Add("Presence #" + count.ToString(), cat10exp.DRHO[count].ToString() + "m, " + cat10exp.DTHETA[count].ToString() + "º"); } catch { }
+                    expanded.Rows.Add("Presence #" + count.ToString(), cat10exp.DRHO[count].ToString() + "m, " + cat10exp.DTHETA[count].ToString() + "º");
                     count++;
                 }
             }
             catch { }
-            try { expanded.Rows.Add("Amplitude of Primary Plot",cat10exp.PAM.ToString()); } catch { }
-            try { expanded.Rows.Add("Calculated Acceleration","X component: "+cat10exp.Ax.ToString()+"m/s2, Y component: "+cat10exp.Ay.ToString()+"m/s2"); } catch { }
+            if (cat10exp.amplitudePP != null) { expanded.Rows.Add("Amplitude of Primary Plot", cat10exp.amplitudePP); }
+            if (cat10exp.acceleration != null) { expanded.Rows.Add("Calculated Acceleration", cat10exp.acceleration); }
 
             dataexpanded.ItemsSource = expanded.DefaultView;
             dataexpanded.Items.Refresh();
@@ -256,14 +262,40 @@ namespace AsterixDisplay
             try
             {
                 int package = Convert.ToInt32(searchbox.Text) - 1;
-                CAT20 cat20search = f.getCAT20(package);
 
-                dataCATsearch = f.getTablaCAT20Indv(cat20search, package);
+                if (this.cat == 10)
+                {
+                    CAT10 cat10search = f.getCAT10(package);
 
-                gridCAT.ItemsSource = dataCATsearch.DefaultView;
-                gridCAT.Items.Refresh();
+                    dataCATsearch = f.getTablaCAT10Indv(cat10search, package);
 
-                filldataexpandedCAT20(package);
+                    gridCAT.ItemsSource = dataCATsearch.DefaultView;
+                    gridCAT.Items.Refresh();
+
+                    filldataexpandedCAT10(package);
+                }
+                if (this.cat == 20)
+                {
+                    CAT20 cat20search = f.getCAT20(package);
+
+                    dataCATsearch = f.getTablaCAT20Indv(cat20search, package);
+
+                    gridCAT.ItemsSource = dataCATsearch.DefaultView;
+                    gridCAT.Items.Refresh();
+
+                    filldataexpandedCAT20(package);
+                }
+                if (this.cat == 21)
+                {
+                    CAT21 cat21search = f.getCAT21(package);
+
+                    dataCATsearch = f.getTablaCAT21Indv(cat21search, package);
+
+                    gridCAT.ItemsSource = dataCATsearch.DefaultView;
+                    gridCAT.Items.Refresh();
+
+                    filldataexpandedCAT21(package);
+                }
             }
             catch
             {

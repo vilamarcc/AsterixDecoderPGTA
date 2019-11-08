@@ -8,15 +8,14 @@ namespace AsterixDecoder
     public class CAT10
     {
         // ATRIBUTS:
-
+         
         public string FSPEC;
 
         public string MessageType;
 
-        public int SACnum;
-        public int SICnum;
-        public string SAC;
-        public string SIC;
+        public string SACnum;
+        public string SICnum;
+        public string DataSourceID;
 
         public string TYP;
         public string DCR;
@@ -29,25 +28,31 @@ namespace AsterixDecoder
         public string LOP;
         public string TOT;
         public string SPI;
+        public string DataCharacteristics;
 
         public string TimeOfDay;
 
-        public double LatitudeWGS;
-        public double LongitudeWGS;
+        public string LatitudeWGS;
+        public string LongitudeWGS;
+        public string positionWGS;
 
-        public double RHO;
-        public double Theta;
+        public string RHO;
+        public string Theta;
+        public string positionPolar;
 
-        public double Xcomponent;
-        public double Ycomponent;
+        public string Xcomponent;
+        public string Ycomponent;
+        public string positionCartesian;
 
-        public double GroundSpeed;
-        public double TrackAngle;
+        public string GroundSpeed;
+        public string TrackAngle;
+        public string velocityPolar;
 
-        public double Vx;
-        public double Vy;
+        public string Vx;
+        public string Vy;
+        public string velocityCartesian;
 
-        public int TrackNumber;
+        public string TrackNumber;
 
         public string CNF;
         public string TRE;
@@ -75,17 +80,21 @@ namespace AsterixDecoder
         public string[] BDS1;
         public string[] BDS2;
 
-        public int VehicleFeetID;
+        public string VehicleFeetID;
 
         public string V_FL;
         public string G_FL;
-        public double FL;
+        public string FL;
+        public string FlightLevel;
 
-        public double Height;
+        public string Height;
+        public string MeasuredHeight;
 
-        public double TargetLength;
-        public double TargetOrientation;
-        public double TargetWidth;
+        public string TargetLength;
+        public string TargetOrientation;
+        public string TargetWidth;
+        public string TargetSize;
+        public string TargetOrientation_;
 
         public string NOGO;
         public string OVL;
@@ -97,17 +106,21 @@ namespace AsterixDecoder
         public int MSG_num;
         public string MSG;
 
-        public double DevX;
-        public double DevY;
-        public double Covariance;
+        public string DevX;
+        public string DevY;
+        public string Cov;
+        public string deviation;
+        public string covariance;
 
         public double[] DRHO;
         public double[] DTHETA;
 
-        public double PAM;
+        public string PAM;
+        public string amplitudePP;
 
-        public double Ax;
-        public double Ay;
+        public string Ax;
+        public string Ay;
+        public string acceleration;
 
         // CONSTRUCTOR:
         public CAT10(string[] paquete) //decodifica el missatge (paquet)
@@ -157,6 +170,7 @@ namespace AsterixDecoder
                 this.ComputePositionInWGS84(paquete[pos] + paquete[pos + 1] + paquete[pos + 2] + paquete[pos + 3], paquete[pos + 4] + paquete[pos + 5] + paquete[pos + 6] + paquete[pos + 7]);
                 pos = pos + 8;
             }
+            
 
             // Measured Position in Polar Co-ordinates
             if (Convert.ToString(FSPEC[5]) == "1")
@@ -330,14 +344,14 @@ namespace AsterixDecoder
             string SIC = Convert.ToString(Convert.ToInt32(octetoSIC, 16), 2).PadLeft(8, '0');
 
             //passem a número
-            this.SACnum = Convert.ToInt32(SAC, 2);
-            this.SICnum = Convert.ToInt32(SIC, 2);
+            this.SACnum = Convert.ToString(Convert.ToInt32(SAC, 2));
+            this.SICnum = Convert.ToString(Convert.ToInt32(SIC, 2));
 
             //decodifiquem (hi ha més codis però aquests són els únics que sortiran)
-            if (this.SACnum == 0)
-                this.SAC = "Data flow local to the airport";
-            if (this.SICnum == 107)
-                this.SIC = "Barcelona airport - LEBL";
+            if (this.SACnum == "0" && this.SICnum == "107")
+                this.DataSourceID = "Data flow local to the airport: Barcelona - LEBL";
+            if (this.SACnum == "0" && this.SICnum == "7")
+                this.DataSourceID = "Data flow local to the airport: -";
         }
 
         public void ComputeMessageType(string octetoMT) // Data Item I010/000
@@ -407,6 +421,8 @@ namespace AsterixDecoder
             if(CRT=="1")
                 this.CRT= "Corrupted replies in multilateration";
 
+            this.DataCharacteristics = this.DataCharacteristics + " - " + this.DCR + "\n - " + this.CHN + "\n - " + this.GBS + "\n - " + this.CRT;
+            
             //mirem el bit FX:
             string FX = Convert.ToString(octeto1[7]);
             while (FX == "1")
@@ -416,51 +432,55 @@ namespace AsterixDecoder
                 FX = Convert.ToString(newoctet[7]);
 
                 //analitzem el nou octeto:
-                if (cont == 2) //(First Extent):
+                if (cont == 1) //(First Extent):
                 {
-                    string SIM = octeto1.Substring(0, 1);
+                    string SIM = newoctet.Substring(0, 1);
                     if (SIM == "0")
                         this.SIM = "Actual target report";
                     if (SIM == "1")
                         this.SIM = "Simulated target report";
 
-                    string TST = octeto1.Substring(1, 1);
+                    string TST = newoctet.Substring(1, 1);
                     if (TST == "0")
-                        this.TST = "Default";
+                        this.TST = "TST: Default";
                     if (TST == "1")
                         this.TST = "Test Target";
 
-                    string RAB = octeto1.Substring(2, 1);
+                    string RAB = newoctet.Substring(2, 1);
                     if (RAB == "0")
                         this.RAB = "Report from target transponder";
                     if (RAB == "1")
                         this.RAB = "Report from field monitor (fixed transponder)";
 
-                    string LOP = octeto1.Substring(3, 2);
+                    string LOP = newoctet.Substring(3, 2);
                     if (LOP == "00")
-                        this.LOP = "Undetermined";
+                        this.LOP = "Loop status: Undetermined";
                     if (LOP == "01")
                         this.LOP = "Loop start";
                     if (LOP == "10")
                         this.LOP = "Loop finish";
 
-                    string TOT = octeto1.Substring(5, 2);
+                    string TOT = newoctet.Substring(5, 2);
                     if (TOT == "00")
-                        this.TOT = "Undetermined";
+                        this.TOT = "Type of vehicle: Undetermined";
                     if (TOT == "01")
                         this.TOT = "Aircraft";
                     if (TOT == "10")
                         this.TOT = "Ground vehicle";
                     if (TOT == "11")
                         this.TOT = "Helicopter";
+
+                    this.DataCharacteristics = this.DataCharacteristics + "\n - " + this.SIM + "\n - " + this.TST + "\n - " + this.RAB + "\n - " + this.LOP + "\n - " + this.TOT;
                 }
                 else //(Second &+ Extent):
                 {
                     //SPI
-                    if (Convert.ToString(newoctet[0]) == "0")
+                    if (newoctet.Substring(0,1) == "0")
                         this.SPI = "Absence of SPI (Special Position Identification)";
-                    if (Convert.ToString(newoctet[0]) == "1")
+                    if (newoctet.Substring(0, 1) == "1")
                         this.SPI = "SPI (Special Position Identification)";
+
+                    this.DataCharacteristics = this.DataCharacteristics + "\n - " + this.SPI;
                 }
 
                 cont++;
@@ -485,12 +505,17 @@ namespace AsterixDecoder
         public void ComputePositionInWGS84(string OctLatWGS, string OctLonWGS) // Data Item I010/041
         {
             //passem a string de bits
-            string lat = Convert.ToString(Convert.ToInt32(OctLatWGS, 16), 2);
-            string lon = Convert.ToString(Convert.ToInt32(OctLonWGS, 16), 2);
+            string lat = Convert.ToString(Convert.ToInt32(OctLatWGS, 16), 2).PadLeft(32, '0');
+            string lon = Convert.ToString(Convert.ToInt32(OctLonWGS, 16), 2).PadLeft(32, '0');
 
             //fem el complement a2 que ens torna els bit en doubles i multipliquem per la resolució
-            this.LatitudeWGS = this.ComputeComplementoA2(lat) * (180 / Math.Pow(2, 31));
-            this.LongitudeWGS = this.ComputeComplementoA2(lon) * (180 / Math.Pow(2, 31));
+            double lati = this.ComputeComplementoA2(lat) * (180 / Math.Pow(2, 31));
+            double longi = this.ComputeComplementoA2(lon) * (180 / Math.Pow(2, 31));
+
+            this.LatitudeWGS = Convert.ToString(Math.Round(1000 * lati) / 1000);
+            this.LongitudeWGS = Convert.ToString(Math.Round(1000 * longi) / 1000);
+
+            this.positionWGS = "Latitude: " + this.LatitudeWGS + "º, Longitude: " + this.LongitudeWGS + "º";
         }
 
         public void ComputePositionInPolar(string OctRHO, string OctTheta) // Data Item I010/040
@@ -500,19 +525,29 @@ namespace AsterixDecoder
             int theta = int.Parse(OctTheta, System.Globalization.NumberStyles.HexNumber);
 
             //multipliquem per la resolució per passar a doubles
-            this.RHO = Convert.ToSingle(rho) * 1;
-            this.Theta = Convert.ToSingle(theta) * (360 / Math.Pow(2, 16));
+            double Rho = Convert.ToSingle(rho) * 1;
+            double THETA = Convert.ToSingle(theta) * (360 / Math.Pow(2, 16));
+
+            this.RHO = Convert.ToString(Rho);
+            this.Theta = Convert.ToString(Math.Round(100 * THETA) / 100);
+
+            this.positionPolar = "Distance: " + this.RHO + "m, Angle: " + this.Theta + "º";
         }
 
         public void ComputePositionInCartesian(string OctX, string OctY) // Data Item I010/042
         {
             //passem a string de bits:
-            string octetx = Convert.ToString(Convert.ToInt32(OctX, 16), 2);
-            string octety = Convert.ToString(Convert.ToInt32(OctY, 16), 2);
+            string octetx = Convert.ToString(Convert.ToInt32(OctX, 16), 2).PadLeft(16, '0');
+            string octety = Convert.ToString(Convert.ToInt32(OctY, 16), 2).PadLeft(16, '0');
 
             //fem el complement a2 que ens torna els bit en doubles i multipliquem per la resolució
-            this.Xcomponent = this.ComputeComplementoA2(octetx) * Math.Pow(2, -14);
-            this.Ycomponent = this.ComputeComplementoA2(octety) * (360 / Math.Pow(2, 16));
+            double x = this.ComputeComplementoA2(octetx) * 1;
+            double y = this.ComputeComplementoA2(octety) * 1;
+
+            this.Xcomponent = Convert.ToString(x);
+            this.Ycomponent = Convert.ToString(y);
+
+            this.positionCartesian = "X component: " + this.Xcomponent + "m, Y component: " + this.Ycomponent + "m";
         }
 
         public void ComputeTrackVelocityInPolar(string OctGS, string OctTA) // Data Item I010/200
@@ -522,19 +557,26 @@ namespace AsterixDecoder
             int ta = int.Parse(OctTA,System.Globalization.NumberStyles.HexNumber);
 
             //multipliquem per la resolució per passar a doubles
-            this.GroundSpeed = Convert.ToSingle(gs) * Math.Pow(2, -14);
-            this.TrackAngle = Convert.ToSingle(ta) * (360 / Math.Pow(2, 16));
+            double groundspeed = Convert.ToSingle(gs) * Math.Pow(2, -14);
+            double trackangle = Convert.ToSingle(ta) * (360 / Math.Pow(2, 16));
+
+            this.GroundSpeed = Convert.ToString(Math.Round(10000 * groundspeed) / 10000);
+            this.TrackAngle = Convert.ToString(Math.Round(10000 * trackangle) / 10000);
+
+            this.velocityPolar = "Ground speed: " + this.GroundSpeed + "NM/s, Track angle: " + this.TrackAngle + "º";
         }
 
         public void ComputeTrackVelocityInCartesian(string OctVx, string OctVy) // Data Item I010/202
         {
             //passem a string de bits:
-            string octetvx = Convert.ToString(Convert.ToInt32(OctVx, 16), 2);
-            string octetvy = Convert.ToString(Convert.ToInt32(OctVy, 16), 2);
+            string octetvx = Convert.ToString(Convert.ToInt32(OctVx, 16), 2).PadLeft(16, '0');
+            string octetvy = Convert.ToString(Convert.ToInt32(OctVy, 16), 2).PadLeft(16, '0');
 
             //fem el complement a2 que ens torna els bit en doubles i multipliquem per la resolució
-            this.Vx = this.ComputeComplementoA2(octetvx) * 0.25;
-            this.Vy = this.ComputeComplementoA2(octetvy) * 0.25;
+            this.Vx = Convert.ToString(this.ComputeComplementoA2(octetvx) * 0.25);
+            this.Vy = Convert.ToString(this.ComputeComplementoA2(octetvy) * 0.25);
+
+            this.velocityCartesian = "X component: " + this.Vx + "m/s, Y component: " + this.Vy + "m/s";
         }
 
         public void ComputeTrackNumber(string OctTN) // Data Item I010/161
@@ -546,7 +588,7 @@ namespace AsterixDecoder
             string tracknum_valid = tracknum_bin.Substring(4, 12);
 
             //passem a int
-            this.TrackNumber = Convert.ToInt32(tracknum_valid, 2);
+            this.TrackNumber = Convert.ToString(Convert.ToInt32(tracknum_valid, 2));
         }
 
         public int ComputeTrackStatus(string[] paquete, int pos) // Data Item I010/170
@@ -558,13 +600,47 @@ namespace AsterixDecoder
             string octeto1 = Convert.ToString(Convert.ToInt32(paquete[pos], 16), 2).PadLeft(8, '0');
 
             //analitzem el octeto 1 (First Part):
-            this.CNF = octeto1.Substring(0, 1);
-            this.TRE = octeto1.Substring(1, 1);
-            this.CST = octeto1.Substring(2, 2);
-            this.MAH = octeto1.Substring(4, 1);
-            this.TCC = octeto1.Substring(5, 1);
-            this.STH = octeto1.Substring(6, 1);
+            string CNF = octeto1.Substring(0, 1);
+            if (CNF == "0")
+                this.CNF = "Confirmed track";
+            if (CNF == "1")
+                this.CNF = "Track in initialisation phase";
 
+            string TRE = octeto1.Substring(1, 1);
+            if (TRE == "0")
+                this.TRE = "TRE: Default";
+            if (TRE == "1")
+                this.TRE = "Last report for a track";
+
+            string CST = octeto1.Substring(2, 2);
+            if (CST == "00")
+                this.CST = "No extrapolation";
+            if (CST == "01")
+                this.CST = "Predictable extrapolation due to sensor refresh period";
+            if (CST == "10")
+                this.CST = "Predictable extrapolation in masked area";
+            if (CST == "11")
+                this.CST = "Extrapolation due to unpredictable absence of detection";
+
+            string MAH = octeto1.Substring(4, 1);
+            if (MAH == "0")
+                this.MAH = "MAH: Default";
+            if (MAH == "1")
+                this.MAH = "Horizontal manoeuvre";
+
+            string TCC = octeto1.Substring(5, 1);
+            if (TCC == "0")
+                this.TCC = "Tracking performed in 'Sensor Plane', i.e. neither slant range correction nor projection was applied";
+            if (TCC == "1")
+                this.TCC = "Slant range correction and a suitable projection technique are used to track in a 2D.reference plane, tangential to the earth model at the Sensor Site co-ordinates";
+
+            string STH = octeto1.Substring(6, 1);
+            if (STH == "0")
+                this.STH = "Measured position";
+            if (STH == "1")
+                this.STH = "Smoothed position";
+
+            this.TrackStatus = this.TrackStatus + " - " + this.CNF + "\n - " + this.TRE + "\n - " + this.CST + "\n - " + this.MAH + "\n - " + this.TCC + "\n - " + this.STH;
 
             //mirem el bit FX:
             string FX = Convert.ToString(octeto1[7]);
@@ -577,28 +653,59 @@ namespace AsterixDecoder
                 //analitzem el nou octeto:
                 if (cont == 1) //(First Extent):
                 {
-                    this.TOM = newoctet.Substring(0, 2);
-                    this.DOU = newoctet.Substring(2, 3);
-                    this.MRS = newoctet.Substring(5, 2);
+                    string TOM = newoctet.Substring(0, 2);
+                    if (TOM == "00")
+                        this.TOM = "Unknown type of movement";
+                    if (TOM == "01")
+                        this.TOM = "Taking-off";
+                    if (TOM == "10")
+                        this.TOM = "Landing";
+                    if (TOM == "11")
+                        this.TOM = "Other types of movement: neither taking-off, nor landing";
+
+                    string DOU = newoctet.Substring(2, 3);
+                    if (DOU == "000")
+                        this.DOU = "No doubt in track";
+                    if (DOU == "001")
+                        this.DOU = "Doubtful correlation (undetermined reason)";
+                    if (DOU == "010")
+                        this.DOU = "Doubtful correlation in clutter";
+                    if (DOU == "011")
+                        this.DOU = "Loss of accuracy";
+                    if (DOU == "100")
+                        this.DOU = "Loss of accuracy in clutter";
+                    if (DOU == "101")
+                        this.DOU = "Unstable track";
+                    if (DOU == "110")
+                        this.DOU = "Previously coasted";
+
+                    string MRS = newoctet.Substring(5, 2);
+                    if (MRS == "00")
+                        this.MRS = "Merge or split indication undetermined";
+                    if (MRS == "01")
+                        this.MRS = "Track merged by association to plot";
+                    if (MRS == "10")
+                        this.MRS = "Track merged by non-association to plot";
+                    if (MRS == "11")
+                        this.MRS = "Split track";
+
+                    this.TrackStatus = this.TrackStatus + "\n - " + this.TOM + "\n - " + this.DOU + "\n - " + this.MRS;
                 }
                 else //(Second &+ Extent):
-                    this.GHO = newoctet.Substring(0, 1);
+                {
+                    string GHO = newoctet.Substring(0, 1);
+                    if (GHO == "1")
+                        this.GHO = "Ghost track";
+                    if (GHO == "0")
+                        this.GHO = "GHO: Default";
+
+                    this.TrackStatus = this.TrackStatus + "\n - " + this.GHO;
+                }
 
                 cont++;
             }
 
-            int i = 1;
-            string trackstatus = Convert.ToString(Convert.ToInt32(paquete[pos], 16), 2).PadLeft(8, '0');
-            while (i <= cont)
-            {
-                trackstatus = trackstatus + Convert.ToString(Convert.ToInt32(paquete[pos + i], 16), 2).PadLeft(8, '0');
-                i++;
-            }
-            this.TrackStatus = trackstatus;
-
             return cont;
-
-            //falta decodificar bits
         }
 
         public void ComputeMode3ACode(string octetos) // Data Item I010/060
@@ -613,7 +720,7 @@ namespace AsterixDecoder
 
             // Code 3-A 
             int i = 4;
-            while(i<bits.Length)
+            while (i < bits.Length)
             {
                 // bits
                 string character_bits = bits.Substring(i, 3);
@@ -625,13 +732,13 @@ namespace AsterixDecoder
                 this.Mode3ACode = this.Mode3ACode + Convert.ToString(character_num);
 
                 // següent character
-                i=i+3;
+                i = i + 3;
             }
         }
 
         public void ComputeTargetAddress(string octetos) // Data Item I010/220
         {
-            this.TargetAddress = Convert.ToString(Convert.ToInt32(octetos, 16), 2);
+            this.TargetAddress = Convert.ToString(Convert.ToInt32(octetos, 16), 2).PadLeft(24, '0');
         }
 
         public void ComputeTargetIdentification(string octetos) // Data Item I010/245
@@ -644,20 +751,70 @@ namespace AsterixDecoder
 
             // ID:
             string targetID = bits.Substring(8, 48);
+            string code = "";
             int nchar = 0;
-            while (nchar < 8)
+            while (nchar < targetID.Length)
             {
-                string character = "";
-                int bit = 0;
-                while (bit < 6)
-                {
-                    character = character + Convert.ToString(targetID[nchar + bit]);
-                    bit++;
-                }
-                this.TargetID = this.TargetID + Convert.ToString(int.Parse(character, System.Globalization.NumberStyles.HexNumber));
+                string character = targetID.Substring(nchar, 6);
 
-                nchar++;
+                string b6_b5 = character.Substring(0, 2);
+                string b4_b3_b2_b1 = character.Substring(2, 4);
+
+                if (b6_b5 == "00")
+                {
+                    if (b4_b3_b2_b1 == "0001") { code = code + "A"; }
+                    if (b4_b3_b2_b1 == "0010") { code = code + "B"; }
+                    if (b4_b3_b2_b1 == "0011") { code = code + "C"; }
+                    if (b4_b3_b2_b1 == "0100") { code = code + "D"; }
+                    if (b4_b3_b2_b1 == "0101") { code = code + "E"; }
+                    if (b4_b3_b2_b1 == "0110") { code = code + "F"; }
+                    if (b4_b3_b2_b1 == "0111") { code = code + "G"; }
+                    if (b4_b3_b2_b1 == "1000") { code = code + "H"; }
+                    if (b4_b3_b2_b1 == "1001") { code = code + "I"; }
+                    if (b4_b3_b2_b1 == "1010") { code = code + "J"; }
+                    if (b4_b3_b2_b1 == "1011") { code = code + "K"; }
+                    if (b4_b3_b2_b1 == "1100") { code = code + "L"; }
+                    if (b4_b3_b2_b1 == "1101") { code = code + "M"; }
+                    if (b4_b3_b2_b1 == "1110") { code = code + "N"; }
+                    if (b4_b3_b2_b1 == "1111") { code = code + "O"; }
+                }
+                if (b6_b5 == "01")
+                {
+                    if (b4_b3_b2_b1 == "0000") { code = code + "P"; }
+                    if (b4_b3_b2_b1 == "0001") { code = code + "Q"; }
+                    if (b4_b3_b2_b1 == "0010") { code = code + "R"; }
+                    if (b4_b3_b2_b1 == "0011") { code = code + "S"; }
+                    if (b4_b3_b2_b1 == "0100") { code = code + "T"; }
+                    if (b4_b3_b2_b1 == "0101") { code = code + "U"; }
+                    if (b4_b3_b2_b1 == "0110") { code = code + "V"; }
+                    if (b4_b3_b2_b1 == "0111") { code = code + "W"; }
+                    if (b4_b3_b2_b1 == "1000") { code = code + "X"; }
+                    if (b4_b3_b2_b1 == "1001") { code = code + "Y"; }
+                    if (b4_b3_b2_b1 == "1010") { code = code + "Z"; }
+                }
+
+                if (b6_b5 == "10")
+                {
+                    if (b4_b3_b2_b1 == "0000") { code = code + " "; }
+                }
+
+                if (b6_b5 == "11")
+                {
+                    if (b4_b3_b2_b1 == "0000") { code = code + "1"; }
+                    if (b4_b3_b2_b1 == "0001") { code = code + "2"; }
+                    if (b4_b3_b2_b1 == "0010") { code = code + "3"; }
+                    if (b4_b3_b2_b1 == "0011") { code = code + "4"; }
+                    if (b4_b3_b2_b1 == "0100") { code = code + "5"; }
+                    if (b4_b3_b2_b1 == "0101") { code = code + "6"; }
+                    if (b4_b3_b2_b1 == "0110") { code = code + "7"; }
+                    if (b4_b3_b2_b1 == "0111") { code = code + "8"; }
+                    if (b4_b3_b2_b1 == "1000") { code = code + "9"; }
+                }
+
+                nchar = nchar + 6;
             }
+
+            this.TargetID = code;
         }
 
         public int ComputeModeS_MBdata(string[] paquete, int pos) // Data Item I010/250
@@ -710,7 +867,7 @@ namespace AsterixDecoder
             string octeto_stringbits = Convert.ToString(Convert.ToInt32(octeto, 16), 2);
 
             //passem a num
-            this.VehicleFeetID = int.Parse(octeto_stringbits, System.Globalization.NumberStyles.HexNumber);
+            this.VehicleFeetID = Convert.ToString(int.Parse(octeto_stringbits, System.Globalization.NumberStyles.HexNumber));
         }
 
         public void ComputeFL(string octetos) // Data Item I010/090
@@ -726,16 +883,20 @@ namespace AsterixDecoder
             string fl_stringbits = bits.Substring(2, 14);
 
             //fem el complement i multipliquem per la resolució
-            this.FL = this.ComputeComplementoA2(fl_stringbits) / 4;
+            this.FL = Convert.ToString(this.ComputeComplementoA2(fl_stringbits) / 4);
+
+            this.FlightLevel = "FL" + this.FL;
         }
 
         public void ComputeMesuredHeight(string octetos) // Data Item I010/091
         {
             //passem a string de bits
-            string height = Convert.ToString(Convert.ToInt32(octetos, 16), 2);
+            string height = Convert.ToString(Convert.ToInt32(octetos, 16), 2).PadLeft(16, '0');
 
             //fem el complement A2 i multipliquem per la resolució
-            this.Height = this.ComputeComplementoA2(height) * 6.25;
+            this.Height = Convert.ToString(this.ComputeComplementoA2(height) * 6.25);
+
+            this.MeasuredHeight = this.Height + "ft";
         }
 
         public int ComputeTargetSizeAndOrientation(string octet1, string octet2, string octet3) // Data Item I010/270
@@ -750,17 +911,20 @@ namespace AsterixDecoder
 
             //passem els bits a ints
             int length = Convert.ToInt32(octL.Substring(0, 7), 2);
-            this.TargetLength = length * 1;
+            this.TargetLength = Convert.ToString(length * 1);
+            this.TargetSize = this.TargetLength + "m length";
             if (octL.Substring(7, 1) == "1")
             {
                 int orientation = Convert.ToInt32(octO.Substring(0, 7), 2);
-                this.TargetOrientation = orientation * (360 / 128);
+                this.TargetOrientation = Convert.ToString(orientation * (360 / 128));
+                this.TargetOrientation_ = this.TargetLength + "º";
                 cont++;
 
                 if (octO.Substring(7, 1) == "1")
                 {
                     int width = Convert.ToInt32(octW.Substring(0, 7), 2);
-                    this.TargetWidth = Convert.ToSingle(width) * 1;
+                    this.TargetWidth = Convert.ToString(Convert.ToSingle(width) * 1);
+                    this.TargetSize = this.TargetLength + "x" + this.TargetWidth + " m";
                     cont++;
                 }
             }
@@ -822,9 +986,11 @@ namespace AsterixDecoder
             int octetos34_int = int.Parse(octetos34_stringbits, System.Globalization.NumberStyles.HexNumber);
 
             //passem a doubles multiplicant per resoució
-            this.DevX = octeto1_int * 0.25;
-            this.DevY = octeto2_int * 0.25;
-            this.Covariance = octetos34_int * 0.25;
+            this.DevX = Convert.ToString(octeto1_int * 0.25);
+            this.DevY = Convert.ToString(octeto2_int * 0.25);
+            this.deviation = "X component: " + this.DevX + "m2, Y component: " + this.DevY + "m2";
+            this.Cov = Convert.ToString(octetos34_int * 0.25);
+            this.covariance = this.Cov + "m2";
         }
 
         public int ComputePresence(string[] paquete, int pos) // Data Item I010/280
@@ -869,22 +1035,26 @@ namespace AsterixDecoder
             int amplitude = int.Parse(octeto, System.Globalization.NumberStyles.HexNumber);
 
             //multipliquem per la resolució
-            this.PAM = amplitude * 0.255;
+            this.PAM = Convert.ToString(amplitude * 1);
+
+            this.amplitudePP = this.PAM + "dBm";
         }
 
         public void ComputeCalculatedAcceleration(string octetoAx, string octetoAy) // Data Item I010/210
         {
             //passem a string de bits
-            string ax_string = Convert.ToString(Convert.ToInt32(octetoAx, 16), 2);
-            string ay_string = Convert.ToString(Convert.ToInt32(octetoAy, 16), 2);
+            string ax_string = Convert.ToString(Convert.ToInt32(octetoAx, 16), 2).PadLeft(8, '0');
+            string ay_string = Convert.ToString(Convert.ToInt32(octetoAy, 16), 2).PadLeft(8, '0');
 
             //passem a int els bits
             int ax = int.Parse(ax_string, System.Globalization.NumberStyles.HexNumber);
             int ay = int.Parse(ay_string, System.Globalization.NumberStyles.HexNumber);
 
             //multipliquem per la resolució:
-            this.Ax = Convert.ToSingle(ax) * 0.25;
-            this.Ay = Convert.ToSingle(ay) * 0.25;
+            this.Ax = Convert.ToString(ax * 0.25);
+            this.Ay = Convert.ToString(ay * 0.25);
+
+            this.acceleration = "X component: " + this.Ax + "m/s2, Y component: " + this.Ay + "m/s2";
         }
 
         public double ComputeComplementoA2(string bits) //hace el complemento A2 (complemento A1 + 1)
