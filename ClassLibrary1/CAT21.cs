@@ -18,9 +18,11 @@ namespace AsterixDecoder
         public string CDTI;
         public string notTCAS;
         public string SA;
+        public string OperationalStatus;
 
         public string SAC;
         public string SIC;
+        public string DataSourceID;
 
         public string serviceID;
 
@@ -540,24 +542,63 @@ namespace AsterixDecoder
             string octeto_bits = Convert.ToString(Convert.ToInt32(octeto, 16), 2).PadLeft(8, '0');
 
             //llegim bits
-            this.RA = octeto_bits.Substring(0, 1);
-            this.TC = octeto_bits.Substring(1, 2);
-            this.TS = octeto_bits.Substring(3, 1);
-            this.ARV = octeto_bits.Substring(4, 1);
-            this.CDTI = octeto_bits.Substring(5, 1);
-            this.notTCAS = octeto_bits.Substring(6, 1);
-            this.SA = octeto_bits.Substring(7, 1);
+            string RA = octeto_bits.Substring(0, 1);
+            if (RA == "1")
+                this.RA = "TCAS RA active";
+            if (RA == "0")
+                this.RA = "TCAS II or ACAS RA not active";
 
-            //falta decodificar bits
+            int TC = Convert.ToInt32(octeto_bits.Substring(1, 2), 2);
+            if (TC == 0)
+                this.TC = "No capability for Trajectory Change Reports";
+            if (TC == 1)
+                this.TC = "Support for TC+0 reports only";
+            if (TC == 2)
+                this.TC = "Support for multiple TC reports";
+            if (TC == 3)
+                this.TC = "Target Trajectory Change Report Capability: reserved";
+
+            string TS = octeto_bits.Substring(3, 1);
+            if (TS == "0")
+                this.TS = "No capability to support Target State Reports";
+            if (TS == "1")
+                this.TS = "Capable of supporting Target State Reports";
+
+            string ARV = octeto_bits.Substring(4, 1);
+            if (ARV == "0")
+                this.ARV = "No capability to generate ARV-reports";
+            if (ARV == "1")
+                this.ARV = "Capable of generate ARV-reports";
+
+            string CDTI = octeto_bits.Substring(5, 1);
+            if (CDTI == "0")
+                this.CDTI = "CDTI not operational";
+            if (CDTI == "1")
+                this.CDTI = "CDTI operational";
+
+            string notTCAS = octeto_bits.Substring(6, 1);
+            if (notTCAS == "0")
+                this.notTCAS = "TCAS operational";
+            if (notTCAS == "1")
+                this.notTCAS = "TCAS not operational";
+
+            string SA = octeto_bits.Substring(7, 1);
+            if (SA == "1")
+                this.SA = "Single antenna only";
+            if (SA == "0")
+                this.SA = "Antenna Diversity";
+
+            this.OperationalStatus = " - " + this.RA + "\n - " + this.TC + "\n - " + this.TS + "\n - " + this.ARV + "\n - " + this.CDTI + "\n - " + this.notTCAS + "\n - " + this.SA;
         }
 
         public void ComputeDataSourceIdentification(string octetoSAC, string octetoSIC) // Data Item I021/010
         {
             //passem a string de bits
-            this.SAC = Convert.ToString(Convert.ToInt32(octetoSAC, 16), 2).PadLeft(8, '0');
-            this.SIC = Convert.ToString(Convert.ToInt32(octetoSIC, 16), 2).PadLeft(8, '0');
+            this.SAC = Convert.ToString(Convert.ToInt32(octetoSAC, 16));
+            this.SIC = Convert.ToString(Convert.ToInt32(octetoSIC, 16));
 
-            //falta decodificar bits
+            if (this.SAC == "0" && this.SIC == "107")
+                this.DataSourceID = "Data flow local to the airport: Barcelona - LEBL";
         }
 
         public void ComputeServiceIdentification(string octeto) // Data Item I021/015
@@ -979,7 +1020,7 @@ namespace AsterixDecoder
         public void ComputeBarometricVerticalRate(string octetos) // Data Item I021/155
         {
             //string de bits
-            string octetos_bits = Convert.ToString(Convert.ToInt32(octetos, 16), 2).PadLeft(8, '0');
+            string octetos_bits = Convert.ToString(Convert.ToInt32(octetos, 16), 2).PadLeft(16, '0');
 
             //separem 
             this.RE_BarometricVerticalRate = octetos_bits.Substring(0, 1);
