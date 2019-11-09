@@ -142,9 +142,12 @@ namespace AsterixDisplay
             }
             if (this.cat == 20)
             {
+                CAT20 paquete = f.getCAT20(fil);
                 //expandimos información:
+                if (c == 3)
+                    MessageBox.Show(paquete.getTargetReportDescriptortoString());
                 if (c == 8) //Track status
-                    MessageBox.Show("Track status shit aqui");
+                    MessageBox.Show(paquete.getTrackStatusToString());
                 if (c == 20) //Pos Accuracy
                     MessageBox.Show("Doppler shit aqui");
                 if (c == 22) //Mode S MB Data
@@ -238,15 +241,15 @@ namespace AsterixDisplay
             expanded.Rows.Add("Package #",index + 1);
             expanded.Rows.Add("FSPEC",cat20exp.FSPEC);
             try { expanded.Rows.Add("Data Source ID", "SAC: " + cat20exp.SAC + " SIC: " + cat20exp.SIC); } catch { }
-            try { expanded.Rows.Add("Target Report", cat20exp.TargetReport); } catch { } //Falta desarrollar esto --> funcion en la clase para descifrar tipo de msg
+            try { expanded.Rows.Add("Target Report", cat20exp.getTargetReportDescriptortoString()); } catch { } //Falta desarrollar esto --> funcion en la clase para descifrar tipo de msg
             try { expanded.Rows.Add("Time of Day (UTC)", cat20exp.TOD); } catch { }
             try { expanded.Rows.Add("Position in WSG-84", "[" + cat20exp.LatWSG.ToString() + "," + cat20exp.LonWSG.ToString() + "]"); } catch { }
             try { expanded.Rows.Add("Position (X, Y)", "[" + cat20exp.X.ToString() + "," + cat20exp.Y.ToString() + "] m"); } catch { }
             try { expanded.Rows.Add("Track Number", cat20exp.TrackNum); } catch { }
-            try { expanded.Rows.Add("Track Status", cat20exp.CDM); } catch { }
+            try { expanded.Rows.Add("Track Status", cat20exp.getTrackStatusToString()); } catch { }
             try { expanded.Rows.Add("Mode-3/A Code", cat20exp.Mode3A.ToString()); } catch { }
             try { expanded.Rows.Add("Track Velocity (Vx, Vy)", "[" + cat20exp.Vy.ToString() + "," + cat20exp.Vy.ToString() + "] m/s"); } catch { }
-            try { expanded.Rows.Add("Flight Level", cat20exp.FL[2]); } catch { }
+            try { expanded.Rows.Add("Flight Level", "FL" + cat20exp.FL[2]); } catch { }
             try { expanded.Rows.Add("Mode-C Code", cat20exp.ModeC.ToString()); } catch { }
             try { expanded.Rows.Add("Target Address", cat20exp.TargetAddress.ToString()); } catch { }
             try { expanded.Rows.Add("Target ID", cat20exp.TargetID[1]);} catch { }

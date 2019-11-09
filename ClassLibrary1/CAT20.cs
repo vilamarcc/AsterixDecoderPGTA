@@ -93,6 +93,21 @@ namespace AsterixDecoder
         public string BDS2;
         public string[] ModeSData;
 
+        //230
+        public string ACAScap;
+
+        //260
+        public string ACASRAreport;
+
+        //030
+        public string warning;
+
+        //055
+        public string Mode1Code;
+
+        //050
+        public string Mode2Code;
+
         public int length;
 
         public CAT20(string[] array)
@@ -249,7 +264,7 @@ namespace AsterixDecoder
                     string Octeto_070_2 = Convert.ToString(Convert.ToInt32(array[OctetoIndex], 16), 2).PadLeft(8, '0');
                     OctetoIndex++;
 
-                    this.Mode3A = Octeto_070_1 + Octeto_070_2;
+                    this.Mode3A = computeMode3A(Octeto_070_1,Octeto_070_2);
                 }
                 i++;
 
@@ -788,6 +803,80 @@ namespace AsterixDecoder
             string oct_t = oct_1 + oct_2;
             double sdh = Convert.ToDouble(Convert.ToInt32(oct_t, 2)) * 0.5;
             return sdh;
+        }
+
+        public string getTrackStatusToString()
+        {
+            string cnf = "", tre = "", cst="", cdm="", mah="", sth="", gho="";
+
+            if(this.CNF == "0") { cnf = "Confirmed Track"; }
+            else if(this.CNF == "1") {  cnf = "Track in initiation phase"; }
+            if(this.TRE == "0") {  tre = "Default"; }
+            else if(this.TRE == "1") {  tre = "Last report for a track"; }
+            if(this.CST == "0") {  cst = "Not extrapolated"; }
+            else if(this.CST == "1") {  cst = "Extrapolated"; }
+            if(this.CDM == "00") {  cdm = "Maintaining"; }
+            else if(this.CDM == "01") {  cdm = "Climbing"; }
+            else if(this.CDM == "10") {  cdm = "Descending"; }
+            else if (this.CDM == "11") {  cdm = "Invalid"; }
+            if(this.MAH == "0") {  mah = "Default"; }
+            else if(this.MAH == "1") {  mah = "Horizontal manoeuvre"; }
+            if(this.STH == "0") {  sth = "Measured position"; }
+            else if(this.STH == "1") {  sth = "Smoothed position"; }
+            if (this.GHO == "0") {  gho = "Default"; }
+            else if (this.GHO == "1") {  gho = "Ghost track"; }
+
+            string trackstatustostring = " - " + cnf + "\n - " + tre + "\n - " + cst + "\n - " + cdm + "\n - " + mah + "\n - " + sth;
+
+            if (gho != "") { trackstatustostring = trackstatustostring + "\n - " + gho; }
+            return trackstatustostring;
+        }
+
+        private string computeMode3A(string oct1, string oct2)
+        {
+            string octT = oct1 + oct2;
+            string numeros = octT.Substring(4, 12);
+            string Mode3Acode = "";
+            for (int c = 0; c < numeros.Length;c= c + 3)
+            {
+                string num = Convert.ToString(Convert.ToInt32(numeros.Substring(c, 3),2));
+                Mode3Acode = Mode3Acode + num;
+            }
+
+            return (Mode3Acode);
+        }
+
+        public string getTargetReportDescriptortoString()
+        {
+            string targetreporttostring = "";
+
+            if(this.TargetReport[0] == '1') { targetreporttostring = "- Non-Mode S 1090MHz MLAT"; }
+            if (this.TargetReport[1] == '1') { targetreporttostring = "- Mode S 1090MHz MLAT"; }
+            if (this.TargetReport[2] == '1') { targetreporttostring = "- HF MLAT"; }
+            if (this.TargetReport[3] == '1') { targetreporttostring = "- VDL Mode 4 MLAT"; }
+            if (this.TargetReport[4] == '1') { targetreporttostring = "- UAT MLAT"; }
+            if (this.TargetReport[5] == '1') { targetreporttostring = "- DME/TACAN MLAT"; }
+            if (this.TargetReport[6] == '1') { targetreporttostring = "- Other Technology MLAT"; }
+
+            if (this.TargetReport[7] == '1')
+            {
+                if (this.TargetReport[8] == '1') { targetreporttostring += "\n- Report from field monitor (fixed transponder)"; }
+                else if (this.TargetReport[8] == '0') { targetreporttostring += "\n- Report from target transponder"; }
+                if (this.TargetReport[9] == '0') { targetreporttostring += "\n- Absence of Special Position Identification"; }
+                else if (this.TargetReport[9] == '1') { targetreporttostring += "\n- Special Position Identification"; }
+                if (this.TargetReport[10] == '0') { targetreporttostring += "\n- Chain"; }
+                else if (this.TargetReport[10] == '1') { targetreporttostring += "\n- Chain 2"; }
+                if (this.TargetReport[11] == '0') { targetreporttostring += "\n- Transponder Ground bit not set"; }
+                else if (this.TargetReport[11] == '1') { targetreporttostring += "\n- Transponder Ground bit set"; }
+                if (this.TargetReport[12] == '0') { targetreporttostring += "\n- No Corrupted reply in MLAT"; }
+                else if (this.TargetReport[12] == '1') { targetreporttostring += "\n- Corrupted replies in MLAT"; }
+                if (this.TargetReport[13] == '0') { targetreporttostring += "\n- Actual Target Report"; }
+                else if (this.TargetReport[13] == '1') { targetreporttostring += "\n- Simulated Target Report"; }
+                if (this.TargetReport[14] == '0') { targetreporttostring += "\n- Default"; }
+                else if (this.TargetReport[14] == '1') { targetreporttostring += "\n- Test Target"; }
+            }
+
+            return targetreporttostring;
         }
     }
 }
