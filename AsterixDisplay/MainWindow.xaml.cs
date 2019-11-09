@@ -323,7 +323,7 @@ namespace AsterixDisplay
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            SimulacionPanel sim = new SimulacionPanel(f.getListCAT20()); 
+            SimulacionPanel sim = new SimulacionPanel(f.getListCAT20(),f.getListCAT10(),f.getListCAT21(),this.cat); 
             sim.ShowDialog();
         }
 

@@ -383,9 +383,9 @@ namespace AsterixDecoder
             //analitzem el octeto 1 (First Part):
             string TYP = octeto1.Substring(0, 3);
             if (TYP == "000")
-                this.TYP = "SSR multilateration";
+                this.TYP = "SSR MLAT";
             if (TYP == "001")
-                this.TYP = "Mode S multilateration";
+                this.TYP = "Mode S MLAT";
             if (TYP == "010")
                 this.TYP = "ADS-B";
             if (TYP == "011")
@@ -393,7 +393,7 @@ namespace AsterixDecoder
             if (TYP == "100")
                 this.TYP = "Magnetic Loop System";
             if (TYP == "101")
-                this.TYP = "HF multilateration";
+                this.TYP = "HF MLAT";
             if (TYP == "110")
                 this.TYP = "Not defined";
             if (TYP == "111")
