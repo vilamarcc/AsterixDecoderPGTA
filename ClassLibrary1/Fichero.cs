@@ -180,14 +180,14 @@ namespace AsterixDecoder
             tablaCAT10.Columns.Add(new DataColumn("Message type"));
             tablaCAT10.Columns.Add(new DataColumn("SAC"));
             tablaCAT10.Columns.Add(new DataColumn("SIC"));
-            tablaCAT10.Columns.Add(new DataColumn("Data type"));
-            tablaCAT10.Columns.Add(new DataColumn("Data characteristics"));
-            tablaCAT10.Columns.Add(new DataColumn("TOD"));
-            tablaCAT10.Columns.Add(new DataColumn("Position WSG-84"));
-            tablaCAT10.Columns.Add(new DataColumn("Position Polar Coords"));
-            tablaCAT10.Columns.Add(new DataColumn("Position Cartesian Coords"));
-            tablaCAT10.Columns.Add(new DataColumn("Track Velocity Polar Coords"));
-            tablaCAT10.Columns.Add(new DataColumn("Track Velocity Cartesian Coords"));
+            tablaCAT10.Columns.Add(new DataColumn("Data Type"));
+            tablaCAT10.Columns.Add(new DataColumn("Data Characteristics"));
+            tablaCAT10.Columns.Add(new DataColumn("Time Of Day (UTC)"));
+            tablaCAT10.Columns.Add(new DataColumn("Position WSG-84\n[Latitude, Longitude]"));
+            tablaCAT10.Columns.Add(new DataColumn("Position Polar Coords\n[Distance, Angle]"));
+            tablaCAT10.Columns.Add(new DataColumn("Position Cartesian Coords\n[X, Y]"));
+            tablaCAT10.Columns.Add(new DataColumn("Track Velocity Polar Coords\n[Ground Speed, Track Angle]"));
+            tablaCAT10.Columns.Add(new DataColumn("Track Velocity Cartesian Coords\n[Vx, Vy]"));
             tablaCAT10.Columns.Add(new DataColumn("Track Number"));
             tablaCAT10.Columns.Add(new DataColumn("Track Status"));
             tablaCAT10.Columns.Add(new DataColumn("Mode 3/A Code"));
@@ -197,15 +197,15 @@ namespace AsterixDecoder
             tablaCAT10.Columns.Add(new DataColumn("Vehicle Fleet ID"));
             tablaCAT10.Columns.Add(new DataColumn("Flight Level"));
             tablaCAT10.Columns.Add(new DataColumn("Measured Height"));
-            tablaCAT10.Columns.Add(new DataColumn("Target Size"));
+            tablaCAT10.Columns.Add(new DataColumn("Target Size\n[Length x Width]"));
             tablaCAT10.Columns.Add(new DataColumn("Target Orientation"));
             tablaCAT10.Columns.Add(new DataColumn("System Status"));
             tablaCAT10.Columns.Add(new DataColumn("Pre Programmed MSG"));
-            tablaCAT10.Columns.Add(new DataColumn("Standard Deviation of Position"));
+            tablaCAT10.Columns.Add(new DataColumn("Standard Deviation of Position\n[X, Y]"));
             tablaCAT10.Columns.Add(new DataColumn("Covariance of deviation"));
             tablaCAT10.Columns.Add(new DataColumn("Presence"));
             tablaCAT10.Columns.Add(new DataColumn("Amplitude of Primary Plot"));
-            tablaCAT10.Columns.Add(new DataColumn("Calculated Acceleration"));
+            tablaCAT10.Columns.Add(new DataColumn("Calculated Acceleration\n[Ax, Ay]"));
 
             //CAT21
 
@@ -234,14 +234,14 @@ namespace AsterixDecoder
             tablaCAT10i.Columns.Add(new DataColumn("Message type"));
             tablaCAT10i.Columns.Add(new DataColumn("SAC"));
             tablaCAT10i.Columns.Add(new DataColumn("SIC"));
-            tablaCAT10i.Columns.Add(new DataColumn("Data type"));
-            tablaCAT10i.Columns.Add(new DataColumn("Data characteristics"));
-            tablaCAT10i.Columns.Add(new DataColumn("TOD"));
-            tablaCAT10i.Columns.Add(new DataColumn("Position WSG-84"));
-            tablaCAT10i.Columns.Add(new DataColumn("Position Polar Coords"));
-            tablaCAT10i.Columns.Add(new DataColumn("Position Cartesian Coords"));
-            tablaCAT10i.Columns.Add(new DataColumn("Track Velocity Polar Coords"));
-            tablaCAT10i.Columns.Add(new DataColumn("Track Velocity Cartesian Coords"));
+            tablaCAT10i.Columns.Add(new DataColumn("Data Type"));
+            tablaCAT10i.Columns.Add(new DataColumn("Data Characteristics"));
+            tablaCAT10i.Columns.Add(new DataColumn("Time Of Dat (UTC)"));
+            tablaCAT10i.Columns.Add(new DataColumn("Position WSG-84\n[Latitude, Longitude]"));
+            tablaCAT10i.Columns.Add(new DataColumn("Position Polar Coords\n[Distance, Angle]"));
+            tablaCAT10i.Columns.Add(new DataColumn("Position Cartesian Coords\n[X, Y]"));
+            tablaCAT10i.Columns.Add(new DataColumn("Track Velocity Polar Coords\n[Ground Speed, Track Angle]"));
+            tablaCAT10i.Columns.Add(new DataColumn("Track Velocity Cartesian Coords\n[Vx, Vy]"));
             tablaCAT10i.Columns.Add(new DataColumn("Track Number"));
             tablaCAT10i.Columns.Add(new DataColumn("Track Status"));
             tablaCAT10i.Columns.Add(new DataColumn("Mode 3/A Code"));
@@ -251,15 +251,15 @@ namespace AsterixDecoder
             tablaCAT10i.Columns.Add(new DataColumn("Vehicle Fleet ID"));
             tablaCAT10i.Columns.Add(new DataColumn("Flight Level"));
             tablaCAT10i.Columns.Add(new DataColumn("Measured Height"));
-            tablaCAT10i.Columns.Add(new DataColumn("Target Size"));
+            tablaCAT10i.Columns.Add(new DataColumn("Target Size\n[Length x Width]"));
             tablaCAT10i.Columns.Add(new DataColumn("Target Orientation"));
             tablaCAT10i.Columns.Add(new DataColumn("System Status"));
             tablaCAT10i.Columns.Add(new DataColumn("Pre Programmed MSG"));
-            tablaCAT10i.Columns.Add(new DataColumn("Standard Deviation of Position"));
+            tablaCAT10i.Columns.Add(new DataColumn("Standard Deviation of Position\n[X, Y]"));
             tablaCAT10i.Columns.Add(new DataColumn("Covariance of deviation"));
             tablaCAT10i.Columns.Add(new DataColumn("Presence"));
             tablaCAT10i.Columns.Add(new DataColumn("Amplitude of Primary Plot"));
-            tablaCAT10i.Columns.Add(new DataColumn("Calculated Acceleration"));
+            tablaCAT10i.Columns.Add(new DataColumn("Calculated Acceleration\n[Ax, Ay]"));
 
             tablaCAT10i.Rows.Add(q + 1, newcat10.MessageType, newcat10.SACnum, newcat10.SICnum, newcat10.TYP, "Click to expand", newcat10.TimeOfDay, newcat10.positionWGS, newcat10.positionPolar, newcat10.positionCartesian, newcat10.velocityPolar, newcat10.velocityCartesian, newcat10.TrackNumber, "Click to expand", newcat10.Mode3ACode, newcat10.TargetAddress, newcat10.TargetID, "Click to expand", newcat10.VFI, newcat10.FlightLevel, newcat10.MeasuredHeight, newcat10.TargetSize, newcat10.TargetOrientation_, "Click to expand", newcat10.MSG, newcat10.deviation, newcat10.covariance, "Click to expand", newcat10.amplitudePP, newcat10.acceleration);
 

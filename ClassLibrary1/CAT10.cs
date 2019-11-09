@@ -312,7 +312,7 @@ namespace AsterixDecoder
 
                         // Bit FSPEC[28] --> no diu res
 
-                        // Posició 29 i 30 ni idea
+                        // Posició 29 i 30 ?
                     }
                 }
             }
@@ -517,7 +517,7 @@ namespace AsterixDecoder
             this.LatitudeWGS = Convert.ToString(Math.Round(1000 * lati) / 1000);
             this.LongitudeWGS = Convert.ToString(Math.Round(1000 * longi) / 1000);
 
-            this.positionWGS = "Latitude: " + this.LatitudeWGS + "º, Longitude: " + this.LongitudeWGS + "º";
+            this.positionWGS = "[" + this.LatitudeWGS + ", : " + this.LongitudeWGS + "] º";
         }
 
         public void ComputePositionInPolar(string OctRHO, string OctTheta) // Data Item I010/040
@@ -533,7 +533,7 @@ namespace AsterixDecoder
             this.RHO = Convert.ToString(Rho);
             this.Theta = Convert.ToString(Math.Round(100 * THETA) / 100);
 
-            this.positionPolar = "Distance: " + this.RHO + "m, Angle: " + this.Theta + "º";
+            this.positionPolar = "[" + this.RHO + " m, : " + this.Theta + "º]";
         }
 
         public void ComputePositionInCartesian(string OctX, string OctY) // Data Item I010/042
@@ -549,7 +549,7 @@ namespace AsterixDecoder
             this.Xcomponent = Convert.ToString(x);
             this.Ycomponent = Convert.ToString(y);
 
-            this.positionCartesian = "X component: " + this.Xcomponent + "m, Y component: " + this.Ycomponent + "m";
+            this.positionCartesian = "[" + this.Xcomponent + ", " + this.Ycomponent + "] m";
         }
 
         public void ComputeTrackVelocityInPolar(string OctGS, string OctTA) // Data Item I010/200
@@ -565,7 +565,7 @@ namespace AsterixDecoder
             this.GroundSpeed = Convert.ToString(Math.Round(10000 * groundspeed) / 10000);
             this.TrackAngle = Convert.ToString(Math.Round(10000 * trackangle) / 10000);
 
-            this.velocityPolar = "Ground speed: " + this.GroundSpeed + "NM/s, Track angle: " + this.TrackAngle + "º";
+            this.velocityPolar = "[" + this.GroundSpeed + " NM/s, " + this.TrackAngle + "º]";
         }
 
         public void ComputeTrackVelocityInCartesian(string OctVx, string OctVy) // Data Item I010/202
@@ -578,7 +578,7 @@ namespace AsterixDecoder
             this.Vx = Convert.ToString(this.ComputeComplementoA2(octetvx) * 0.25);
             this.Vy = Convert.ToString(this.ComputeComplementoA2(octetvy) * 0.25);
 
-            this.velocityCartesian = "X component: " + this.Vx + "m/s, Y component: " + this.Vy + "m/s";
+            this.velocityCartesian = "[" + this.Vx + ", " + this.Vy + "] m/s";
         }
 
         public void ComputeTrackNumber(string OctTN) // Data Item I010/161
@@ -753,70 +753,28 @@ namespace AsterixDecoder
 
             // ID:
             string targetID = bits.Substring(8, 48);
-            string code = "";
+            
             int nchar = 0;
             while (nchar < targetID.Length)
             {
                 string character = targetID.Substring(nchar, 6);
 
-                string b6_b5 = character.Substring(0, 2);
-                string b4_b3_b2_b1 = character.Substring(2, 4);
-
-                if (b6_b5 == "00")
-                {
-                    if (b4_b3_b2_b1 == "0001") { code = code + "A"; }
-                    if (b4_b3_b2_b1 == "0010") { code = code + "B"; }
-                    if (b4_b3_b2_b1 == "0011") { code = code + "C"; }
-                    if (b4_b3_b2_b1 == "0100") { code = code + "D"; }
-                    if (b4_b3_b2_b1 == "0101") { code = code + "E"; }
-                    if (b4_b3_b2_b1 == "0110") { code = code + "F"; }
-                    if (b4_b3_b2_b1 == "0111") { code = code + "G"; }
-                    if (b4_b3_b2_b1 == "1000") { code = code + "H"; }
-                    if (b4_b3_b2_b1 == "1001") { code = code + "I"; }
-                    if (b4_b3_b2_b1 == "1010") { code = code + "J"; }
-                    if (b4_b3_b2_b1 == "1011") { code = code + "K"; }
-                    if (b4_b3_b2_b1 == "1100") { code = code + "L"; }
-                    if (b4_b3_b2_b1 == "1101") { code = code + "M"; }
-                    if (b4_b3_b2_b1 == "1110") { code = code + "N"; }
-                    if (b4_b3_b2_b1 == "1111") { code = code + "O"; }
-                }
-                if (b6_b5 == "01")
-                {
-                    if (b4_b3_b2_b1 == "0000") { code = code + "P"; }
-                    if (b4_b3_b2_b1 == "0001") { code = code + "Q"; }
-                    if (b4_b3_b2_b1 == "0010") { code = code + "R"; }
-                    if (b4_b3_b2_b1 == "0011") { code = code + "S"; }
-                    if (b4_b3_b2_b1 == "0100") { code = code + "T"; }
-                    if (b4_b3_b2_b1 == "0101") { code = code + "U"; }
-                    if (b4_b3_b2_b1 == "0110") { code = code + "V"; }
-                    if (b4_b3_b2_b1 == "0111") { code = code + "W"; }
-                    if (b4_b3_b2_b1 == "1000") { code = code + "X"; }
-                    if (b4_b3_b2_b1 == "1001") { code = code + "Y"; }
-                    if (b4_b3_b2_b1 == "1010") { code = code + "Z"; }
-                }
-
-                if (b6_b5 == "10")
-                {
-                    if (b4_b3_b2_b1 == "0000") { code = code + " "; }
-                }
-
-                if (b6_b5 == "11")
-                {
-                    if (b4_b3_b2_b1 == "0000") { code = code + "1"; }
-                    if (b4_b3_b2_b1 == "0001") { code = code + "2"; }
-                    if (b4_b3_b2_b1 == "0010") { code = code + "3"; }
-                    if (b4_b3_b2_b1 == "0011") { code = code + "4"; }
-                    if (b4_b3_b2_b1 == "0100") { code = code + "5"; }
-                    if (b4_b3_b2_b1 == "0101") { code = code + "6"; }
-                    if (b4_b3_b2_b1 == "0110") { code = code + "7"; }
-                    if (b4_b3_b2_b1 == "0111") { code = code + "8"; }
-                    if (b4_b3_b2_b1 == "1000") { code = code + "9"; }
-                }
+                this.TargetID = this.TargetID + this.GetCode(character);
 
                 nchar = nchar + 6;
             }
+        }
 
-            this.TargetID = code;
+        public string GetCode(string character_string)
+        {
+            //número que representa el string
+            int character_int = Convert.ToInt32(character_string, 2);
+
+            //lista per decodificar 
+            List<string> code = new List<string>() { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+
+            //decodifiquem
+            return code[character_int - 1];
         }
 
         public int ComputeModeS_MBdata(string[] paquete, int pos) // Data Item I010/250
@@ -935,7 +893,7 @@ namespace AsterixDecoder
             //fem el complement A2 i multipliquem per la resolució
             this.Height = Convert.ToString(this.ComputeComplementoA2(height) * 6.25);
 
-            this.MeasuredHeight = this.Height + "ft";
+            this.MeasuredHeight = this.Height + " ft";
         }
 
         public int ComputeTargetSizeAndOrientation(string octet1, string octet2, string octet3) // Data Item I010/270
@@ -963,7 +921,7 @@ namespace AsterixDecoder
                 {
                     int width = Convert.ToInt32(octW.Substring(0, 7), 2);
                     this.TargetWidth = Convert.ToString(Convert.ToSingle(width) * 1);
-                    this.TargetSize = this.TargetLength + "x" + this.TargetWidth + " m";
+                    this.TargetSize = "[" + this.TargetLength + "x" + this.TargetWidth + "] m";
                     cont++;
                 }
             }
@@ -977,14 +935,39 @@ namespace AsterixDecoder
             string octet_stringbits = Convert.ToString(Convert.ToInt32(octet, 16), 2).PadLeft(8, '0');
 
             //separem
-            this.NOGO = octet_stringbits.Substring(0, 2);
-            this.OVL = octet_stringbits.Substring(2, 1);
-            this.TSV = octet_stringbits.Substring(3, 1);
-            this.DIV = octet_stringbits.Substring(4, 1);
-            this.TTF = octet_stringbits.Substring(5, 1);
+            string NOGO = octet_stringbits.Substring(0, 2);
+            if (NOGO == "00")
+                this.NOGO = "Operational Release Status: Operational";
+            if (NOGO == "01")
+                this.NOGO = "Operational Release Status: Degraded";
+            if (NOGO == "10")
+                this.NOGO = "Operational Release Status: NOGO";
 
-            
-            //falta decodificar bits
+            string OVL = octet_stringbits.Substring(2, 1);
+            if (OVL == "0")
+                this.OVL = "No overload";
+            if (OVL == "1")
+                this.OVL = "Overload";
+
+            string TSV = octet_stringbits.Substring(3, 1);
+            if (TSV == "0")
+                this.TSV = "Time Source: valid";
+            if (TSV == "1")
+                this.TSV = "Time Source: invalid";
+
+            string DIV = octet_stringbits.Substring(4, 1);
+            if (DIV == "0")
+                this.DIV = "Normal Operation";
+            if (DIV == "1")
+                this.DIV = "Diversity degraded";
+
+            string TTF = octet_stringbits.Substring(5, 1);
+            if (TTF == "0")
+                this.TTF = "Test Target Operative";
+            if (TTF == "1")
+                this.TTF = "Test Target Failure";
+
+            this.SystemStatus = " - " + this.NOGO + "\n - " + this.OVL + "\n - " + this.TSV + "\n - " + this.DIV + "\n - " + this.TTF;
         }
 
         public void ComputePreprogrammedMessage(string octeto) // Data Item I010/310
@@ -1028,9 +1011,9 @@ namespace AsterixDecoder
             //passem a doubles multiplicant per resoució
             this.DevX = Convert.ToString(octeto1_int * 0.25);
             this.DevY = Convert.ToString(octeto2_int * 0.25);
-            this.deviation = "X component: " + this.DevX + "m2, Y component: " + this.DevY + "m2";
+            this.deviation = "[" + this.DevX + ", " + this.DevY + "] m2";
             this.Cov = Convert.ToString(octetos34_int * 0.25);
-            this.covariance = this.Cov + "m2";
+            this.covariance = this.Cov + " m2";
         }
 
         public int ComputePresence(string[] paquete, int pos) // Data Item I010/280
@@ -1061,7 +1044,7 @@ namespace AsterixDecoder
                 this.DRHO[i] = rho * 1;
                 this.DTHETA[i] = dtheta * 0.15;
 
-                this.Presence = this.DRHO[i] + "m, " + this.DTHETA[i] + "º \n";
+                this.Presence = this.DRHO[i] + " m, " + this.DTHETA[i] + "º \n";
 
                 cont = cont + 2;
 
@@ -1077,9 +1060,9 @@ namespace AsterixDecoder
             int amplitude = int.Parse(octeto, System.Globalization.NumberStyles.HexNumber);
 
             //multipliquem per la resolució
-            this.PAM = Convert.ToString(amplitude * 1);
+            this.PAM = Convert.ToString(amplitude * (0.255/255));
 
-            this.amplitudePP = this.PAM + "dBm";
+            this.amplitudePP = this.PAM + " dBm";
         }
 
         public void ComputeCalculatedAcceleration(string octetoAx, string octetoAy) // Data Item I010/210
@@ -1096,10 +1079,10 @@ namespace AsterixDecoder
             this.Ax = Convert.ToString(ax * 0.25);
             this.Ay = Convert.ToString(ay * 0.25);
 
-            this.acceleration = "X component: " + this.Ax + "m/s2, Y component: " + this.Ay + "m/s2";
+            this.acceleration = "[" + this.Ax + ", " + this.Ay + "] m/s2";
         }
 
-        public double ComputeComplementoA2(string bits) //hace el complemento A2 (complemento A1 + 1)
+        public double ComputeComplementoA2(string bits) //hace el complemento A2
         {
             if (bits == "1")
                 return -1;

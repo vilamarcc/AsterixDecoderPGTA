@@ -134,6 +134,8 @@ namespace AsterixDisplay
                     MessageBox.Show(paquete.Presence);
                 if (c == 17) // Mode S MB Data
                     MessageBox.Show(paquete.ModeS);
+                if (c == 23) // System Status
+                    MessageBox.Show(paquete.SystemStatus);
 
                 //mostramos las características de ese paquete a parte:
                 filldataexpandedCAT10(fil);
@@ -174,17 +176,17 @@ namespace AsterixDisplay
             expanded.Columns.Add(new DataColumn());
 
             expanded.Rows.Add("Package #", index + 1);
-            if (cat10exp.MessageType != null) { expanded.Rows.Add("Type of message", cat10exp.MessageType); }
+            if (cat10exp.MessageType != null) { expanded.Rows.Add("Message Type", cat10exp.MessageType); }
             if (cat10exp.TrackNumber != null) { expanded.Rows.Add("Track Number", cat10exp.TrackNumber); }
             if (cat10exp.DataSourceID != null) { expanded.Rows.Add("Data Source ID", cat10exp.DataSourceID); }
-            if (cat10exp.TYP != null) { expanded.Rows.Add("Data type", cat10exp.TYP); }
-            if (cat10exp.DataCharacteristics != null) { expanded.Rows.Add("Data characteristics", cat10exp.DataCharacteristics); }
+            if (cat10exp.TYP != null) { expanded.Rows.Add("Data Type", cat10exp.TYP); }
+            if (cat10exp.DataCharacteristics != null) { expanded.Rows.Add("Data Characteristics", cat10exp.DataCharacteristics); }
             if (cat10exp.TimeOfDay != null) { expanded.Rows.Add("Time of Day (UTC)", cat10exp.TimeOfDay); }
-            if (cat10exp.positionWGS != null) { expanded.Rows.Add("Position in WGS-84", cat10exp.positionWGS); }
-            if (cat10exp.positionPolar != null) { expanded.Rows.Add("Position in Polar", cat10exp.positionPolar); }
-            if (cat10exp.positionCartesian != null) { expanded.Rows.Add("Position in Cartesian", cat10exp.positionCartesian); }
-            if (cat10exp.velocityPolar != null) { expanded.Rows.Add("Track Velocity in Polar", cat10exp.velocityPolar); }
-            if (cat10exp.velocityCartesian != null) { expanded.Rows.Add("Track Velocity in Cartesian", cat10exp.velocityCartesian); }
+            if (cat10exp.positionWGS != null) { expanded.Rows.Add("Position in WGS-84\n[Latitude, Longitude]", cat10exp.positionWGS); }
+            if (cat10exp.positionPolar != null) { expanded.Rows.Add("Position in Polar\n[Distance, Angle]", cat10exp.positionPolar); }
+            if (cat10exp.positionCartesian != null) { expanded.Rows.Add("Position in Cartesian\n[X, Y]", cat10exp.positionCartesian); }
+            if (cat10exp.velocityPolar != null) { expanded.Rows.Add("Track Velocity in Polar\n[Ground Speed, Track Angle]", cat10exp.velocityPolar); }
+            if (cat10exp.velocityCartesian != null) { expanded.Rows.Add("Track Velocity in Cartesian\n[Vx, Vy]", cat10exp.velocityCartesian); }
             if (cat10exp.TrackStatus != null) { expanded.Rows.Add("Track Status", cat10exp.TrackStatus); }
             if (cat10exp.Mode3ACode != null) { expanded.Rows.Add("Mode 3/A Code", cat10exp.Mode3ACode); }
             if (cat10exp.TargetAddress != null) { expanded.Rows.Add("Target Address", cat10exp.TargetAddress); }
@@ -194,7 +196,7 @@ namespace AsterixDisplay
                 int cont = 1;
                 while (cont <= cat10exp.MBdata.Count())
                 {
-                    expanded.Rows.Add("Mode S MB Data #" + cont, "Message: " + cat10exp.MBdata[cont] + ", Address1: " + cat10exp.BDS1[cont] + ", Address 2: " + cat10exp.BDS2[cont]);
+                    expanded.Rows.Add("Mode S MB Data #" + cont, cat10exp.ModeS[cont + 1]);
                     cont++;
                 }
             }
@@ -202,24 +204,24 @@ namespace AsterixDisplay
             if (cat10exp.VFI != null) { expanded.Rows.Add("Vehicle Fleet ID", cat10exp.VFI); }
             if (cat10exp.FlightLevel != null) { expanded.Rows.Add("Flight Level", cat10exp.FlightLevel); }
             if (cat10exp.MeasuredHeight != null) { expanded.Rows.Add("Measured Height", cat10exp.MeasuredHeight); }
-            if (cat10exp.TargetSize != null) { expanded.Rows.Add("Target Size", cat10exp.TargetSize); }
+            if (cat10exp.TargetSize != null) { expanded.Rows.Add("Target Size\n[Length x Width]", cat10exp.TargetSize); }
             if (cat10exp.TargetOrientation_ != null) { expanded.Rows.Add("Target Orientation", cat10exp.TargetOrientation_); }
-            // SYSTEM STATUS
+            if (cat10exp.SystemStatus != null) { expanded.Rows.Add("System Status", cat10exp.SystemStatus); }
             if (cat10exp.MSG != null) { expanded.Rows.Add("Pre-programmed Message", cat10exp.MSG); }
-            if (cat10exp.deviation != null) { expanded.Rows.Add("Standard Deviation of Position", cat10exp.deviation); }
+            if (cat10exp.deviation != null) { expanded.Rows.Add("Standard Deviation of Position\n[X, Y]", cat10exp.deviation); }
             if (cat10exp.covariance != null) { expanded.Rows.Add("Covariance of Deviation", cat10exp.covariance); }
             try
             {
                 int count = 1;
-                while (count <= cat10exp.DRHO.Count())
+                while (count <= cat10exp.Presence.Count())
                 {
-                    expanded.Rows.Add("Presence #" + count.ToString(), cat10exp.DRHO[count].ToString() + "m, " + cat10exp.DTHETA[count].ToString() + "º");
+                    expanded.Rows.Add("Presence #" + count.ToString(), cat10exp.Presence[count - 1]);
                     count++;
                 }
             }
             catch { }
             if (cat10exp.amplitudePP != null) { expanded.Rows.Add("Amplitude of Primary Plot", cat10exp.amplitudePP); }
-            if (cat10exp.acceleration != null) { expanded.Rows.Add("Calculated Acceleration", cat10exp.acceleration); }
+            if (cat10exp.acceleration != null) { expanded.Rows.Add("Calculated Acceleration\n[Ax, Ay]", cat10exp.acceleration); }
 
             dataexpanded.ItemsSource = expanded.DefaultView;
             dataexpanded.Items.Refresh();
