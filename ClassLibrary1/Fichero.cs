@@ -6,7 +6,6 @@ using System.IO;
 using System.Data;
 using AsterixDecoder;
 using System.Reflection;
-using System.Data;
 
 namespace AsterixDecoder
 {
@@ -132,7 +131,7 @@ namespace AsterixDecoder
                     //afegim a la llista
                     listaCAT20.Add(newcat20);
                     //afegim a la taula
-                    tablaCAT20.Rows.Add(contadorCAT20, newcat20.SAC, newcat20.SIC, "Click to expand", newcat20.TOD, newcat20.LonWSG, "[" + newcat20.coordscc[0].ToString() + "," + newcat20.coordscc[1].ToString() + "] m", newcat20.TrackNum, "Click to expand", newcat20.Mode3A, "[" + newcat20.Velocitycc[0].ToString() + "," + newcat20.Velocitycc[1].ToString() + "] m/s", newcat20.FL[2], newcat20.ModeC, newcat20.TargetAddress, newcat20.callsign, newcat20.MeasuredHeight, newcat20.geoHeight, newcat20.calcAccel, newcat20.VehicleFleetID, newcat20.PPMsg, newcat20.DOP, newcat20.Receivers, newcat20.ModeSData,newcat20.ACAScap, newcat20.ACASRAreport, newcat20.warning, newcat20.Mode1Code, newcat20.Mode2Code);
+                    tablaCAT20.Rows.Add(contadorCAT20, newcat20.getMessageType(), newcat20.SAC, newcat20.SIC, "Click to expand", newcat20.TOD, newcat20.LonWSG, "[" + newcat20.coordscc[0].ToString() + "," + newcat20.coordscc[1].ToString() + "] m", newcat20.TrackNum, "Click to expand", newcat20.Mode3A, "[" + newcat20.Velocitycc[0].ToString() + "," + newcat20.Velocitycc[1].ToString() + "] m/s", newcat20.FL[2], newcat20.ModeC, newcat20.TargetAddress, newcat20.callsign, newcat20.MeasuredHeight, newcat20.geoHeight, newcat20.calcAccel, newcat20.VehicleFleetID, newcat20.PPMsg, "Click to expand", newcat20.Receivers, newcat20.ModeSData,newcat20.ACAScap, newcat20.ACASRAreport, newcat20.warning, newcat20.Mode1Code, newcat20.Mode2Code);
                 }
                 else if (CAT == 21)
                 {
@@ -152,6 +151,7 @@ namespace AsterixDecoder
         {
             //CAT20
             tablaCAT20.Columns.Add(new DataColumn("#"));
+            tablaCAT20.Columns.Add(new DataColumn("Message Type"));
             tablaCAT20.Columns.Add(new DataColumn("SAC"));
             tablaCAT20.Columns.Add(new DataColumn("SIC"));
             tablaCAT20.Columns.Add(new DataColumn("Target Report Descriptor"));
@@ -276,6 +276,7 @@ namespace AsterixDecoder
             DataTable tablaCAT20i = new DataTable();
 
             tablaCAT20i.Columns.Add(new DataColumn("#"));
+            tablaCAT20i.Columns.Add(new DataColumn("Message Type"));
             tablaCAT20i.Columns.Add(new DataColumn("SAC"));
             tablaCAT20i.Columns.Add(new DataColumn("SIC"));
             tablaCAT20i.Columns.Add(new DataColumn("Target Report \n   Descriptor"));
@@ -304,7 +305,7 @@ namespace AsterixDecoder
             tablaCAT20i.Columns.Add(new DataColumn("Mode 1 Code"));
             tablaCAT20i.Columns.Add(new DataColumn("Mode 2 Code"));
 
-            tablaCAT20i.Rows.Add(q + 1, newcat20.SAC, newcat20.SIC, newcat20.TargetReport, newcat20.TOD, newcat20.LonWSG, "[" + newcat20.coordscc[0].ToString() + "," + newcat20.coordscc[1].ToString() + "] m", newcat20.TrackNum, "Click to expand", newcat20.Mode3A, "[" + newcat20.Velocitycc[0].ToString() + "," + newcat20.Velocitycc[1].ToString() + "] m/s", newcat20.FL[2], newcat20.ModeC, newcat20.TargetAddress, newcat20.TargetID, newcat20.MeasuredHeight, newcat20.geoHeight, newcat20.calcAccel, newcat20.VehicleFleetID, newcat20.PPMsg, newcat20.DOP, newcat20.Receivers, newcat20.ModeSData,newcat20.ACAScap,newcat20.ACASRAreport,newcat20.warning,newcat20.Mode1Code,newcat20.Mode2Code);
+            tablaCAT20i.Rows.Add(q + 1, newcat20.getMessageType(), newcat20.SAC, newcat20.SIC, newcat20.TargetReport, newcat20.TOD, newcat20.LonWSG, "[" + newcat20.coordscc[0].ToString() + "," + newcat20.coordscc[1].ToString() + "] m", newcat20.TrackNum, "Click to expand", newcat20.Mode3A, "[" + newcat20.Velocitycc[0].ToString() + "," + newcat20.Velocitycc[1].ToString() + "] m/s", newcat20.FL[2], newcat20.ModeC, newcat20.TargetAddress, newcat20.TargetID, newcat20.MeasuredHeight, newcat20.geoHeight, newcat20.calcAccel, newcat20.VehicleFleetID, newcat20.PPMsg, newcat20.DOP, newcat20.Receivers, newcat20.ModeSData,newcat20.ACAScap,newcat20.ACASRAreport,newcat20.warning,newcat20.Mode1Code,newcat20.Mode2Code);
 
             return tablaCAT20i;
         }

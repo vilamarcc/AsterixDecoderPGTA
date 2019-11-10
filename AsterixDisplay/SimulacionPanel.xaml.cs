@@ -31,7 +31,6 @@ namespace AsterixDisplay
         int minact;
         int horaact;
         int contador;
-        int mostrados;
         List<CAT20> CAT20s;
         List<CAT10> CAT10s;
         List<CAT21> CAT21s;
@@ -48,7 +47,6 @@ namespace AsterixDisplay
             SMRcoords[0] = 41.29561833;
             SMRcoords[1] = 2.095114167;
             contador = 0;
-            mostrados = 0;
             this.CAT20s = cat20s;
             this.CAT10s = cat10s;
             this.CAT21s = cat21s;

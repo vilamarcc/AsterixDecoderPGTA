@@ -15,6 +15,7 @@ namespace AsterixDecoder
 
         //020
         public string TargetReport;
+        public string messagetype;
         
         //140
         public string TOD;
@@ -81,7 +82,7 @@ namespace AsterixDecoder
         //500
         public double[] DOP; 
         public double[] SDP; 
-        public double SDH;
+        public string SDH;
 
         //400
         public int Receivers;
@@ -256,7 +257,7 @@ namespace AsterixDecoder
             {
                 i++;
 
-                //I020/070 Mode 3A code
+                //I020/070 Mode 3A Code
                 if (Convert.ToString(FSPEC_copia[i]) == "1")
                 {
                     string Octeto_070_1 = Convert.ToString(Convert.ToInt32(array[OctetoIndex], 16), 2).PadLeft(8, '0');
@@ -324,7 +325,7 @@ namespace AsterixDecoder
                     string Octeto_220_3 = Convert.ToString(Convert.ToInt32(array[OctetoIndex], 16), 2).PadLeft(8, '0');
                     OctetoIndex++;
 
-                    this.TargetAddress = Octeto_220_1 + Octeto_220_2 + Octeto_220_3;
+                    this.TargetAddress = computeTargetAddress(Octeto_220_1, Octeto_220_2, Octeto_220_3);
                 }
                 i++;
 
@@ -798,13 +799,36 @@ namespace AsterixDecoder
             return DOP;
         }
 
-        private double computeSDH(string oct_1,string oct_2)
+        private string computeSDH(string oct_1,string oct_2)
         {
             string oct_t = oct_1 + oct_2;
-            double sdh = Convert.ToDouble(Convert.ToInt32(oct_t, 2)) * 0.5;
+            string sdh = Convert.ToString(Convert.ToDouble(Convert.ToInt32(oct_t, 2)) * 0.5);
             return sdh;
         }
 
+        private string computeMode3A(string oct_1, string oct_2)
+        {
+            string octT = oct_1 + oct_2;
+            string numeros = octT.Substring(4, 12);
+            string Mode3Acode = "";
+            for (int c = 0; c < numeros.Length; c = c + 3)
+            {
+                string num = Convert.ToString(Convert.ToInt32(numeros.Substring(c, 3), 2));
+                Mode3Acode = Mode3Acode + num;
+            }
+
+            return (Mode3Acode);
+        }
+
+        private string computeTargetAddress(string oct_1,string oct_2,string oct_3)
+        {
+            string hex1 = Convert.ToInt32(oct_1, 2).ToString("X");
+            string hex2 = Convert.ToInt32(oct_2, 2).ToString("X");
+            string hex3 = Convert.ToInt32(oct_3, 2).ToString("X");
+
+            return hex1 + hex2 + hex3;
+        }
+        
         public string getTrackStatusToString()
         {
             string cnf = "", tre = "", cst="", cdm="", mah="", sth="", gho="";
@@ -832,31 +856,18 @@ namespace AsterixDecoder
             return trackstatustostring;
         }
 
-        private string computeMode3A(string oct1, string oct2)
-        {
-            string octT = oct1 + oct2;
-            string numeros = octT.Substring(4, 12);
-            string Mode3Acode = "";
-            for (int c = 0; c < numeros.Length;c= c + 3)
-            {
-                string num = Convert.ToString(Convert.ToInt32(numeros.Substring(c, 3),2));
-                Mode3Acode = Mode3Acode + num;
-            }
-
-            return (Mode3Acode);
-        }
-
         public string getTargetReportDescriptortoString()
         {
             string targetreporttostring = "";
 
-            if(this.TargetReport[0] == '1') { targetreporttostring = "- Non-Mode S 1090MHz MLAT"; }
+            if(this.TargetReport[0] == '1') { targetreporttostring = "- Non-Mode S 1090MHz MLAT";}
             if (this.TargetReport[1] == '1') { targetreporttostring = "- Mode S 1090MHz MLAT"; }
             if (this.TargetReport[2] == '1') { targetreporttostring = "- HF MLAT"; }
             if (this.TargetReport[3] == '1') { targetreporttostring = "- VDL Mode 4 MLAT"; }
             if (this.TargetReport[4] == '1') { targetreporttostring = "- UAT MLAT"; }
-            if (this.TargetReport[5] == '1') { targetreporttostring = "- DME/TACAN MLAT"; }
+            if (this.TargetReport[5] == '1') { targetreporttostring = "- DME/TACAN MLAT"; } 
             if (this.TargetReport[6] == '1') { targetreporttostring = "- Other Technology MLAT"; }
+
 
             if (this.TargetReport[7] == '1')
             {
@@ -878,5 +889,40 @@ namespace AsterixDecoder
 
             return targetreporttostring;
         }
+
+        public string getPositionAccuracyToString()
+        {
+            string PAtostring = "";
+            if (this.DOP.Length != 0)
+            {
+                PAtostring += "- DOP: \n   DOP-x = " + Convert.ToString(this.DOP[0]) + "\n   DOP-y = " + Convert.ToString(this.DOP[1]) + "\n   DOP-xy = " + Convert.ToString(this.DOP[2]) + "\n";
+            }
+            if(this.SDP.Length != 0)
+            {
+                PAtostring += "- Standard Deviation: \n   X Component = " + Convert.ToString(this.SDP[0]) + " m" + "\n   Y Component = " + Convert.ToString(this.SDP[1]) + " m" + "\n   Correlation coefficient = " + Convert.ToString(this.SDP[2]) + "\n";
+            }
+            if(this.SDH != null)
+            {
+                PAtostring += "   Geometric Height = " + this.SDH;
+            }
+
+            return PAtostring;
+        }
+        
+        public string getMessageType()
+        {
+            string messagetype = "";
+
+            if (this.TargetReport[0] == '1') {messagetype = "Non-Mode S 1090MHz MLAT"; }
+            if (this.TargetReport[1] == '1') {messagetype = "Mode S 1090MHz MLAT"; }
+            if (this.TargetReport[2] == '1') {messagetype = "HF MLAT"; }
+            if (this.TargetReport[3] == '1') {messagetype = "VDL Mode 4 MLAT"; }
+            if (this.TargetReport[4] == '1') {messagetype = "UAT MLAT"; }
+            if (this.TargetReport[5] == '1') {messagetype = "DME/TACAN MLAT"; }
+            if (this.TargetReport[6] == '1') {messagetype = "Other Technology MLAT"; }
+
+            return messagetype;
+        }
+
     }
 }

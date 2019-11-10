@@ -149,7 +149,7 @@ namespace AsterixDisplay
                 if (c == 8) //Track status
                     MessageBox.Show(paquete.getTrackStatusToString());
                 if (c == 20) //Pos Accuracy
-                    MessageBox.Show("Doppler shit aqui");
+                    MessageBox.Show(paquete.getPositionAccuracyToString());
                 if (c == 22) //Mode S MB Data
                     MessageBox.Show("Data Mode S aqui");
 
@@ -239,7 +239,6 @@ namespace AsterixDisplay
             expanded.Columns.Add(new DataColumn());
 
             expanded.Rows.Add("Package #",index + 1);
-            expanded.Rows.Add("FSPEC",cat20exp.FSPEC);
             try { expanded.Rows.Add("Data Source ID", "SAC: " + cat20exp.SAC + " SIC: " + cat20exp.SIC); } catch { }
             try { expanded.Rows.Add("Target Report", cat20exp.getTargetReportDescriptortoString()); } catch { } //Falta desarrollar esto --> funcion en la clase para descifrar tipo de msg
             try { expanded.Rows.Add("Time of Day (UTC)", cat20exp.TOD); } catch { }
@@ -258,7 +257,7 @@ namespace AsterixDisplay
             try { expanded.Rows.Add("Calculated Accel", cat20exp.calcAccel.ToString()); } catch { }
             try { expanded.Rows.Add("Vehicle Fleet ID", cat20exp.VehicleFleetID.ToString()); } catch { }
             try { expanded.Rows.Add("Pre-Programmed Message", cat20exp.PPMsg.ToString()); } catch { }
-            try { expanded.Rows.Add("Position Accuracy:", "Falta desarrollar"); } catch { }
+            try { expanded.Rows.Add("Position Accuracy:", cat20exp.getPositionAccuracyToString()); } catch { }
             try { expanded.Rows.Add("Receivers", cat20exp.Receivers.ToString()); } catch { }
             try { expanded.Rows.Add("Mode S MB Data", cat20exp.ModeSData.ToString()); } catch { }
 
@@ -316,7 +315,9 @@ namespace AsterixDisplay
         {
             try
             {
-                gridCAT.ItemsSource = dataCAT20.DefaultView;
+                if(this.cat == 20) { gridCAT.ItemsSource = dataCAT20.DefaultView; }
+                if(this.cat == 10) { gridCAT.ItemsSource = dataCAT10.DefaultView; }
+                if(this.cat == 21) { gridCAT.ItemsSource = dataCAT21.DefaultView; }
             }
             catch
             {
@@ -379,6 +380,13 @@ namespace AsterixDisplay
 
                 cat21_butt.IsChecked = false;
             }
+        }
+
+        private void searchbox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox tb = (TextBox)sender;
+            tb.Text = string.Empty;
+            tb.GotFocus -= searchbox_GotFocus;
         }
     }
 }
