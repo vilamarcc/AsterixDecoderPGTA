@@ -11,7 +11,7 @@ namespace AsterixDecoder
 
         public string FSPEC;
 
-        public int version;
+        public int version = 23;
 
         public string RA;
         public string TC;
@@ -52,6 +52,7 @@ namespace AsterixDecoder
         public string SIM;
         public string TST;
         public string SAA;
+        public string SPI;
         public string CL;
         public string LLC;
         public string IPC;
@@ -280,12 +281,15 @@ namespace AsterixDecoder
                 pos = pos + 2;
             }
 
-            // Target Report Descriptor
-            if (Convert.ToString(this.FSPEC[1]) == "1")
-                pos = pos + this.ComputeTargetReportDescriptor(paquete, pos);
-
             if (this.version == 23)
             {
+                // Target Report Descriptor
+                if (Convert.ToString(this.FSPEC[1]) == "1")
+                {
+                    this.ComputeTargetReportDescriptor23(paquete[pos] + paquete[pos]);
+                    pos = pos + 2;
+                }
+
                 // Time Of Day
                 if (Convert.ToString(this.FSPEC[2]) == "1")
                 {
@@ -462,6 +466,10 @@ namespace AsterixDecoder
             }
             if (this.version == 24)
             {
+                // Target Report Descriptor
+                if (Convert.ToString(this.FSPEC[1]) == "1")
+                    pos = pos + this.ComputeTargetReportDescriptor24(paquete, pos);
+
                 // Track Number
                 if (Convert.ToString(this.FSPEC[2]) == "1")
                 {
@@ -973,15 +981,84 @@ namespace AsterixDecoder
                 this.TI = "straight";
             if(octeto1.Substring(7,1)=="1")
             {
-                cont++;
                 string octeto2= Convert.ToString(Convert.ToInt32(paquete[pos + cont], 16), 2).PadLeft(8, '0');
+                cont++;
                 this.ROT = (1 / 4) * this.ComputeComplementoA2(octeto2.Substring(0, 7));
                 this.RateOfTurn = this.ROT.ToString() + " º/s " + this.TI;
             }
             return cont;
         }
 
-        public int ComputeTargetReportDescriptor(string[] paquete, int pos) // Data Item I021/040
+        public void ComputeTargetReportDescriptor23(string octetos)
+        {
+            string bits = Convert.ToString(Convert.ToInt32(octetos, 16), 2).PadLeft(16, '0');
+
+            int DCR = int.Parse(bits.Substring(0, 1), System.Globalization.NumberStyles.HexNumber);
+            if (DCR == 0)
+                this.DCR = "No differential correction (ADS-B)";
+            if (DCR == 1)
+                this.DCR = "Differential correction (ADS-B)";
+
+            int GBS = int.Parse(bits.Substring(1, 1), System.Globalization.NumberStyles.HexNumber);
+            if (GBS == 0)
+                this.GBS = "Ground Bit not set";
+            if (GBS == 1)
+                this.GBS = "Ground Bit set";
+
+            int SIM = int.Parse(bits.Substring(2, 1), System.Globalization.NumberStyles.HexNumber);
+            if (SIM == 0)
+                this.SIM = "Actual target report";
+            if (SIM == 1)
+                this.SIM = "Simulated target report";
+
+            int TST = int.Parse(bits.Substring(3, 1), System.Globalization.NumberStyles.HexNumber);
+            if (TST == 0)
+                this.TST = "Test Target: Default";
+            if (TST == 1)
+                this.TST = "Test Target";
+
+            int RAB = int.Parse(bits.Substring(4, 1), System.Globalization.NumberStyles.HexNumber);
+            if (RAB == 0)
+                this.RAB = "Report from target transponder";
+            if (RAB == 1)
+                this.RAB = "Report from field monitor (fixed transponder)";
+
+            int SAA = int.Parse(bits.Substring(5, 1), System.Globalization.NumberStyles.HexNumber);
+            if (SAA == 0)
+                this.SAA = "Equipment capable to provide Selected Altitude";
+            if (SAA == 1)
+                this.SAA = "Equipment not capable to provide Selected Altitude";
+
+            int SPI = int.Parse(bits.Substring(6, 1), System.Globalization.NumberStyles.HexNumber);
+            if (SPI == 0)
+                this.SPI = "Absence of SPI (Special Position Identification)";
+            if (SPI == 1)
+                this.SPI = "Special Position Identification";
+
+            int ATP = int.Parse(bits.Substring(8, 3), System.Globalization.NumberStyles.HexNumber);
+            if (ATP == 0)
+                this.ATP = "Non unique address";
+            if (ATP == 1)
+                this.ATP = "24-Bit ICAO address";
+            if (ATP == 2)
+                this.ATP = "Surface vehicle address";
+            if (ATP == 3)
+                this.ATP = "Anonymous address";
+            if (ATP >= 4)
+                this.ATP = "Address reserved for future use";
+
+            int ARC = int.Parse(bits.Substring(11, 2), System.Globalization.NumberStyles.HexNumber);
+            if (ARC == 1)
+                this.ARC = "Altitude Reporting Capability: 25ft";
+            if (ARC == 2)
+                this.ARC = "Altitude Reporting Capability: 100ft";
+            if (ARC == 0)
+                this.ARC = "Altitude Reporting Capability: Unknown";
+
+            this.TargetReport = " - " + this.DCR + "\n - " + this.GBS + "\n - " + this.SIM + "\n - " + this.TST + "\n - " + this.RAB + "\n - " + this.SAA + "\n - " + this.SPI + "\n - " + this.ATP + "\n - " + this.SPI;
+        }
+
+        public int ComputeTargetReportDescriptor24(string[] paquete, int pos) // Data Item I021/040
         {
             //contador de octetos
             int cont = 1;
@@ -1628,7 +1705,7 @@ namespace AsterixDecoder
                 BarometricVR_bits = octetos_bits.Substring(0, 16);
 
             //passem a int i resolució
-            this.BarometricVerticalRateNum = 6.25 * Convert.ToInt32(BarometricVR_bits);
+            this.BarometricVerticalRateNum = 6.25 * Convert.ToInt64(BarometricVR_bits);
 
             this.BarometricVerticalRate = this.BarometricVerticalRateNum + " feet/minute";
         }
@@ -1636,7 +1713,7 @@ namespace AsterixDecoder
         public void ComputeGeometricVerticalRate(string octetos) // Data Item I021/157
         {
             //string de bits
-            string octetos_bits = Convert.ToString(Convert.ToInt32(octetos, 16), 2).PadLeft(8, '0');
+            string octetos_bits = Convert.ToString(Convert.ToInt32(octetos, 16), 2).PadLeft(16, '0');
 
             //separem 
             this.RE_GeometricVerticalRate = octetos_bits.Substring(0, 1);
@@ -1651,7 +1728,7 @@ namespace AsterixDecoder
         public void ComputeAirborneGroundVector(string octetos) // Data Item I021/160
         {
             //string de bits
-            string octetos_bits = Convert.ToString(Convert.ToInt32(octetos, 16), 2).PadLeft(8, '0');
+            string octetos_bits = Convert.ToString(Convert.ToInt32(octetos, 16), 2).PadLeft(32, '0');
 
             //separem
             if (this.version == 24)
@@ -1862,13 +1939,15 @@ namespace AsterixDecoder
             //llegim quins camps hi ha
             if(bits.Substring(0, 1) == "1")
             {
-                this.WindSpeed = int.Parse(paquete[pos + cont] + paquete[pos + cont + 1], System.Globalization.NumberStyles.HexNumber);
+                string octwindspeed = paquete[pos + cont] + paquete[pos + cont + 1];
+                this.WindSpeed = int.Parse(octwindspeed, System.Globalization.NumberStyles.HexNumber);
                 cont = cont + 2;
                 this.MetReport = " - Wind Speed: " + this.WindSpeed.ToString() + " knots";
             }
             if(bits.Substring(1, 1) == "1")
             {
-                this.WindDirection = int.Parse(paquete[pos + cont] + paquete[pos + cont + 1], System.Globalization.NumberStyles.HexNumber);
+                string octwinddirect = paquete[pos + cont] + paquete[pos + cont + 1];
+                this.WindDirection = int.Parse(octwinddirect, System.Globalization.NumberStyles.HexNumber);
                 cont = cont + 2;
                 this.MetReport = this.MetReport + " - Wind Direction: " + this.WindDirection + "º";
             }
