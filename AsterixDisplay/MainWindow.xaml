@@ -47,7 +47,7 @@
             <MenuItem Header="_Open File" Click="cargarbut_Click"></MenuItem>
             <MenuItem Header="_Simulate" Click="MenuItem_Click"></MenuItem>
             <MenuItem Header="_Help"></MenuItem>
-            <MenuItem Header="_About Us"></MenuItem>
+            <MenuItem Header="_About Us" Click="MenuItem_Click_1"></MenuItem>
         </Menu>
         <DataGrid x:Name="dataexpanded" Grid.Column="5" HorizontalAlignment="Center" Height="290" Margin="0" Grid.Row="4" Grid.RowSpan="6" VerticalAlignment="Center" Width="350" Grid.ColumnSpan="7" CanUserReorderColumns="False" CanUserSortColumns="False" ItemsSource="{Binding}" HeadersVisibility="None" CanUserAddRows="False" ColumnWidth="Auto">
         </DataGrid>

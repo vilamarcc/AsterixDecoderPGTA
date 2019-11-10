@@ -5,16 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AsterixDisplay"
         mc:Ignorable="d"
-        Title="Asterix Decoder" Height="450" Width="800">
-    <Grid>
-        <Image HorizontalAlignment="Left" Height="135" VerticalAlignment="Top" Width="600" Margin="25,20,0,0">
-            <Image.OpacityMask>
-                <ImageBrush ImageSource="Resources/UPC-logo.jpg" Stretch="Uniform"/>
-            </Image.OpacityMask>
+        Title="Asterix Decoder" Height="450" Width="800" FontFamily="Lucida Sans Unicode">
+    <Grid Margin="0,0,-6.667,-0.333">
+        <Image HorizontalAlignment="Left" Height="135" VerticalAlignment="Top" Width="600" Margin="25,20,0,0" Source="/Resources/UPC-logo.jpg" Grid.ColumnSpan="2">
         </Image>
-        <Button x:Name="iniciatbut" Content="Iniciar " HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="708,379,0,0" Background="{x:Null}" Click="iniciatbut_Click"/>
-        <Button Content="Button" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="628,379,0,0" Background="{x:Null}"/>
-        <Button Content="Button" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="548,379,0,0" Background="{x:Null}"/>
-
+        <Button x:Name="iniciatbut" Content="Iniciar " HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="700,382,0,0" Background="{x:Null}" Click="iniciatbut_Click"/>
+        <Button Content="About Us" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="95,381,0,0" Background="{x:Null}" Click="Button_Click"/>
+        <Button Content="Help" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="15,381,0,0" Background="{x:Null}"/>
+        <TextBlock Text="© Laura Parga, Marc Vila, Mercè Cuixart, Irene Medina, Irene Rodríguez for PGTA" Margin="190,390,122,7" TextWrapping="Wrap"></TextBlock>
+        <TextBlock Text="Asterix Decoder v1.0" Margin="659,9,11,385"></TextBlock>
+        <TextBlock Text="Asterix Decoder" FontSize="30" Margin="25,280,501.333,85.667" Grid.ColumnSpan="2"></TextBlock>
     </Grid>
 </Window>

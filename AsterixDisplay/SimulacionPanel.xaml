@@ -9,7 +9,7 @@
         mc:Ignorable="d"
         Title="Simulation" Height="720" Width="1350" FontFamily="Lucida Sans Unicode">
     <Grid>
-        <gmaps:GMapControl x:Name="mapView" Loaded="mapView_Loaded" Margin="20,20,460,20" BorderBrush="Black" MouseUp="mapView_MouseUp">
+        <gmaps:GMapControl x:Name="mapView" Loaded="mapView_Loaded" Margin="20,20,460,20" BorderBrush="Black">
         </gmaps:GMapControl>
         <TextBlock x:Name="clockbox" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="998,70,0,0" Height="55" Width="182" FontSize="40" Background="#FFE9E6E6"/>
         <Button x:Name="playbut" HorizontalAlignment="Left" VerticalAlignment="Top" Width="45" Margin="1065,140,0,0" Height="45" Click="playbut_Click" BorderBrush="White">

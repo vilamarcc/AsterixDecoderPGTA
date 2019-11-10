@@ -388,5 +388,11 @@ namespace AsterixDisplay
             tb.Text = string.Empty;
             tb.GotFocus -= searchbox_GotFocus;
         }
+
+        private void MenuItem_Click_1(object sender, RoutedEventArgs e)
+        {
+            AboutUs au = new AboutUs();
+            au.ShowDialog();
+        }
     }
 }

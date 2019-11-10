@@ -17,25 +17,11 @@ namespace AsterixDisplay
     /// <summary>
     /// Interaction logic for Window1.xaml
     /// </summary>
-    public partial class Inicio : Window
+    public partial class AboutUs : Window
     {
-        public Inicio()
+        public AboutUs()
         {
             InitializeComponent();
-        }
-
-        private void iniciatbut_Click(object sender, RoutedEventArgs e)
-        {
-            MainWindow main = new MainWindow();
-            this.Close();
-            main.ShowDialog();
-
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            AboutUs au = new AboutUs();
-            au.ShowDialog();
         }
     }
 }
