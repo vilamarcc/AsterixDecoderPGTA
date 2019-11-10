@@ -52,8 +52,8 @@
         <DataGrid x:Name="dataexpanded" Grid.Column="5" HorizontalAlignment="Center" Height="290" Margin="0" Grid.Row="4" Grid.RowSpan="6" VerticalAlignment="Center" Width="350" Grid.ColumnSpan="7" CanUserReorderColumns="False" CanUserSortColumns="False" ItemsSource="{Binding}" HeadersVisibility="None" CanUserAddRows="False" ColumnWidth="Auto">
         </DataGrid>
         <TextBox x:Name="searchbox" Grid.Column="7" HorizontalAlignment="Left" Height="23" Margin="70,0,10,0" Grid.Row="3" TextWrapping="Wrap" Text="Package #" VerticalAlignment="Center" Width="120" FontStyle="Italic" FontSize="14" GotFocus="searchbox_GotFocus"/>
-        <Button x:Name="clearsearchbut" Content="Clear" Grid.Column="7" HorizontalAlignment="Right" Margin="10,0,120,0" Grid.Row="3" VerticalAlignment="Center" Width="73" Click="clearsearchbut_Click"/>
-        <Button x:Name="searchbut" Content="Search" Grid.Column="7" HorizontalAlignment="Center" Margin="10,0" Grid.Row="3" VerticalAlignment="Center" Width="75" Click="searchbut_Click"/>
+        <Button x:Name="clearsearchbut" Content="Clear" Grid.Column="7" HorizontalAlignment="Right" Margin="10,0,120,0" Grid.Row="3" VerticalAlignment="Center" Width="73" Click="clearsearchbut_Click" Background="{x:Null}"/>
+        <Button x:Name="searchbut" Content="Search" Grid.Column="7" HorizontalAlignment="Center" Margin="10,0" Grid.Row="3" VerticalAlignment="Center" Width="75" Click="searchbut_Click" Background="{x:Null}"/>
         <ProgressBar x:Name="progressbar1" Grid.Column="1" Grid.Row="14" HorizontalAlignment="Left" VerticalAlignment="Center" Width="200" Height="10" Minimum="0" Maximum="100" Margin="2,18,0,1"/>
         <RadioButton x:Name="cat10_butt" Content="CAT10" Grid.Column="7" HorizontalAlignment="Left" Margin="110,21,0,0" Grid.Row="11" VerticalAlignment="Top" Click="cat10_butt_Click"/>
         <RadioButton x:Name="cat20_butt" Content="CAT20" Grid.Column="7" HorizontalAlignment="Left" Margin="110,21,0,0" Grid.Row="12" VerticalAlignment="Top" Click="cat20_butt_Click"/>

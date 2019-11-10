@@ -108,7 +108,7 @@ namespace AsterixDisplay
 
         public void fillgridwithdata(DataTable data) //enseña en pantalla la tabla que le damos como input
         {
-            gridCAT.ItemsSource = data.DefaultView;
+            gridCAT.DataContext = data.DefaultView;
             gridCAT.Items.Refresh();
         }
 
@@ -150,8 +150,6 @@ namespace AsterixDisplay
                     MessageBox.Show(paquete.getTrackStatusToString());
                 if (c == 20) //Pos Accuracy
                     MessageBox.Show(paquete.getPositionAccuracyToString());
-                if (c == 22) //Mode S MB Data
-                    MessageBox.Show("Data Mode S aqui");
 
                 //mostramos las características de ese paquete a parte:
                 filldataexpandedCAT20(fil);
@@ -327,8 +325,10 @@ namespace AsterixDisplay
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            SimulacionPanel sim = new SimulacionPanel(f.getListCAT20(),f.getListCAT10(),f.getListCAT21(),this.cat); 
+            SimulacionPanel sim = new SimulacionPanel(f.getListCAT20(),f.getListCAT10(),f.getListCAT21(),this.cat);
+            this.Hide();
             sim.ShowDialog();
+            this.Show();
         }
 
         private void cat10_butt_Click(object sender, RoutedEventArgs e)
