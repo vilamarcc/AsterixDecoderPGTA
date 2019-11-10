@@ -118,6 +118,7 @@ namespace AsterixDisplay
                 };
                 marker.ZIndex = 0; //Indice = 0, airplane
                 marker.Offset = new System.Windows.Point(-7.5, -7.5);
+                marker.Shape = new System.Windows.Controls.TextBlock(new System.Windows.Documents.Run(callsign));
             }
             if (callsign == null)
             {
@@ -141,28 +142,14 @@ namespace AsterixDisplay
         {
             GMapMarker marker = new GMapMarker((fromXYtoLatLongSMR(X, Y)));
             marker.Position = (fromXYtoLatLongSMR(X, Y));
-            if (callsign != null)
+            marker.Shape = new System.Windows.Controls.Image
             {
-                marker.Shape = new System.Windows.Controls.Image
-                {
-                    Width = 15,
-                    Height = 15,
-                    Source = new BitmapImage(new System.Uri("pack://application:,,,/Resources/airplane1.png"))
-                };
-                marker.ZIndex = 0; //Indice = 0, airplane
-                marker.Offset = new System.Windows.Point(-7.5, -7.5);
-            }
-            if (callsign == null)
-            {
-                marker.Shape = new System.Windows.Controls.Image
-                {
-                    Width = 30,
-                    Height = 30,
-                    Source = new BitmapImage(new System.Uri("pack://application:,,,/Resources/unidentified.png"))
-                };
-                marker.ZIndex = 1; //Index = 1, non airplane
-                marker.Offset = new System.Windows.Point(-15, -15);
-            }
+                Width = 15,
+                Height = 15,
+                Source = new BitmapImage(new System.Uri("pack://application:,,,/Resources/airplane1.png"))
+            };
+            marker.ZIndex = 0; //Indice = 0, airplane
+            marker.Offset = new System.Windows.Point(-7.5, -7.5);
 
             checkVisible(marker);
             mapView.Markers.Add(marker);
@@ -182,18 +169,18 @@ namespace AsterixDisplay
             Boolean t = true;
             while (t == true)
             {           
-                    CAT20 cat20 = CAT20s[this.contador];
-                    this.tiempo = cat20.TOD.Split(':');
-                    if (Convert.ToInt32(tiempo[2]) == secact)
+                CAT20 cat20 = CAT20s[this.contador];
+                this.tiempo = cat20.TOD.Split(':');
+                if (Convert.ToInt32(tiempo[2]) == secact)
+                {
+                    addMarkerMLAT(cat20.X, cat20.Y, cat20.callsign);
+                    this.contador++;
+                    if (mapView.Markers.Count >= 200)
                     {
-                        addMarkerMLAT(cat20.X, cat20.Y, cat20.callsign);
-                        this.contador++;
-                        if (this.contador >= 200)
-                        {
-                            mapView.Markers[contador - 199].Clear();
-                        }
-                    }                
-                
+                        mapView.Markers[mapView.Markers.Count - 200].Clear();
+                    }
+                }
+
                 else
                 {
                     t = false;
@@ -216,9 +203,9 @@ namespace AsterixDisplay
                     if (cat10.TYP == "PSR") { addMarkerSMR(Convert.ToDouble(cat10.Xcomponent), Convert.ToDouble(cat10.Ycomponent), cat10.TargetID); }
                     if (cat10.TYP == "Mode S MLAT") { addMarkerMLAT(Convert.ToDouble(cat10.Xcomponent), Convert.ToDouble(cat10.Ycomponent), cat10.TargetID); }
                     this.contador++;
-                    if (this.contador >= 200)
+                    if (mapView.Markers.Count >= 200)
                     {
-                        mapView.Markers[contador - 199].Clear();
+                        mapView.Markers[mapView.Markers.Count - 200].Clear();
                     }
                 }
                 else
@@ -255,22 +242,21 @@ namespace AsterixDisplay
         {
             if (checktrail.IsChecked == true)
             {
-                foreach (GMapMarker marker in mapView.Markers)
+                for (int i = 0; i < mapView.Markers.Count; i++)
                 {
-                    if (marker.Shape != null)
+                    if (mapView.Markers[i].Shape != null)
                     {
-                        marker.Shape.Visibility = Visibility.Visible;
+                        mapView.Markers[i].Shape.Visibility = Visibility.Visible;
                     }
-
                 }
             }
             if (checktrail.IsChecked == false)
             {
-                foreach (GMapMarker marker in mapView.Markers)
+                for (int i = 0; i < mapView.Markers.Count; i++)
                 {
-                    if (marker.Shape != null)
+                    if (mapView.Markers[i].Shape != null)
                     {
-                        marker.Shape.Visibility = Visibility.Collapsed;
+                        mapView.Markers[i].Shape.Visibility = Visibility.Collapsed;
                     }
                 }
             }
@@ -280,25 +266,24 @@ namespace AsterixDisplay
         {
             if (checkairplanes.IsChecked == true)
             {
-                foreach (GMapMarker marker in mapView.Markers)
+                for (int i = 0; i < mapView.Markers.Count; i++)
                 {
-                    if (marker.Shape != null)
+                    if (mapView.Markers[i].Shape != null)
                     {
-                        if (marker.ZIndex == 0)
-                            marker.Shape.Visibility = Visibility.Visible;
-                        else if (marker.ZIndex == 1)
-                            marker.Shape.Visibility = Visibility.Collapsed;
+                        if (mapView.Markers[i].ZIndex == 0)
+                            mapView.Markers[i].Shape.Visibility = Visibility.Visible;
+                        else if (mapView.Markers[i].ZIndex == 1)
+                            mapView.Markers[i].Shape.Visibility = Visibility.Collapsed;
                     }
-
                 }
             }
             if (checkairplanes.IsChecked == false)
             {
-                foreach (GMapMarker marker in mapView.Markers)
+                for (int i = 0; i < mapView.Markers.Count; i++)
                 {
-                    if (marker.Shape != null)
+                    if (mapView.Markers[i].Shape != null)
                     {
-                        marker.Shape.Visibility = Visibility.Visible;
+                        mapView.Markers[i].Shape.Visibility = Visibility.Visible;
                     }
                 }
             }
@@ -318,11 +303,11 @@ namespace AsterixDisplay
         {
             if (checktrail.IsChecked == false)
             {
-                foreach (GMapMarker marker in mapView.Markers)
+                for (int i = 0; i < mapView.Markers.Count; i++)
                 {
-                    if (marker.Shape != null)
+                    if (mapView.Markers[i].Shape != null)
                     {
-                        marker.Shape.Visibility = Visibility.Collapsed;
+                        mapView.Markers[i].Shape.Visibility = Visibility.Collapsed;
                     }
                 }
             }
