@@ -11,6 +11,8 @@ namespace AsterixDecoder
 
         public string FSPEC;
 
+        public int version;
+
         public string RA;
         public string TC;
         public string TS;
@@ -26,44 +28,74 @@ namespace AsterixDecoder
 
         public string serviceID;
 
-        public double RP;
+        public double ROT;
+        public string TI;
+        public string RateOfTurn;
 
-        public int ECAT;
+        public string RP;
 
-        public int ATP;
-        public int ARC;
-        public int RC;
-        public int RAB;
-        public int DCR;
-        public int GBS;
-        public int SIM;
-        public int TST;
-        public int SAA;
-        public int CL;
-        public int LLC;
-        public int IPC;
-        public int NOGO;
-        public int CPR;
-        public int LDPJ;
-        public int RCF;
+        public string ECAT;
+
+        public string DTI;
+        public string MDS;
+        public string UAT;
+        public string VDL;
+        public string OTR;
+        public string LinkTech;
+
+        public string ATP;
+        public string ARC;
+        public string RC;
+        public string RAB;
+        public string DCR;
+        public string GBS;
+        public string SIM;
+        public string TST;
+        public string SAA;
+        public string CL;
+        public string LLC;
+        public string IPC;
+        public string NOGO;
+        public string CPR;
+        public string LDPJ;
+        public string RCF;
+        public string TargetReport;
+
+        public double Velocityaccuracy;
+        public string velAccuracy; 
+
+        public string AC;
+        public string MN;
+        public string DC;
+        public string FigureOfMerit;
+        public string posAccuracy;
 
         public string Mode3ACode;
 
+        public string TODaccuracy;
+
         public double TimeOfApplicabilityForPosition;
+        public string TimeOfApplicabilityForPosition_;
 
         public double TimeOfApplicabilityForVelocity;
+        public string TimeOfApplicabilityForVelocity_;
 
         public double TimeOfMessageReceptionForPosition;
+        public string TimeOfMessageReceptionForPosition_;
 
         public string FSI_Position;
         public double TimeOfMessageReceptionForPosition_HighPrecision;
+        public string TimeOfMessageReceptionForPosition_HighPrecision_;
 
         public double TimeOfMessageReceptionForVelocity;
+        public string TimeOfMessageReceptionForVelocity_;
 
         public string FSI_Velocity;
         public double TimeOfMessageReceptionForVelocity_HighPrecision;
+        public string TimeOfMessageReceptionForVelocity_HighPrecision_;
 
         public double TimeOfAsterixReportTransmission;
+        public string TimeOfAsterixReportTransmission_;
 
         public string TargetAddress;
 
@@ -76,12 +108,13 @@ namespace AsterixDecoder
         public int SDA;
         public int GVA;
         public int PIC;
+        public string QualityIndicators;
 
         public int NAV;
         public int NVB;
         public string[] TCA;
         public string[] NC;
-        public string[] TCP;
+        public int[] TCP;
         public double[] Altitude;
         public double[] Latitude;
         public double[] Longitude;
@@ -91,72 +124,92 @@ namespace AsterixDecoder
         public string[] TOA;
         public int[] TOV;
         public double[] TTR;
+        public string TrajectoryIntentData;
 
         public double LatitudeWGS;
         public double LongitudeWGS;
+        public string positionWGS;
 
         public double LatitudeWGS_HR;
         public double LongitudeWGS_HR;
+        public string HRpositionWGS;
 
         public double MAM;
+        public string MSGampl;
 
         public double GH;
+        public string GeometricHeight;
 
         public double FL;
+        public string FlightLevel;
 
         public string SAS;
         public string Source;
-        public double SelectedAltitude;
+        public double SelectedAltitude_I;
+        public string SelectedAltitude_IS;
 
         public string MV;
         public string AH;
         public string AM;
-        public double SelectedAltitude_FS;
+        public double SelectedAltitude_F;
+        public string SelectedAltitude_FS;
 
         public string IM;
-        public double AirSpeed;
+        public double AirSpeedNum;
+        public string AirSpeed;
 
         public string RE_TrueAirspeed;
-        public double TrueAirspeed;
+        public double TAS;
+        public string TrueAirspeed;
 
-        public double MagneticHeading;
+        public double MagneticHeadingNum;
+        public string MagneticHeading;
 
         public string RE_BarometricVerticalRate;
-        public double BarometricVerticalRate;
+        public double BarometricVerticalRateNum;
+        public string BarometricVerticalRate;
 
         public string RE_GeometricVerticalRate;
-        public double GeometricVerticalRate;
+        public double GeometricVerticalRateNum;
+        public string GeometricVerticalRate;
 
         public string RE_AirborneGroundVector;
         public double GroundSpeed;
         public double TrackAngle;
+        public string AirborneGroundVector;
 
         public int TrackNumber;
 
         public double TAR;
+        public string TrackAngleRate;
 
         public string TargetID;
 
         public string ICF;
         public string LNAV;
         public string ME;
-        public int PS;
-        public int SS;
+        public string PS;
+        public string SS;
+        public string TargetStatus;
 
         public string VNS;
-        public int VN;
-        public int LTT;
+        public string VN;
+        public string LTT;
+        public string MOPS;
 
         public int WindSpeed;
         public int WindDirection;
         public double Temperature;
         public int Turbulence;
+        public string MetReport;
 
-        public double RollAngle;
+        public double RollAngleNum;
+        public string RollAngle;
 
         public string[] MBdata;
         public string[] BDS1;
         public string[] BDS2;
+        public string ModeS;
 
         public string TYP;
         public string STYP;
@@ -200,6 +253,8 @@ namespace AsterixDecoder
 
         public string RID;
 
+        public string TOD;
+
 
         // CONSTRUCTOR:
         public CAT21(string[] paquete) //decodifica el missatge (paquet)
@@ -229,280 +284,459 @@ namespace AsterixDecoder
             if (Convert.ToString(this.FSPEC[1]) == "1")
                 pos = pos + this.ComputeTargetReportDescriptor(paquete, pos);
 
-            // Track Number
-            if (Convert.ToString(this.FSPEC[2]) == "1")
+            if (this.version == 23)
             {
-                this.ComputeTrackNumber(paquete[pos] + paquete[pos + 1]);
-                pos = pos + 2;
-            }
-
-            // Service Identification
-            if (Convert.ToString(this.FSPEC[3]) == "1")
-            {
-                this.ComputeServiceIdentification(paquete[pos]);
-            }
-
-            // Time of Applicability for Position
-            if (Convert.ToString(this.FSPEC[4]) == "1")
-            {
-                this.ComputeTimeOfApplicabilityForPosition(paquete[pos] + paquete[pos + 1] + paquete[pos + 2]);
-                pos = pos + 3;
-            }
-
-            // Position in WGS-84 coordinates
-            if (Convert.ToString(this.FSPEC[5]) == "1")
-            {
-                this.ComputePositionInWGS84(paquete[pos] + paquete[pos + 1] + paquete[pos + 2], paquete[pos + 3] + paquete[pos + 4] + paquete[pos + 5]);
-                pos = pos + 6;
-            }
-
-            // Position in WGS-84 coordinates - High Resolution
-            if (Convert.ToString(this.FSPEC[6]) == "1")
-            {
-                this.ComputeHighResolutionPositionInWGS84(paquete[pos] + paquete[pos + 1] + paquete[pos + 2] + paquete[pos + 3], paquete[pos + 4] + paquete[pos + 5] + paquete[pos + 6] + paquete[pos + 7]);
-                pos = pos + 8;
-            }
-
-            if (longFSPEC >= 2)
-            {
-                // Time of Applicability for Velocity
-                if (Convert.ToString(this.FSPEC[8]) == "1")
+                // Time Of Day
+                if (Convert.ToString(this.FSPEC[2]) == "1")
                 {
-                    this.ComputeTimeOfApplicabilityForVelocity(paquete[pos] + paquete[pos + 1] + paquete[pos + 2]);
+                    this.ComputeTimeOfDay(paquete[pos] + paquete[pos + 1] + paquete[pos + 2]);
                     pos = pos + 3;
                 }
 
-                // Air Speed
-                if (Convert.ToString(this.FSPEC[9]) == "1")
+                // Position in WGS-84
+                if (Convert.ToString(this.FSPEC[3]) == "1")
                 {
-                    this.ComputeAirSpeed(paquete[pos] + paquete[pos + 1]);
-                    pos = pos + 2;
-                }
-
-                // True Air Speed
-                if (Convert.ToString(this.FSPEC[10]) == "1")
-                {
-                    this.ComputeTrueAirspeed(paquete[pos] + paquete[pos + 1]);
-                    pos = pos + 2;
+                    this.ComputePositionInWGS84(paquete[pos] + paquete[pos + 1] + paquete[pos + 2], paquete[pos + 3] + paquete[pos + 4] + paquete[pos + 5]);
+                    pos = pos + 6;
                 }
 
                 // Target Address
-                if (Convert.ToString(this.FSPEC[11]) == "1")
+                if (Convert.ToString(this.FSPEC[4]) == "1")
                 {
                     this.ComputeTargetAddress(paquete[pos] + paquete[pos + 1] + paquete[pos + 2]);
                     pos = pos + 3;
                 }
 
-                // Time of Message Reception of Position
-                if (Convert.ToString(this.FSPEC[12]) == "1")
+                // Geometric Altitude
+                if (Convert.ToString(this.FSPEC[5]) == "1")
                 {
-                    this.ComputeTimeOfMessageReceptionForPosition(paquete[pos] + paquete[pos + 1] + paquete[pos + 2]);
-                    pos = pos + 3;
+                    this.ComputeGeometricHeight(paquete[pos] + paquete[pos + 1]);
+                    pos = pos + 2;
                 }
 
-                // Time of Message Reception of Position - High Precision
-                if(Convert.ToString(this.FSPEC[13])=="1")
+                // Figure of Merit
+                if (Convert.ToString(this.FSPEC[6]) == "1")
                 {
-                    this.ComputeTimeOfMessageReceptionForPosition_HighPrecision(paquete[pos] + paquete[pos + 1] + paquete[pos + 2] + paquete[pos + 3]);
-                    pos = pos + 4;
+                    this.ComputeFigureOfMerit(paquete[pos] + paquete[pos + 1]);
+                    pos = pos + 2;
                 }
 
-                // Time of Message Reception of Velocity
-                if (Convert.ToString(this.FSPEC[14]) == "1")
+                if(longFSPEC>=2)
                 {
-                    this.ComputeTimeOfMessageReceptionForVelocity(paquete[pos] + paquete[pos + 1] + paquete[pos + 2]);
-                    pos = pos + 3;
-                }
-
-                if (longFSPEC >= 3)
-                {
-                    // Time of Message Reception of Velocity - High Precision
-                    if (Convert.ToString(this.FSPEC[16]) == "1")
+                    // Link Technology
+                    if (Convert.ToString(FSPEC[8]) == "1")
                     {
-                        this.ComputeTimeOfMessageReceptionForVelocity_HighPrecision(paquete[pos] + paquete[pos + 1] + paquete[pos + 2] + paquete[pos + 3]);
-                        pos = pos + 4;
-                    }
-
-                    // Geometric Height
-                    if (Convert.ToString(this.FSPEC[17]) == "1")
-                    {
-                        this.ComputeGeometricHeight(paquete[pos] + paquete[pos + 1]);
-                        pos = pos + 2;
-                    }
-
-                    // Quality Indicators
-                    if (Convert.ToString(this.FSPEC[18]) == "1")
-                        pos = pos + this.ComputeQualityIndicators(paquete, pos);
-
-                    // MOPS Version
-                    if (Convert.ToString(this.FSPEC[19]) == "1")
-                    {
-                        this.ComputeMOPSversion(paquete[pos]);
+                        this.ComputeLinkTechnology(paquete[pos]);
                         pos++;
                     }
 
-                    // Mode 3/A Code
-                    if (Convert.ToString(this.FSPEC[20]) == "1")
-                    {
-                        this.ComputeMode3ACode(paquete[pos] + paquete[pos + 1]);
-                        pos = pos + 2;
-                    }
-
-                    // Roll Angle 
-                    if (Convert.ToString(this.FSPEC[21]) == "1")
+                    // Roll Angle
+                    if (Convert.ToString(FSPEC[9]) == "1")
                     {
                         this.ComputeRollAngle(paquete[pos] + paquete[pos + 1]);
                         pos = pos + 2;
                     }
 
                     // Flight Level
-                    if (Convert.ToString(this.FSPEC[22]) == "1")
+                    if (Convert.ToString(FSPEC[10]) == "1")
                     {
                         this.ComputeFL(paquete[pos] + paquete[pos + 1]);
                         pos = pos + 2;
                     }
 
-                    if (longFSPEC >= 4)
+                    // Air Speed
+                    if (Convert.ToString(FSPEC[11]) == "1")
                     {
-                        // Magnetic Heading
-                        if (Convert.ToString(this.FSPEC[24]) == "1")
-                        {
-                            this.ComputeMagneticHeading(paquete[pos] + paquete[pos + 1]);
-                            pos = pos + 2;
-                        }
+                        this.ComputeAirSpeed(paquete[pos] + paquete[pos + 1]);
+                        pos = pos + 2;
+                    }
 
-                        // Target Status
-                        if (Convert.ToString(this.FSPEC[25]) == "1")
-                        {
-                            this.ComputeTargetStatus(paquete[pos]);
-                            pos++;
-                        }
+                    // True Air Speed
+                    if (Convert.ToString(FSPEC[12]) == "1")
+                    {
+                        this.ComputeTrueAirspeed(paquete[pos] + paquete[pos + 1]);
+                        pos = pos + 2;
+                    }
 
-                        // Barometric Vertical Rate
-                        if (Convert.ToString(this.FSPEC[26]) == "1")
-                        {
-                            this.ComputeBarometricVerticalRate(paquete[pos] + paquete[pos + 1]);
-                            pos = pos + 2;
-                        }
+                    // Magnetic Heading
+                    if (Convert.ToString(FSPEC[13]) == "1")
+                    {
+                        this.ComputeMagneticHeading(paquete[pos] + paquete[pos + 1]);
+                        pos = pos + 2;
+                    }
 
+                    // Barometric Vertical Rate
+                    if (Convert.ToString(FSPEC[14]) == "1")
+                    {
+                        this.ComputeBarometricVerticalRate(paquete[pos] + paquete[pos + 1]);
+                        pos = pos + 2;
+                    }
+
+                    if(longFSPEC>=3)
+                    {
                         // Geometric Vertical Rate
-                        if (Convert.ToString(this.FSPEC[27]) == "1")
+                        if (Convert.ToString(FSPEC[15]) == "1")
                         {
                             this.ComputeGeometricVerticalRate(paquete[pos] + paquete[pos + 1]);
                             pos = pos + 2;
                         }
 
-                        // Airborne Ground Vector
-                        if (Convert.ToString(this.FSPEC[28]) == "1")
+                        // Ground Vector
+                        if (Convert.ToString(FSPEC[16]) == "1")
                         {
                             this.ComputeAirborneGroundVector(paquete[pos] + paquete[pos + 1] + paquete[pos + 2] + paquete[pos + 3]);
                             pos = pos + 4;
                         }
 
-                        // Track Angle Rate
-                        if (Convert.ToString(this.FSPEC[29]) == "1")
+                        // Rate of Turn
+                        if (Convert.ToString(FSPEC[17]) == "1")
+                            this.ComputeRateOfAngle(paquete, pos);
+
+                        // Target Identification
+                        if (Convert.ToString(FSPEC[18]) == "1")
                         {
-                            this.ComputeTrackAngleRate(paquete[pos] + paquete[pos + 1]);
-                            pos = pos + 2;
+                            this.ComputeTargetIdentification(paquete[pos] + paquete[pos + 1] + paquete[pos + 2] + paquete[pos + 3] + paquete[pos + 4] + paquete[pos + 5]);
+                            pos = pos + 6;
                         }
 
-                        // Time of Report Transmission
-                        if (Convert.ToString(this.FSPEC[30]) == "1")
+                        // Velocity Accuracy
+                        if(Convert.ToString(FSPEC[19])=="1")
                         {
-                            this.ComputeTimeOfAsterixReportTransmission(paquete[pos] + paquete[pos + 1] + paquete[pos + 2]);
-                            pos = pos + 3;
+                            this.ComputeVelocityAccuracy(paquete[pos]);
+                            pos++;
                         }
 
-                        if (longFSPEC >= 5)
+                        // Time of day accuracy
+                        if (Convert.ToString(FSPEC[20]) == "1")
                         {
-                            // Target Identification
-                            if (Convert.ToString(this.FSPEC[32]) == "1")
-                            {
-                                this.ComputeTargetIdentification(paquete[pos] + paquete[pos + 1] + paquete[pos + 2] + paquete[pos + 3] + paquete[pos + 4] + paquete[pos + 5]);
-                                pos = pos + 6;
-                            }
+                            this.ComputeTODaccuracy(paquete[pos]);
+                            pos++;
+                        }
 
+                        // Target Status
+                        if (Convert.ToString(FSPEC[21]) == "1")
+                        {
+                            this.ComputeTargetStatus23(paquete[pos]);
+                            pos++;
+                        }
+
+                        if (longFSPEC>=4)
+                        {
                             // Emitter Category
-                            if (Convert.ToString(this.FSPEC[33]) == "1")
+                            if (Convert.ToString(FSPEC[23]) == "1")
                             {
                                 this.ComputeEmitterCategory(paquete[pos]);
                                 pos++;
                             }
 
-                            // Met Information
-                            if (Convert.ToString(this.FSPEC[34]) == "1")
+                            // Met report
+                            if (Convert.ToString(FSPEC[24]) == "1")
                                 pos = pos + this.ComputeMetInformation(paquete, pos);
 
-                            // Selected Altitude
-                            if (Convert.ToString(this.FSPEC[35]) == "1")
+                            // Intermediate State Selected Altitude
+                            if (Convert.ToString(FSPEC[25]) == "1")
                             {
                                 this.ComputeSelectedAltitude(paquete[pos] + paquete[pos + 1]);
                                 pos = pos + 2;
                             }
 
                             // Final State Selected Altitude
-                            if (Convert.ToString(this.FSPEC[36]) == "1")
+                            if (Convert.ToString(FSPEC[27]) == "1")
                             {
                                 this.ComputeFinalStateSelectedAltitude(paquete[pos] + paquete[pos + 1]);
                                 pos = pos + 2;
                             }
 
-                            // Trajectory Intend
-                            if (Convert.ToString(this.FSPEC[37]) == "1")
+                            // Trajectory Intent
+                            if(Convert.ToString(FSPEC[28])=="1")
                                 pos = pos + this.ComputeTrajectoryIntend(paquete, pos);
-
-                            // Service Management
-                            if (Convert.ToString(this.FSPEC[38]) == "1")
+                            
+                            if (longFSPEC>=5)
                             {
-                                this.ComputeServiceManagement(paquete[pos]);
+                                // Reserved Expansion Field
+                                // Special Purpose Field
+                            }
+                        }
+                    }
+                }
+            }
+            if (this.version == 24)
+            {
+                // Track Number
+                if (Convert.ToString(this.FSPEC[2]) == "1")
+                {
+                    this.ComputeTrackNumber(paquete[pos] + paquete[pos + 1]);
+                    pos = pos + 2;
+                }
+
+                // Service Identification
+                if (Convert.ToString(this.FSPEC[3]) == "1")
+                {
+                    this.ComputeServiceIdentification(paquete[pos]);
+                }
+
+                // Time of Applicability for Position
+                if (Convert.ToString(this.FSPEC[4]) == "1")
+                {
+                    this.ComputeTimeOfApplicabilityForPosition(paquete[pos] + paquete[pos + 1] + paquete[pos + 2]);
+                    pos = pos + 3;
+                }
+
+                // Position in WGS-84 coordinates
+                if (Convert.ToString(this.FSPEC[5]) == "1")
+                {
+                    this.ComputePositionInWGS84(paquete[pos] + paquete[pos + 1] + paquete[pos + 2], paquete[pos + 3] + paquete[pos + 4] + paquete[pos + 5]);
+                    pos = pos + 6;
+                }
+
+                // Position in WGS-84 coordinates - High Resolution
+                if (Convert.ToString(this.FSPEC[6]) == "1")
+                {
+                    this.ComputeHighResolutionPositionInWGS84(paquete[pos] + paquete[pos + 1] + paquete[pos + 2] + paquete[pos + 3], paquete[pos + 4] + paquete[pos + 5] + paquete[pos + 6] + paquete[pos + 7]);
+                    pos = pos + 8;
+                }
+
+                if (longFSPEC >= 2)
+                {
+                    // Time of Applicability for Velocity
+                    if (Convert.ToString(this.FSPEC[8]) == "1")
+                    {
+                        this.ComputeTimeOfApplicabilityForVelocity(paquete[pos] + paquete[pos + 1] + paquete[pos + 2]);
+                        pos = pos + 3;
+                    }
+
+                    // Air Speed
+                    if (Convert.ToString(this.FSPEC[9]) == "1")
+                    {
+                        this.ComputeAirSpeed(paquete[pos] + paquete[pos + 1]);
+                        pos = pos + 2;
+                    }
+
+                    // True Air Speed
+                    if (Convert.ToString(this.FSPEC[10]) == "1")
+                    {
+                        this.ComputeTrueAirspeed(paquete[pos] + paquete[pos + 1]);
+                        pos = pos + 2;
+                    }
+
+                    // Target Address
+                    if (Convert.ToString(this.FSPEC[11]) == "1")
+                    {
+                        this.ComputeTargetAddress(paquete[pos] + paquete[pos + 1] + paquete[pos + 2]);
+                        pos = pos + 3;
+                    }
+
+                    // Time of Message Reception of Position
+                    if (Convert.ToString(this.FSPEC[12]) == "1")
+                    {
+                        this.ComputeTimeOfMessageReceptionForPosition(paquete[pos] + paquete[pos + 1] + paquete[pos + 2]);
+                        pos = pos + 3;
+                    }
+
+                    // Time of Message Reception of Position - High Precision
+                    if (Convert.ToString(this.FSPEC[13]) == "1")
+                    {
+                        this.ComputeTimeOfMessageReceptionForPosition_HighPrecision(paquete[pos] + paquete[pos + 1] + paquete[pos + 2] + paquete[pos + 3]);
+                        pos = pos + 4;
+                    }
+
+                    // Time of Message Reception of Velocity
+                    if (Convert.ToString(this.FSPEC[14]) == "1")
+                    {
+                        this.ComputeTimeOfMessageReceptionForVelocity(paquete[pos] + paquete[pos + 1] + paquete[pos + 2]);
+                        pos = pos + 3;
+                    }
+
+                    if (longFSPEC >= 3)
+                    {
+                        // Time of Message Reception of Velocity - High Precision
+                        if (Convert.ToString(this.FSPEC[16]) == "1")
+                        {
+                            this.ComputeTimeOfMessageReceptionForVelocity_HighPrecision(paquete[pos] + paquete[pos + 1] + paquete[pos + 2] + paquete[pos + 3]);
+                            pos = pos + 4;
+                        }
+
+                        // Geometric Height
+                        if (Convert.ToString(this.FSPEC[17]) == "1")
+                        {
+                            this.ComputeGeometricHeight(paquete[pos] + paquete[pos + 1]);
+                            pos = pos + 2;
+                        }
+
+                        // Quality Indicators
+                        if (Convert.ToString(this.FSPEC[18]) == "1")
+                            pos = pos + this.ComputeQualityIndicators(paquete, pos);
+
+                        // MOPS Version
+                        if (Convert.ToString(this.FSPEC[19]) == "1")
+                        {
+                            this.ComputeMOPSversion(paquete[pos]);
+                            pos++;
+                        }
+
+                        // Mode 3/A Code
+                        if (Convert.ToString(this.FSPEC[20]) == "1")
+                        {
+                            this.ComputeMode3ACode(paquete[pos] + paquete[pos + 1]);
+                            pos = pos + 2;
+                        }
+
+                        // Roll Angle 
+                        if (Convert.ToString(this.FSPEC[21]) == "1")
+                        {
+                            this.ComputeRollAngle(paquete[pos] + paquete[pos + 1]);
+                            pos = pos + 2;
+                        }
+
+                        // Flight Level
+                        if (Convert.ToString(this.FSPEC[22]) == "1")
+                        {
+                            this.ComputeFL(paquete[pos] + paquete[pos + 1]);
+                            pos = pos + 2;
+                        }
+
+                        if (longFSPEC >= 4)
+                        {
+                            // Magnetic Heading
+                            if (Convert.ToString(this.FSPEC[24]) == "1")
+                            {
+                                this.ComputeMagneticHeading(paquete[pos] + paquete[pos + 1]);
+                                pos = pos + 2;
+                            }
+
+                            // Target Status
+                            if (Convert.ToString(this.FSPEC[25]) == "1")
+                            {
+                                this.ComputeTargetStatus24(paquete[pos]);
                                 pos++;
                             }
 
-                            if (longFSPEC >= 6)
+                            // Barometric Vertical Rate
+                            if (Convert.ToString(this.FSPEC[26]) == "1")
                             {
-                                // Aircraft Operational Status
-                                if (Convert.ToString(this.FSPEC[40]) == "1")
+                                this.ComputeBarometricVerticalRate(paquete[pos] + paquete[pos + 1]);
+                                pos = pos + 2;
+                            }
+
+                            // Geometric Vertical Rate
+                            if (Convert.ToString(this.FSPEC[27]) == "1")
+                            {
+                                this.ComputeGeometricVerticalRate(paquete[pos] + paquete[pos + 1]);
+                                pos = pos + 2;
+                            }
+
+                            // Airborne Ground Vector
+                            if (Convert.ToString(this.FSPEC[28]) == "1")
+                            {
+                                this.ComputeAirborneGroundVector(paquete[pos] + paquete[pos + 1] + paquete[pos + 2] + paquete[pos + 3]);
+                                pos = pos + 4;
+                            }
+
+                            // Track Angle Rate
+                            if (Convert.ToString(this.FSPEC[29]) == "1")
+                            {
+                                this.ComputeTrackAngleRate(paquete[pos] + paquete[pos + 1]);
+                                pos = pos + 2;
+                            }
+
+                            // Time of Report Transmission
+                            if (Convert.ToString(this.FSPEC[30]) == "1")
+                            {
+                                this.ComputeTimeOfAsterixReportTransmission(paquete[pos] + paquete[pos + 1] + paquete[pos + 2]);
+                                pos = pos + 3;
+                            }
+
+                            if (longFSPEC >= 5)
+                            {
+                                // Target Identification
+                                if (Convert.ToString(this.FSPEC[32]) == "1")
                                 {
-                                    this.ComputeAircraftOperationalStatus(paquete[pos]);
+                                    this.ComputeTargetIdentification(paquete[pos] + paquete[pos + 1] + paquete[pos + 2] + paquete[pos + 3] + paquete[pos + 4] + paquete[pos + 5]);
+                                    pos = pos + 6;
+                                }
+
+                                // Emitter Category
+                                if (Convert.ToString(this.FSPEC[33]) == "1")
+                                {
+                                    this.ComputeEmitterCategory(paquete[pos]);
                                     pos++;
                                 }
 
-                                // Surface Capabilities and Characteristics
-                                if (Convert.ToString(this.FSPEC[41]) == "1")
-                                    pos = pos + this.ComputeSurfaceCapabilitiesAndCharacteristics(paquete, pos);
+                                // Met Information
+                                if (Convert.ToString(this.FSPEC[34]) == "1")
+                                    pos = pos + this.ComputeMetInformation(paquete, pos);
 
-                                // Message Amplitude
-                                if (Convert.ToString(this.FSPEC[42]) == "1")
+                                // Selected Altitude
+                                if (Convert.ToString(this.FSPEC[35]) == "1")
                                 {
-                                    this.ComputeMessageAmplitude(paquete[pos]);
+                                    this.ComputeSelectedAltitude(paquete[pos] + paquete[pos + 1]);
+                                    pos = pos + 2;
+                                }
+
+                                // Final State Selected Altitude
+                                if (Convert.ToString(this.FSPEC[36]) == "1")
+                                {
+                                    this.ComputeFinalStateSelectedAltitude(paquete[pos] + paquete[pos + 1]);
+                                    pos = pos + 2;
+                                }
+
+                                // Trajectory Intend
+                                if (Convert.ToString(this.FSPEC[37]) == "1")
+                                    pos = pos + this.ComputeTrajectoryIntend(paquete, pos);
+
+                                // Service Management
+                                if (Convert.ToString(this.FSPEC[38]) == "1")
+                                {
+                                    this.ComputeServiceManagement(paquete[pos]);
                                     pos++;
                                 }
 
-                                // Mode S MB Data
-                                if (Convert.ToString(this.FSPEC[43]) == "1")
-                                    pos = pos + this.ComputeModeS_MBdata(paquete, pos);
-
-                                // ACAS Resolution Advisory Report
-                                if (Convert.ToString(this.FSPEC[44]) == "1")
+                                if (longFSPEC >= 6)
                                 {
-                                    this.ComputeACAS_RAreport(paquete[pos] + paquete[pos + 1] + paquete[pos + 2] + paquete[pos + 3] + paquete[pos + 4] + paquete[pos + 5] + paquete[pos + 6]);
-                                    pos = pos + 7;
-                                }
+                                    // Aircraft Operational Status
+                                    if (Convert.ToString(this.FSPEC[40]) == "1")
+                                    {
+                                        this.ComputeAircraftOperationalStatus(paquete[pos]);
+                                        pos++;
+                                    }
 
-                                // Receiver ID
-                                if (Convert.ToString(this.FSPEC[45]) == "1")
-                                {
-                                    this.ComputeReceiverID(paquete[pos]);
-                                    pos++;
-                                }
+                                    // Surface Capabilities and Characteristics
+                                    if (Convert.ToString(this.FSPEC[41]) == "1")
+                                        pos = pos + this.ComputeSurfaceCapabilitiesAndCharacteristics(paquete, pos);
 
-                                // Data Ages
-                                if (Convert.ToString(this.FSPEC[46]) == "1")
-                                    pos = pos + this.ComputeDataAges(paquete, pos);
+                                    // Message Amplitude
+                                    if (Convert.ToString(this.FSPEC[42]) == "1")
+                                    {
+                                        this.ComputeMessageAmplitude(paquete[pos]);
+                                        pos++;
+                                    }
 
-                                if (longFSPEC == 7)
-                                {
-                                    //nidea
+                                    // Mode S MB Data
+                                    if (Convert.ToString(this.FSPEC[43]) == "1")
+                                        pos = pos + this.ComputeModeS_MBdata(paquete, pos);
+
+                                    // ACAS Resolution Advisory Report
+                                    if (Convert.ToString(this.FSPEC[44]) == "1")
+                                    {
+                                        this.ComputeACAS_RAreport(paquete[pos] + paquete[pos + 1] + paquete[pos + 2] + paquete[pos + 3] + paquete[pos + 4] + paquete[pos + 5] + paquete[pos + 6]);
+                                        pos = pos + 7;
+                                    }
+
+                                    // Receiver ID
+                                    if (Convert.ToString(this.FSPEC[45]) == "1")
+                                    {
+                                        this.ComputeReceiverID(paquete[pos]);
+                                        pos++;
+                                    }
+
+                                    // Data Ages
+                                    if (Convert.ToString(this.FSPEC[46]) == "1")
+                                        pos = pos + this.ComputeDataAges(paquete, pos);
+
+                                    if (longFSPEC == 7)
+                                    {
+                                        //nidea
+                                    }
                                 }
                             }
                         }
@@ -520,18 +754,17 @@ namespace AsterixDecoder
             //llegim octets fins que la última posició d'un d'ells sigui "0"
             int pos = 3;
             bool continua = true;
-            while (continua==true && pos <= 9)
+            while (continua==true)
             {
                 //llegim nou octeto
                 string newocteto = Convert.ToString(Convert.ToInt32(paquete[pos], 16), 2).PadLeft(8, '0');
 
-                if (newocteto.Substring(7, 1) == "1") //fiquem aquest octeto al nostre FSPEC
-                {
-                    this.FSPEC = this.FSPEC + newocteto;
+                //fiquem aquest octeto al nostre FSPEC
+                this.FSPEC = this.FSPEC + newocteto;
 
+                if (newocteto.Substring(7, 1) == "1") //seguim
                     pos++;
-                }
-                else
+                else //sortim del bucle
                     continua = false;
             }
         }
@@ -601,10 +834,65 @@ namespace AsterixDecoder
                 this.DataSourceID = "Data flow local to the airport: Barcelona - LEBL";
         }
 
+        public void ComputeFigureOfMerit(string octetos) // Data Item I021/090
+        {
+            //string de bits
+            string bits = Convert.ToString(Convert.ToInt32(octetos, 16), 2).PadLeft(16, '0');
+
+            //separem
+            string AC = bits.Substring(0, 2);
+            if (AC == "00")
+                this.AC = "ACAS operability: Unknown";
+            if (AC == "01")
+                this.AC = "ACAS not operational";
+            if (AC == "10")
+                this.AC = "ACAS operational";
+            if (AC == "11")
+                this.AC = "ACAS operability: Invalid";
+
+            string MN = bits.Substring(2, 2);
+            if (MN == "00")
+                this.MN = "Multiple aids operating: unknown";
+            if (MN == "01")
+                this.MN = "Multiple navigational aids not operating";
+            if (MN == "10")
+                this.MN = "Multiple navigational aids operating";
+            if (MN == "11")
+                this.MN = "Multiple aids operating: invalid";
+
+            string DC = bits.Substring(4, 2);
+            if (DC == "00")
+                this.DC = "Differential correction: unknown";
+            if (DC == "01")
+                this.DC = "Differential correction";
+            if (DC == "10")
+                this.DC = "No differential correction";
+            if (DC == "11")
+                this.DC = "Differential correction: invalid";
+
+            this.FigureOfMerit = "\n - " + this.AC + "\n - " + this.MN + "\n - " + this.DC;
+
+            int PA = Convert.ToInt32(bits.Substring(12, 4), 2);
+            this.posAccuracy = Convert.ToString(PA);
+        }
+
         public void ComputeServiceIdentification(string octeto) // Data Item I021/015
         {
             //passem a string de bits
             this.serviceID = Convert.ToString(Convert.ToInt32(octeto, 16), 2).PadLeft(8, '0');
+        }
+
+        public void ComputeTimeOfDay(string octetoTimeOfDay) // Data Item I021/030
+        {
+            //calculem quin segon del dia és
+            int seg = int.Parse(octetoTimeOfDay, System.Globalization.NumberStyles.HexNumber);
+            double segundos = Convert.ToSingle(seg) / 128; //resolució
+
+            TimeSpan time = TimeSpan.FromSeconds(segundos);
+
+            //here backslash is must to tell that colon is
+            //not the part of format, it just a character that we want in output
+            this.TOD = time.ToString(@"hh\:mm\:ss\:fff");
         }
 
         public void ComputeServiceManagement(string octeto) // Data Item I021/016
@@ -613,15 +901,84 @@ namespace AsterixDecoder
             int rp_int=int.Parse(octeto, System.Globalization.NumberStyles.HexNumber);
 
             //multipliquem per la resolució
-            this.RP = rp_int * 0.5;
+            this.RP = Convert.ToString(rp_int * 0.5) + " s";
         }
 
         public void ComputeEmitterCategory(string octeto) // Data Item I021/020
         {
             //llegim el número
-            this.ECAT = int.Parse(octeto, System.Globalization.NumberStyles.HexNumber);
+            int ecat = int.Parse(octeto, System.Globalization.NumberStyles.HexNumber);
+            if (ecat == 1)
+                this.ECAT = "Light aircraft";
+            if (ecat == 3)
+                this.ECAT = "Medium aircraft";
+            if (ecat == 5)
+                this.ECAT = "Heavy aircraft";
+            if (ecat == 6)
+                this.ECAT = "Highly manoeuvrable and high speed";
+            if (ecat >= 7 && ecat <= 9)
+                this.ECAT = "Reserved";
+            if (ecat == 10)
+                this.ECAT = "Rotocraft";
+            if (ecat == 11)
+                this.ECAT = "Glider/Sailplane";
+            if (ecat == 12)
+                this.ECAT = "Lighter than air aircraft";
+            if (ecat == 13)
+                this.ECAT = "Unmanned aerial vehicle";
+            if (ecat == 14)
+                this.ECAT = "Space/Transatmospheric vehicle";
+            if (ecat == 15)
+                this.ECAT = "Ultralight/Handglider/Paraglider";
+            if (ecat == 16)
+                this.ECAT = "Parachutis/Skydriver";
+            if (ecat >= 17 && ecat <= 19)
+                this.ECAT = "Reserved";
+            if (ecat == 20)
+                this.ECAT = "Surface emergency vehicle";
+            if (ecat == 21)
+                this.ECAT = "Surface service vehicle";
+            if (ecat == 22)
+                this.ECAT = "Fixed grounf or tethered obstruction";
+            if (this.version == 24)
+            {
+                if (ecat == 0)
+                    this.ECAT = "No information";
+                if (ecat == 2)
+                    this.ECAT = "Small aircraft";
+                if (ecat == 4)
+                    this.ECAT = "High Vortex Large";
+                if (ecat == 23)
+                    this.ECAT = "Cluster obstacle";
+                if (ecat == 24)
+                    this.ECAT = "Line obstacle";
+            }
+            if (this.version == 23 && (ecat == 2 || ecat == 4 || ecat==23 || ecat==24))
+                this.ECAT = "Reserved";
+        }
 
-            // falta decodificar bits
+        public int ComputeRateOfAngle(string[] paquete, int pos)
+        {
+            //octeto 1
+            int cont = 1;
+            string octeto1 = Convert.ToString(Convert.ToInt32(paquete[pos], 16), 2).PadLeft(8, '0');
+            string TI = octeto1.Substring(0, 2);
+            if (TI == "00")
+                this.TI = "";
+            if (TI == "01")
+                this.TI = "to the left";
+            if (TI == "10")
+                this.TI = "to the rigth";
+            if (TI == "11")
+                this.TI = "straight";
+            if(octeto1.Substring(7,1)=="1")
+            {
+                cont++;
+                string octeto2= Convert.ToString(Convert.ToInt32(paquete[pos + cont], 16), 2).PadLeft(8, '0');
+                this.ROT = (1 / 4) * this.ComputeComplementoA2(octeto2.Substring(0, 7));
+                this.RateOfTurn = this.ROT.ToString() + " º/s " + this.TI;
+            }
+            return cont;
         }
 
         public int ComputeTargetReportDescriptor(string[] paquete, int pos) // Data Item I021/040
@@ -632,36 +989,133 @@ namespace AsterixDecoder
             //llegim primer octet
             string octet1 = Convert.ToString(Convert.ToInt32(paquete[pos], 16), 2).PadLeft(8, '0');
             
-            this.ATP = int.Parse(octet1.Substring(0, 3), System.Globalization.NumberStyles.HexNumber);
-            this.ARC = int.Parse(octet1.Substring(3, 2), System.Globalization.NumberStyles.HexNumber);
-            this.RC = int.Parse(octet1.Substring(5, 1), System.Globalization.NumberStyles.HexNumber);
-            this.RAB = int.Parse(octet1.Substring(6, 1), System.Globalization.NumberStyles.HexNumber);
+            int ATP = int.Parse(octet1.Substring(0, 3), System.Globalization.NumberStyles.HexNumber);
+            if (ATP == 0)
+                this.ATP = "24-Bit ICAO address";
+            if (ATP == 1)
+                this.ATP = "Duplicate address";
+            if (ATP == 2)
+                this.ATP = "Surface vehicle address";
+            if (ATP == 3)
+                this.ATP = "Anonymous address";
+            if (ATP >= 4)
+                this.ATP = "Address reserved for future use";
 
-            if(octet1.Substring(7,1) == "1") // First Extension
+            int ARC = int.Parse(octet1.Substring(3, 2), System.Globalization.NumberStyles.HexNumber);
+            if (ARC == 0)
+                this.ARC = "Altitude Reporting Capability: 25ft";
+            if (ARC == 1)
+                this.ARC = "Altitude Reporting Capability: 100ft";
+            if (ARC == 2)
+                this.ARC = "Altitude Reporting Capability: Unknown";
+            if (ARC == 3)
+                this.ARC = "Altitude Reporting Capability: Invalid";
+
+            int RC = int.Parse(octet1.Substring(5, 1), System.Globalization.NumberStyles.HexNumber);
+            if (RC == 0)
+                this.RC = "Range Check: Default";
+            if (RC == 1)
+                this.RC = "Range Check passed, CPR Validation pending";
+
+            int RAB = int.Parse(octet1.Substring(6, 1), System.Globalization.NumberStyles.HexNumber);
+            if (RAB == 0)
+                this.RAB = "Report from target transponder";
+            if (RAB == 1)
+                this.RAB = "Report from field monitor (fixed transponder)";
+
+            this.TargetReport = " - " + this.ATP + "\n - " + this.ARC + "\n - " + this.RC + "\n - " + this.RAB;
+
+            if (octet1.Substring(7,1) == "1") // First Extension
             {
                 string octet2 = Convert.ToString(Convert.ToInt32(paquete[pos + cont], 16), 2).PadLeft(8, '0');
                 
-                this.DCR = int.Parse(octet2.Substring(0, 1), System.Globalization.NumberStyles.HexNumber);
-                this.GBS = int.Parse(octet2.Substring(1, 1), System.Globalization.NumberStyles.HexNumber);
-                this.SIM = int.Parse(octet2.Substring(2, 1), System.Globalization.NumberStyles.HexNumber);
-                this.TST = int.Parse(octet2.Substring(3, 1), System.Globalization.NumberStyles.HexNumber);
-                this.SAA = int.Parse(octet2.Substring(4, 1), System.Globalization.NumberStyles.HexNumber);
-                this.CL = int.Parse(octet2.Substring(5, 2), System.Globalization.NumberStyles.HexNumber);
+                int DCR = int.Parse(octet2.Substring(0, 1), System.Globalization.NumberStyles.HexNumber);
+                if (DCR == 0)
+                    this.DCR = "No differential correction (ADS-B)";
+                if (DCR == 1)
+                    this.DCR = "Differential correction (ADS-B)";
+
+                int GBS = int.Parse(octet2.Substring(1, 1), System.Globalization.NumberStyles.HexNumber);
+                if (GBS == 0)
+                    this.GBS = "Ground Bit not set";
+                if (GBS == 1)
+                    this.GBS = "Ground Bit set";
+
+                int SIM = int.Parse(octet2.Substring(2, 1), System.Globalization.NumberStyles.HexNumber);
+                if (SIM == 0)
+                    this.SIM = "Actual target report";
+                if (SIM == 1)
+                    this.SIM = "Simulated target report";
+
+                int TST = int.Parse(octet2.Substring(3, 1), System.Globalization.NumberStyles.HexNumber);
+                if (TST == 0)
+                    this.TST = "Test Target: Default";
+                if (TST == 1)
+                    this.TST = "Test Target";
+
+                int SAA = int.Parse(octet2.Substring(4, 1), System.Globalization.NumberStyles.HexNumber);
+                if (SAA == 0)
+                    this.SAA = "Equipment capable to provide Selected Altitude";
+                if (SAA == 1)
+                    this.SAA = "Equipment not capable to provide Selected Altitude";
+
+                int CL = int.Parse(octet2.Substring(5, 2), System.Globalization.NumberStyles.HexNumber);
+                if (CL == 0)
+                    this.CL = "Report valid";
+                if (CL == 1)
+                    this.CL = "Report suspect";
+                if (CL == 2)
+                    this.CL = "No information about Confidence Level";
+                if (CL == 3)
+                    this.CL = "Reserved for future use";
 
                 cont++;
+
+                this.TargetReport = this.TargetReport + "\n - " + this.DCR + "\n - " + this.GBS + "\n - " + this.SIM + "\n - " + this.TST + "\n - " + this.SAA + "\n - " + this.CL;
 
                 if (octet2.Substring(7, 1) == "1") // Second Extension: Error Conditions
                 {
                     string octet3 = Convert.ToString(Convert.ToInt32(paquete[pos + cont], 16), 2).PadLeft(8, '0');
                     
-                    this.LLC = int.Parse(octet3.Substring(1, 1), System.Globalization.NumberStyles.HexNumber);
-                    this.IPC = int.Parse(octet3.Substring(2, 1), System.Globalization.NumberStyles.HexNumber);
-                    this.NOGO = int.Parse(octet3.Substring(3, 1), System.Globalization.NumberStyles.HexNumber);
-                    this.CPR = int.Parse(octet3.Substring(4, 1), System.Globalization.NumberStyles.HexNumber);
-                    this.LDPJ = int.Parse(octet3.Substring(5, 1), System.Globalization.NumberStyles.HexNumber);
-                    this.RCF = int.Parse(octet3.Substring(6, 1), System.Globalization.NumberStyles.HexNumber);
+                    int LLC = int.Parse(octet3.Substring(1, 1), System.Globalization.NumberStyles.HexNumber);
+                    if (LLC == 0)
+                        this.LLC = "List Lookup Check: Default";
+                    if (LLC == 1)
+                        this.LLC = "List Lookup Check failed";
+
+                    int IPC = int.Parse(octet3.Substring(2, 1), System.Globalization.NumberStyles.HexNumber);
+                    if (IPC == 0)
+                        this.IPC = "Independent Position Check: Default";
+                    if (IPC == 1)
+                        this.IPC = "Independent Position Check failed";
+
+                    int NOGO = int.Parse(octet3.Substring(3, 1), System.Globalization.NumberStyles.HexNumber);
+                    if (NOGO == 0)
+                        this.NOGO = "NOGO bit not set";
+                    if (NOGO == 1)
+                        this.NOGO = "NOGO bit set";
+
+                    int CPR = int.Parse(octet3.Substring(4, 1), System.Globalization.NumberStyles.HexNumber);
+                    if (CPR == 0)
+                        this.CPR = "CPR Validation correct";
+                    if (CPR == 1)
+                        this.CPR = "CPR Validation failed";
+
+                    int LDPJ = int.Parse(octet3.Substring(5, 1), System.Globalization.NumberStyles.HexNumber);
+                    if (LDPJ == 0)
+                        this.LDPJ = "LDPJ not detected";
+                    if (LDPJ == 1)
+                        this.LDPJ = "LDPJ detected";
+
+                    int RCF = int.Parse(octet3.Substring(6, 1), System.Globalization.NumberStyles.HexNumber);
+                    if (RCF == 0)
+                        this.RCF = "Range Check: Default";
+                    if (RCF == 1)
+                        this.RCF = "Range Chack failed";
 
                     cont++;
+
+                    this.TargetReport = this.TargetReport + "\n - " + this.LLC + "\n - " + this.IPC + "\n - " + this.NOGO + "\n - " + this.CPR + "\n - " + this.LDPJ + "\n - " + this.RCF;
                 }
             }
 
@@ -683,6 +1137,8 @@ namespace AsterixDecoder
 
             //multipliquem per a la resolució
             this.TimeOfApplicabilityForPosition = time / 128;
+
+            this.TimeOfApplicabilityForPosition_ = this.TimeOfApplicabilityForPosition.ToString() + " s";
         }
 
         public void ComputeTimeOfApplicabilityForVelocity(string octetos) // Data Item I021/072
@@ -692,6 +1148,8 @@ namespace AsterixDecoder
 
             //multipliquem per a la resolució
             this.TimeOfApplicabilityForVelocity = time / 128;
+
+            this.TimeOfApplicabilityForVelocity_ = this.TimeOfApplicabilityForVelocity.ToString() + " s";
         }
 
         public void ComputeTimeOfMessageReceptionForPosition(string octetos) // Data Item I021/073
@@ -701,6 +1159,8 @@ namespace AsterixDecoder
 
             //multipliquem per a la resolució
             this.TimeOfMessageReceptionForPosition = time / 128;
+
+            this.TimeOfMessageReceptionForPosition_ = this.TimeOfMessageReceptionForPosition.ToString() + " s";
         }
 
         public void ComputeTimeOfMessageReceptionForPosition_HighPrecision(string octetos) // Data Item I021/074
@@ -725,6 +1185,8 @@ namespace AsterixDecoder
                 this.TimeOfMessageReceptionForPosition_HighPrecision = this.TimeOfMessageReceptionForPosition_HighPrecision - 1;
             if (this.FSI_Position == "01")
                 this.TimeOfMessageReceptionForPosition_HighPrecision = this.TimeOfMessageReceptionForPosition_HighPrecision + 1;
+
+            this.TimeOfMessageReceptionForPosition_HighPrecision_ = this.TimeOfMessageReceptionForPosition_HighPrecision.ToString() + " ns";
         }
 
         public void ComputeTimeOfMessageReceptionForVelocity(string octetos) // Data Item I021/075
@@ -734,6 +1196,8 @@ namespace AsterixDecoder
 
             //multipliquem per a la resolució
             this.TimeOfMessageReceptionForVelocity = time / 128;
+
+            this.TimeOfMessageReceptionForVelocity_ = this.TimeOfMessageReceptionForVelocity.ToString() + " s";
         }
 
         public void ComputeTimeOfMessageReceptionForVelocity_HighPrecision(string octetos) // Data Item I021/076
@@ -758,6 +1222,8 @@ namespace AsterixDecoder
                 this.TimeOfMessageReceptionForVelocity_HighPrecision = this.TimeOfMessageReceptionForVelocity_HighPrecision - 1;
             if (this.FSI_Velocity == "01")
                 this.TimeOfMessageReceptionForVelocity_HighPrecision = this.TimeOfMessageReceptionForVelocity_HighPrecision + 1;
+
+            this.TimeOfMessageReceptionForVelocity_HighPrecision_ = this.TimeOfMessageReceptionForVelocity_HighPrecision.ToString() + " ns";
         }
 
         public void ComputeTimeOfAsterixReportTransmission(string octetos) // Data Item I021/077
@@ -767,6 +1233,8 @@ namespace AsterixDecoder
 
             //multipliquem per a la resolució
             this.TimeOfAsterixReportTransmission = time / 128;
+
+            this.TimeOfAsterixReportTransmission_ = this.TimeOfAsterixReportTransmission.ToString() + " ns";
         }
 
         public void ComputeTargetAddress(string octetos) // Data Item I021/080
@@ -785,6 +1253,8 @@ namespace AsterixDecoder
             this.NUCr_NACv = int.Parse(octet1.Substring(0, 3), System.Globalization.NumberStyles.HexNumber);
             this.NUCp_NIC = int.Parse(octet1.Substring(3, 4), System.Globalization.NumberStyles.HexNumber);
 
+            this.QualityIndicators = " - Navigation Uncertainty Category for Velocity: " + this.NUCr_NACv.ToString() + "\n - Navigation Uncertainty category for Position: " + this.NUCp_NIC.ToString();
+
             if (octet1.Substring(7, 1) == "1") // First Extension: Navigation Accuracy Category for Position
             {
                 string octet2 = Convert.ToString(Convert.ToInt32(paquete[pos + cont], 16), 2).PadLeft(8, '0');
@@ -793,6 +1263,8 @@ namespace AsterixDecoder
                 this.SIL = int.Parse(octet2.Substring(1, 2), System.Globalization.NumberStyles.HexNumber);
                 this.NACp = int.Parse(octet2.Substring(3, 4), System.Globalization.NumberStyles.HexNumber);
 
+                this.QualityIndicators = this.QualityIndicators + "\n - Navigation Integrity Category for Barometric Altitude: " + this.NICbaro.ToString() + "\n - Surveillance (MOPS version 1) or Source (MOPS version 2) Integrity Level: " + this.SIL.ToString() + "\n - Navigation Accuracy Category for Position: " + this.NACp.ToString();
+
                 cont++;
 
                 if (octet2.Substring(7, 1) == "1") // Second Extension: Position Quality Indicators
@@ -800,8 +1272,14 @@ namespace AsterixDecoder
                     string octet3 = Convert.ToString(Convert.ToInt32(paquete[pos + cont], 16), 2).PadLeft(8, '0');
 
                     this.SILS = int.Parse(octet3.Substring(2, 1), System.Globalization.NumberStyles.HexNumber);
+                    if (this.SILS == 0)
+                        this.QualityIndicators = this.QualityIndicators + "\n - SIL-Supplement measured per flight-hour";
+                    if (this.SILS == 1)
+                        this.QualityIndicators = this.QualityIndicators + "\n - SIL-Supplement measured per sample";
                     this.SDA = int.Parse(octet3.Substring(3, 2), System.Globalization.NumberStyles.HexNumber);
                     this.GVA = int.Parse(octet3.Substring(5, 2), System.Globalization.NumberStyles.HexNumber);
+
+                    this.QualityIndicators = this.QualityIndicators + "\n - Horizontal Position System Design Assurance Level: " + this.SDA.ToString() + "\n - Geometric Altitude Acuracy: " + this.GVA;
 
                     cont++;
 
@@ -810,6 +1288,8 @@ namespace AsterixDecoder
                         string octet4 = Convert.ToString(Convert.ToInt32(paquete[pos + cont], 16), 2).PadLeft(8, '0');
 
                         this.PIC = int.Parse(octet4.Substring(0, 4), System.Globalization.NumberStyles.HexNumber);
+
+                        this.QualityIndicators = this.QualityIndicators + "\n - Position Integrity Category: " + this.PIC;
 
                         cont++;
                     }
@@ -844,11 +1324,11 @@ namespace AsterixDecoder
             {
                 //llegim num de repeticions
                 int rep = int.Parse(paquete[pos], System.Globalization.NumberStyles.HexNumber);
-
+                
                 //creamos vectores
                 this.TCA = new string[rep];
                 this.NC = new string[rep];
-                this.TCP = new string[rep];
+                this.TCP = new int[rep];
                 this.Altitude = new double[rep];
                 this.Latitude = new double[rep];
                 this.Longitude = new double[rep];
@@ -863,6 +1343,8 @@ namespace AsterixDecoder
                 int i = 0;
                 while (i < rep)
                 {
+                    this.TrajectoryIntentData = "\n\tPOINT " + Convert.ToString(i + 1) + ":";
+
                     //agafem octets en string de bits
                     string octet2 = Convert.ToString(Convert.ToInt32(paquete[pos + (i * 15) + 1], 16), 2).PadLeft(8, '0');
                     string octets_Altitude = Convert.ToString(Convert.ToInt32(paquete[pos + (i * 15) + 2], 16), 2).PadLeft(8, '0') + Convert.ToString(Convert.ToInt32(paquete[pos + (i * 15) + 3], 16), 2).PadLeft(8, '0');
@@ -875,9 +1357,43 @@ namespace AsterixDecoder
                     //llegim els que són strings
                     this.TCA[i] = octet2.Substring(0, 1);
                     this.NC[i] = octet2.Substring(1, 1);
-                    this.TCP[i] = octet2.Substring(2, 6);
-                    this.PointType[i] = octet11.Substring(0, 4);
-                    this.TD[i] = octet11.Substring(4, 2);
+                    this.TCP[i] = Convert.ToInt32(octet2.Substring(2, 6), 2);
+                    int pointtype = Convert.ToInt32(octet11.Substring(0, 4), 2);
+                    if (pointtype ==0)
+                        this.PointType[i] = "Unknown";
+                    if (pointtype == 2)
+                        this.PointType[i] = "Fly over waypoint";
+                    if (pointtype ==1)
+                        this.PointType[i] = "Fly by waypoint";
+                    if (pointtype ==3)
+                        this.PointType[i] = "Hold pattern";
+                    if (pointtype ==4)
+                        this.PointType[i] = "Procedure hold";
+                    if (pointtype ==5)
+                        this.PointType[i] = "Procedure hold";
+                    if (pointtype ==6)
+                        this.PointType[i] = "RF leg";
+                    if (pointtype ==7)
+                        this.PointType[i] = "Top of climb";
+                    if (pointtype ==8)
+                        this.PointType[i] = "Top of descent";
+                    if (pointtype ==9)
+                        this.PointType[i] = "Start of level";
+                    if (pointtype ==10)
+                        this.PointType[i] = "Cross-over altitude";
+                    if (pointtype ==11)
+                        this.PointType[i] = "Transition altitude";
+                    if (pointtype ==11)
+                        this.PointType[i] = "";
+                    string td = octet11.Substring(4, 2);
+                    if (td == "00")
+                        this.TD[i] = "N/A";
+                    if (td == "01")
+                        this.TD[i] = "Turn right";
+                    if (td == "10")
+                        this.TD[i] = "Turn left";
+                    if (td == "11")
+                        this.TD[i] = "No turn";
                     this.TRA[i] = octet11.Substring(6, 1);
                     this.TOA[i] = octet11.Substring(7, 1);
 
@@ -891,6 +1407,14 @@ namespace AsterixDecoder
 
                     //passem a double el TTR multiplicant int per resolució
                     this.TTR[i] = 0.01 * Convert.ToInt32(octets_TTR, 2);
+
+                    if (TCA[i] == "0")
+                        this.TrajectoryIntentData = this.TrajectoryIntentData + "\n - TCP: " + this.TCP[i].ToString();
+                    this.TrajectoryIntentData = this.TrajectoryIntentData + "\n - Altitude: " + this.Altitude[i].ToString() + " ft\n - Latitude: " + this.Latitude[i].ToString() + "º\n - Longitude: " + this.Longitude[i].ToString() + "º\n - Point type: " + this.PointType[i] + "\n - TD: " + this.TD[i];
+                    if (TOA[i] == "0")
+                        this.TrajectoryIntentData = this.TrajectoryIntentData + "\n - Time Over Point: " + this.TOV[i] + " s";
+                    if (this.TRA[i] == "1")
+                        this.TrajectoryIntentData = this.TrajectoryIntentData + "\n - TCP Turn Radius: " + this.TTR[i] + " Nm";
 
                     i++;
                 }
@@ -908,8 +1432,10 @@ namespace AsterixDecoder
             string lon = Convert.ToString(Convert.ToInt32(OctLonWGS, 16), 2);
 
             //fem el complement a2 que ens torna els bit en doubles i multipliquem per la resolució
-            this.LatitudeWGS = this.ComputeComplementoA2(lat) * (180 / Math.Pow(2, 31));
-            this.LongitudeWGS = this.ComputeComplementoA2(lon) * (180 / Math.Pow(2, 31));
+            this.LatitudeWGS = this.ComputeComplementoA2(lat) * (180 / Math.Pow(2, 23));
+            this.LongitudeWGS = this.ComputeComplementoA2(lon) * (180 / Math.Pow(2, 23));
+
+            this.positionWGS = "[" + this.LatitudeWGS + "º, " + this.LongitudeWGS + "]";
         }
 
         public void ComputeHighResolutionPositionInWGS84(string OctLatWGS, string OctLonWGS) // Data Item I021/131
@@ -921,6 +1447,8 @@ namespace AsterixDecoder
             //fem el complement a2 que ens torna els bit en doubles i multipliquem per la resolució
             this.LatitudeWGS_HR = this.ComputeComplementoA2(lat) * (180 / Math.Pow(2, 31));
             this.LongitudeWGS_HR = this.ComputeComplementoA2(lon) * (180 / Math.Pow(2, 31));
+
+            this.HRpositionWGS = "[" + this.LatitudeWGS_HR + "º, " + this.LongitudeWGS_HR + "º]";
         }
 
         public void ComputeMessageAmplitude(string octeto) // Data Item I021/132
@@ -930,6 +1458,8 @@ namespace AsterixDecoder
 
             //complement a2 + resolució
             this.MAM = 1 * this.ComputeComplementoA2(bits);
+
+            this.MSGampl = this.MAM.ToString() + " dBm";
         }
 
         public void ComputeGeometricHeight(string octetos) // Data Item I021/140
@@ -939,6 +1469,8 @@ namespace AsterixDecoder
 
             //complemento a2 + resolució
             this.GH = 6.25 * this.ComputeComplementoA2(bits);
+
+            this.GeometricHeight = this.GH.ToString() + " ft";
         }
 
         public void ComputeFL(string octetos) // Data Item I021/145
@@ -948,6 +1480,8 @@ namespace AsterixDecoder
 
             //complemento a2 + resolució
             this.FL = (1 / 4) * this.ComputeComplementoA2(bits);
+
+            this.FlightLevel = "FL" + this.FL.ToString();
         }
 
         public void ComputeSelectedAltitude(string octetos) // Data Item I021/146
@@ -961,7 +1495,9 @@ namespace AsterixDecoder
             string altitude_bits = octetos_bits.Substring(3, 13);
 
             //complement a2 y resolució a l'altitud
-            this.SelectedAltitude = 25 * this.ComputeComplementoA2(altitude_bits);
+            this.SelectedAltitude_I = 25 * this.ComputeComplementoA2(altitude_bits);
+
+            this.SelectedAltitude_IS = this.Source + ": " + this.SelectedAltitude_I + " ft";
         }
 
         public void ComputeFinalStateSelectedAltitude(string octetos) // Data Item I021/148
@@ -976,7 +1512,9 @@ namespace AsterixDecoder
             string altitude_bits = octetos_bits.Substring(3, 13);
 
             //complement a2 y resolució
-            this.SelectedAltitude_FS = 25 * this.ComputeComplementoA2(altitude_bits);
+            this.SelectedAltitude_F = 25 * this.ComputeComplementoA2(altitude_bits);
+
+            this.SelectedAltitude_FS = this.SelectedAltitude_F + " ft";
         }
 
         public void ComputeAirSpeed(string octetos) // Data Item I021/150
@@ -993,9 +1531,17 @@ namespace AsterixDecoder
 
             //resolució
             if (this.IM == "0")
-                this.AirSpeed = Math.Pow(2, -14) * airspeed_num;
+            { 
+                this.AirSpeedNum = Math.Pow(2, -14) * airspeed_num;
+
+                this.AirSpeed = "IAS: " + this.AirSpeedNum + " NM/s";
+            }
             if (this.IM == "1")
-                this.AirSpeed = 0.001 * airspeed_num;
+            {
+                this.AirSpeedNum = 0.001 * airspeed_num;
+
+                this.AirSpeed = "Mach: " + this.AirSpeedNum;
+            }
         }
 
         public void ComputeTrueAirspeed(string octetos) // Data Item I021/151
@@ -1003,18 +1549,67 @@ namespace AsterixDecoder
             //string de bits
             string octetos_bits = Convert.ToString(Convert.ToInt32(octetos, 16), 2).PadLeft(8, '0');
 
-            //separem 
-            this.RE_TrueAirspeed = octetos_bits.Substring(0, 1);
-            string airspeed_bits = octetos_bits.Substring(1, 15);
+            string airspeed_bits = "0";
+            if (this.version == 24)
+            {
+                //separem 
+                this.RE_TrueAirspeed = octetos_bits.Substring(0, 1);
+                airspeed_bits = octetos_bits.Substring(1, 15);
+            }
+            if (this.version == 23)
+                airspeed_bits = octetos_bits.Substring(0, 16);
 
             //passem a int i resolució
-            this.TrueAirspeed = Convert.ToInt32(airspeed_bits, 2);
+            this.TAS = Convert.ToInt32(airspeed_bits, 2);
+
+            this.TrueAirspeed = this.TAS + " knots";
         }
 
         public void ComputeMagneticHeading(string octetos) // Data Item I021/152
         {
             //passem a int i multipliquem per la resolució
-            this.MagneticHeading = (360 / Math.Pow(2, 16)) * int.Parse(octetos, System.Globalization.NumberStyles.HexNumber);
+            this.MagneticHeadingNum = (360 / Math.Pow(2, 16)) * int.Parse(octetos, System.Globalization.NumberStyles.HexNumber);
+
+            this.MagneticHeading = this.MagneticHeadingNum + "º";
+        }
+
+        public void ComputeLinkTechnology(string octeto)
+        {
+            //string de bits
+            string bits = Convert.ToString(Convert.ToInt32(octeto, 16), 2).PadLeft(8, '0');
+
+            //separem
+            string dti = bits.Substring(3, 1);
+            if (dti == "0")
+                this.DTI = "Cockpit Display of Traffic Information: unknown";
+            if (dti == "1")
+                this.DTI = "Cockpit Display of Traffic Information: aircraft equiped with CDTI";
+
+            string mds = bits.Substring(4, 1);
+            if (mds == "0")
+                this.MDS = "Mode-S Extended Squitter: not used";
+            if (mds == "1")
+                this.MDS = "Mode-S Extended Squitter: used";
+
+            string uat = bits.Substring(5, 1);
+            if (uat == "0")
+                this.UAT = "UAT: not used";
+            if (uat == "1")
+                this.UAT = "UAT: used";
+
+            string vdl = bits.Substring(6, 1);
+            if (vdl == "0")
+                this.VDL = "VDL Mode 4: not used";
+            if (vdl == "1")
+                this.VDL = "VDL Mode 4: used";
+
+            string otr = bits.Substring(7, 1);
+            if (otr == "0")
+                this.OTR = "Other Technology: not used";
+            if (otr == "1")
+                this.OTR = "Other Technology: used";
+
+            this.LinkTech = "\n - " + this.DTI + "\n - " + this.MDS + "\n - " + this.UAT + "\n - " + this.VDL + "\n - " + this.OTR;
         }
 
         public void ComputeBarometricVerticalRate(string octetos) // Data Item I021/155
@@ -1022,12 +1617,20 @@ namespace AsterixDecoder
             //string de bits
             string octetos_bits = Convert.ToString(Convert.ToInt32(octetos, 16), 2).PadLeft(16, '0');
 
-            //separem 
-            this.RE_BarometricVerticalRate = octetos_bits.Substring(0, 1);
-            string BarometricVR_bits = octetos_bits.Substring(1, 15);
+            string BarometricVR_bits = "0";
+            if (this.version == 24)
+            { 
+                //separem 
+                this.RE_BarometricVerticalRate = octetos_bits.Substring(0, 1);
+                BarometricVR_bits = octetos_bits.Substring(1, 15);
+            }
+            if(this.version==23)
+                BarometricVR_bits = octetos_bits.Substring(0, 16);
 
             //passem a int i resolució
-            this.BarometricVerticalRate = 6.25 * Convert.ToInt32(BarometricVR_bits);
+            this.BarometricVerticalRateNum = 6.25 * Convert.ToInt32(BarometricVR_bits);
+
+            this.BarometricVerticalRate = this.BarometricVerticalRateNum + " feet/minute";
         }
 
         public void ComputeGeometricVerticalRate(string octetos) // Data Item I021/157
@@ -1040,7 +1643,9 @@ namespace AsterixDecoder
             string GeometricVR_bits = octetos_bits.Substring(1, 15);
 
             //complement a2 i resolució
-            this.GeometricVerticalRate = 6.25 * this.ComputeComplementoA2(GeometricVR_bits);
+            this.GeometricVerticalRateNum = 6.25 * this.ComputeComplementoA2(GeometricVR_bits);
+
+            this.GeometricVerticalRate = this.GeometricVerticalRateNum + " feet/minute";
         }
 
         public void ComputeAirborneGroundVector(string octetos) // Data Item I021/160
@@ -1048,10 +1653,20 @@ namespace AsterixDecoder
             //string de bits
             string octetos_bits = Convert.ToString(Convert.ToInt32(octetos, 16), 2).PadLeft(8, '0');
 
-            //separem 
-            this.RE_AirborneGroundVector = octetos_bits.Substring(0, 1);
-            this.GroundSpeed = Math.Pow(2, -14) * Convert.ToInt32(octetos_bits.Substring(1, 15), 2);
-            this.TrackAngle = (360 / Math.Pow(2, 16)) * Convert.ToInt32(octetos_bits.Substring(16, 16), 2);
+            //separem
+            if (this.version == 24)
+            {
+                this.RE_AirborneGroundVector = octetos_bits.Substring(0, 1);
+                this.GroundSpeed = Math.Pow(2, -14) * Convert.ToInt32(octetos_bits.Substring(1, 15), 2);
+                this.TrackAngle = (360 / Math.Pow(2, 16)) * Convert.ToInt32(octetos_bits.Substring(16, 16), 2);
+            }
+            if(this.version==23)
+            {
+                this.GroundSpeed = Math.Pow(2, -14) * this.ComputeComplementoA2(octetos_bits.Substring(0, 16));
+                this.TrackAngle = (360 / Math.Pow(2, 16)) * Convert.ToInt32(octetos_bits.Substring(16, 16), 2);
+            }
+
+            this.AirborneGroundVector = "[" + this.GroundSpeed.ToString() + " NM/s, " + this.TrackAngle.ToString() + "º]";
         }
 
         public void ComputeTrackNumber(string octetos) // Data Item I021/161
@@ -1076,41 +1691,125 @@ namespace AsterixDecoder
 
             //complement a2 i resolució
             this.TAR = (1 / 32) * this.ComputeComplementoA2(bits_valid);
+
+            this.TrackAngleRate = this.TAR.ToString() + " º/s";
         }
 
         public void ComputeTargetIdentification(string octetos) // Data Item I021/170
         {
             //string de bits
             string targetID = Convert.ToString(Convert.ToInt32(octetos, 16), 2).PadLeft(8, '0');
-            
+
             //llegim
             int nchar = 0;
-            while (nchar < 8)
+            while (nchar < targetID.Length)
             {
-                string character = "";
-                int bit = 0;
-                while (bit < 6)
-                {
-                    character = character + Convert.ToString(targetID[nchar + bit]);
-                    bit++;
-                }
-                this.TargetID = this.TargetID + Convert.ToString(int.Parse(character, System.Globalization.NumberStyles.HexNumber));
+                string character = targetID.Substring(nchar, 6);
 
-                nchar++;
+                this.TargetID = this.TargetID + this.GetCode(character);
+
+                nchar = nchar + 6;
             }
         }
 
-        public void ComputeTargetStatus(string octeto) // Data Item I021/200
+        public string GetCode(string character_string)
+        {
+            //número que representa el string
+            int character_int = Convert.ToInt32(character_string, 2);
+
+            //lista per decodificar 
+            List<string> code = new List<string>() { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+
+            //decodifiquem
+            return code[character_int - 1];
+        }
+
+        public void ComputeTargetStatus24(string octeto) // Data Item I021/200
         {
             //string de bits
             string bits = Convert.ToString(Convert.ToInt32(octeto, 16), 2).PadLeft(8, '0');
 
             //llegim
-            this.ICF = bits.Substring(0, 1);
-            this.LNAV = bits.Substring(1, 1);
-            this.ME = bits.Substring(2, 1);
-            this.PS = int.Parse(bits.Substring(3, 3), System.Globalization.NumberStyles.HexNumber);
-            this.SS = int.Parse(bits.Substring(6, 2), System.Globalization.NumberStyles.HexNumber);
+            string ICF = bits.Substring(0, 1);
+            if (ICF == "0")
+                this.ICF = "Intent Change Flag: no intent active";
+            if (ICF == "1")
+                this.ICF = "Intent Change Flag raised";
+
+            string LNAV = bits.Substring(1, 1);
+            if (LNAV == "0")
+                this.LNAV = "LNAV Mode engaged";
+            if (LNAV == "1")
+                this.LNAV = "LNAV Mode not engaged";
+
+            string ME = bits.Substring(2, 1);
+            if (ME == "0")
+                this.ME = "No military emergency";
+            if (ME == "1")
+                this.ME = "Military emergency";
+
+            int PS = Convert.ToInt32(bits.Substring(3, 3), 2);
+            if (PS == 0)
+                this.PS = "No emergency/not reported emergency";
+            if (PS == 1)
+                this.PS = "General emergency";
+            if (PS == 2)
+                this.PS = "Lifeguard/medical emergency";
+            if (PS == 3)
+                this.PS = "Minimum fuel";
+            if (PS == 4)
+                this.PS = "No communications";
+            if (PS == 5)
+                this.PS = "Unlawful interference";
+            if (PS == 6)
+                this.PS = "'Downed' aircraft";
+
+            int SS = Convert.ToInt32(bits.Substring(6, 2), 2);
+            if (SS == 0)
+                this.SS = "Surveillance Status: No condition reported";
+            if (SS == 1)
+                this.SS = "Surveillance Status: Permanent Alert (Emergency condition)";
+            if (SS == 2)
+                this.SS = "Surveillance Status: Temporary Alert (change in Mode 3/A Code other than emergency)";
+            if (SS == 3)
+                this.SS = "Surveillance Status: SPI set";
+
+            this.TargetStatus = "\n - " + this.ICF + "\n - " + this.LNAV + "\n - " + this.ME + "\n - " + this.PS + "\n - " + this.SS;
+        }
+
+        public void ComputeTargetStatus23(string octeto) // Data Item I021/200
+        {
+            int targetstatus = int.Parse(octeto, System.Globalization.NumberStyles.HexNumber);
+            if (targetstatus == 0)
+                this.TargetStatus = "No emergency/no reported emergency";
+            if (targetstatus == 1)
+                this.TargetStatus = "General emergency";
+            if (targetstatus == 2)
+                this.TargetStatus = "Lifeguard/medical";
+            if (targetstatus == 3)
+                this.TargetStatus = "Minimum fuel";
+            if (targetstatus == 4)
+                this.TargetStatus = "No communications";
+            if (targetstatus == 5)
+                this.TargetStatus = "Unlawful interference";
+        }
+
+        public void ComputeVelocityAccuracy(string octeto)
+        {
+            string bits = Convert.ToString(Convert.ToInt32(octeto, 16), 2).PadLeft(8, '0');
+
+            // HAY QUE DECODIFICAR
+
+            this.velAccuracy = bits;
+        }
+
+        public void ComputeTODaccuracy(string octeto)
+        {
+            string bits = Convert.ToString(Convert.ToInt32(octeto, 16), 2).PadLeft(8, '0');
+
+            double todacc = (1 / 128) * Convert.ToInt32(bits, 2);
+
+            this.TODaccuracy = todacc.ToString() + " s";
         }
 
         public void ComputeMOPSversion(string octetos) // Data Item I021/210
@@ -1119,9 +1818,36 @@ namespace AsterixDecoder
             string bits = Convert.ToString(Convert.ToInt32(octetos, 16), 2).PadLeft(8, '0');
 
             //llegim
-            this.VNS = bits.Substring(1, 1);
-            this.VN = int.Parse(bits.Substring(2, 3), System.Globalization.NumberStyles.HexNumber);
-            this.LTT = int.Parse(bits.Substring(5, 3), System.Globalization.NumberStyles.HexNumber);
+            string VNS = bits.Substring(1, 1);
+            if (VNS == "0")
+                this.VNS = "The MOPS Version is supported by the GS";
+            if (VNS == "1")
+                this.VNS = "The MOPS Version is not supported by the GS";
+            int VN = int.Parse(bits.Substring(2, 3), System.Globalization.NumberStyles.HexNumber);
+            int LTT = int.Parse(bits.Substring(5, 3), System.Globalization.NumberStyles.HexNumber);
+            if (LTT == 0)
+                this.LTT = "Link Technology Type: other";
+            if (LTT == 1)
+                this.LTT = "Link Technology Type: UAT";
+            if (LTT == 2)
+                this.LTT = "Link Technology Type: 1090 ES";
+            if (LTT == 3)
+                this.LTT = "Link Technology Type: VDL 4";
+            if (LTT >= 4)
+                this.LTT = "Link Technology Type: not assigned";
+            if (LTT == 2)
+            {
+                if (VN == 0)
+                    this.VN = "ED102/DO-260";
+                if (VN == 1)
+                    this.VN = "DO-260A";
+                if (VN == 2)
+                    this.VN = "ED102A/DO-260B";
+            }
+            else
+                this.VN = Convert.ToString(VN);
+
+            this.MOPS = " - " + this.VNS + "\n - " + this.VN + "\n - " + this.LTT;
         }
 
         public int ComputeMetInformation(string[] paquete, int pos) // Data Item I021/220
@@ -1138,11 +1864,13 @@ namespace AsterixDecoder
             {
                 this.WindSpeed = int.Parse(paquete[pos + cont] + paquete[pos + cont + 1], System.Globalization.NumberStyles.HexNumber);
                 cont = cont + 2;
+                this.MetReport = " - Wind Speed: " + this.WindSpeed.ToString() + " knots";
             }
             if(bits.Substring(1, 1) == "1")
             {
                 this.WindDirection = int.Parse(paquete[pos + cont] + paquete[pos + cont + 1], System.Globalization.NumberStyles.HexNumber);
                 cont = cont + 2;
+                this.MetReport = this.MetReport + " - Wind Direction: " + this.WindDirection + "º";
             }
             if(bits.Substring(2, 1) == "1")
             {
@@ -1150,11 +1878,13 @@ namespace AsterixDecoder
                 string bitsTMP = Convert.ToString(Convert.ToInt32(octetoTMP, 16), 2);
                 this.Temperature = 0.25 * this.ComputeComplementoA2(bitsTMP);
                 cont = cont + 2;
+                this.MetReport = this.MetReport + " - Temperature: " + this.Temperature + "ºC";
             }
             if(bits.Substring(3, 1) == "1")
             {
                 this.Turbulence = int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                 cont++;
+                this.MetReport = this.MetReport + " - Turbulence: " + this.Turbulence;
             }
 
             return cont;
@@ -1169,7 +1899,9 @@ namespace AsterixDecoder
             double rollangle = this.ComputeComplementoA2(bits);
 
             //resolució
-            this.RollAngle = rollangle * 0.01;
+            this.RollAngleNum = rollangle * 0.01;
+
+            this.RollAngle = this.RollAngleNum.ToString() + "º";
         }
 
         public int ComputeModeS_MBdata(string[] paquete, int pos) // Data Item I021/250
@@ -1200,13 +1932,15 @@ namespace AsterixDecoder
                     j++;
                 }
 
-                this.MBdata[i] = Convert.ToString(Convert.ToInt32(mbdata, 16), 2).PadLeft(8, '0');
+                this.MBdata[i] = Convert.ToString(Convert.ToInt32(mbdata, 2), 16).PadLeft(8, '0');
 
                 //BDS1 & BDS2
                 string octet8 = Convert.ToString(Convert.ToInt32(paquete[pos + cont + 7], 16), 2).PadLeft(8, '0');
 
                 this.BDS1[i] = octet8.Substring(0, 4);
                 this.BDS2[i] = octet8.Substring(4, 4);
+
+                this.ModeS = "\nMessage: " + this.MBdata[i] + ", Address 1: " + this.BDS1[i] + ", Address 2: " + this.BDS2[i];
 
                 cont = cont + 8;
 
@@ -1419,7 +2153,7 @@ namespace AsterixDecoder
 
         public void ComputeReceiverID(string octeto) // Data Item I021/400
         {
-            this.RID = Convert.ToString(Convert.ToInt32(octeto, 16), 2).PadLeft(8, '0');
+            this.RID = Convert.ToString(Convert.ToInt32(octeto, 16));
         }
 
         public double ComputeComplementoA2(string bits) //hace el complemento A2
