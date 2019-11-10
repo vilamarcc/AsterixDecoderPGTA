@@ -9,14 +9,27 @@
         mc:Ignorable="d"
         Title="Simulation" Height="720" Width="1350" FontFamily="Lucida Sans Unicode">
     <Grid>
-        <gmaps:GMapControl x:Name="mapView" Loaded="mapView_Loaded" Margin="20,20,460,20"></gmaps:GMapControl>
-        <TextBlock x:Name="clockbox" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="975,60,0,0" Height="55" Width="223" FontSize="40"/>
-        <Button x:Name="playbut" Content="Play" HorizontalAlignment="Left" VerticalAlignment="Top" Width="45" Margin="1065,140,0,0" Height="45" Click="playbut_Click"/>
-        <Button x:Name="stopbut" Content="Stop" HorizontalAlignment="Left" VerticalAlignment="Top" Width="45" Margin="995,140,0,0" Height="45" Click="stopbut_Click"/>
-        <Button x:Name="resetbut" Content="Reset" HorizontalAlignment="Left" VerticalAlignment="Top" Width="45" Margin="1137,140,0,0" Height="45"/>
-        <Button x:Name="speed1but" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="950,215,0,0" Content="x1" Click="speed1but_Click"/>
-        <Button x:Name="speed2but" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="1045,215,0,0" Content="x2" Click="speed4but_Click"/>
-        <Button x:Name="speed4but" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="1137,215,0,0" Content="x4" Click="speed2but_Click"/>
+        <gmaps:GMapControl x:Name="mapView" Loaded="mapView_Loaded" Margin="20,20,460,20" BorderBrush="Black">
+        </gmaps:GMapControl>
+        <TextBlock x:Name="clockbox" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="998,70,0,0" Height="55" Width="182" FontSize="40" Background="#FFE9E6E6"/>
+        <Button x:Name="playbut" HorizontalAlignment="Left" VerticalAlignment="Top" Width="45" Margin="1065,140,0,0" Height="45" Click="playbut_Click" BorderBrush="White">
+            <Button.Background>
+                <ImageBrush ImageSource="Resources/play.png" Stretch="Uniform"/>
+            </Button.Background>
+        </Button>
+        <Button x:Name="stopbut" HorizontalAlignment="Left" VerticalAlignment="Top" Width="45" Margin="1020,140,0,0" Height="45" Click="stopbut_Click" BorderBrush="#FFFCFAFA">
+            <Button.Background>
+                <ImageBrush ImageSource="Resources/pause.png" Stretch="Uniform"/>
+            </Button.Background>
+        </Button>
+        <Button x:Name="resetbut" HorizontalAlignment="Left" VerticalAlignment="Top" Width="42" Margin="1115,140,0,0" Height="42" BorderBrush="White">
+            <Button.Background>
+                <ImageBrush ImageSource="Resources/reset.png" Stretch="Uniform"/>
+            </Button.Background>
+        </Button>
+        <Button x:Name="speed1but" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="973,190,0,0" Content="x1" Click="speed1but_Click" Background="{x:Null}"/>
+        <Button x:Name="speed2but" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="1053,190,0,0" Content="x2" Click="speed4but_Click" Background="{x:Null}"/>
+        <Button x:Name="speed4but" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="1133,190,0,0" Content="x4" Click="speed2but_Click" Background="{x:Null}"/>
         <DataGrid x:Name="gridclick" HorizontalAlignment="Left" Height="320" VerticalAlignment="Top" Width="330" Margin="930,275,0,0"/>
         <CheckBox x:Name="checktrail" Content="Show Package Trail" HorizontalAlignment="Left" Margin="908,653,0,0" VerticalAlignment="Top" IsChecked="True" Checked="checktrail_CheckedChanged" Unchecked="checktrail_CheckedChanged"/>
         <CheckBox x:Name="checkairplanes" Content="Show Airplanes Only" HorizontalAlignment="Left" Margin="1055,653,0,0" VerticalAlignment="Top" IsChecked="False" Checked="checkairplanes_CheckedChanged" Unchecked="checkairplanes_CheckedChanged"/>

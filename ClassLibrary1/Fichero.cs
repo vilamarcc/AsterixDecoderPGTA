@@ -160,7 +160,7 @@ namespace AsterixDecoder
             tablaCAT20.Columns.Add(new DataColumn("Position Cartesian Coords"));
             tablaCAT20.Columns.Add(new DataColumn("Track Number"));
             tablaCAT20.Columns.Add(new DataColumn("Track Status"));
-            tablaCAT20.Columns.Add(new DataColumn("Mode 3/A Code"));
+            tablaCAT20.Columns.Add(new DataColumn("Mode 3A Code"));
             tablaCAT20.Columns.Add(new DataColumn("Calculated Velocity"));
             tablaCAT20.Columns.Add(new DataColumn("Flight Level"));
             tablaCAT20.Columns.Add(new DataColumn("Mode C Code"));
@@ -195,7 +195,7 @@ namespace AsterixDecoder
             tablaCAT10.Columns.Add(new DataColumn("Track Velocity Cartesian Coords\n[Vx, Vy]"));
             tablaCAT10.Columns.Add(new DataColumn("Track Number"));
             tablaCAT10.Columns.Add(new DataColumn("Track Status"));
-            tablaCAT10.Columns.Add(new DataColumn("Mode 3/A Code"));
+            tablaCAT10.Columns.Add(new DataColumn("Mode 3A Code"));
             tablaCAT10.Columns.Add(new DataColumn("Target Address"));
             tablaCAT10.Columns.Add(new DataColumn("Target ID"));
             tablaCAT10.Columns.Add(new DataColumn("Mode S MB Data"));
@@ -249,7 +249,7 @@ namespace AsterixDecoder
             tablaCAT10i.Columns.Add(new DataColumn("Track Velocity Cartesian Coords\n[Vx, Vy]"));
             tablaCAT10i.Columns.Add(new DataColumn("Track Number"));
             tablaCAT10i.Columns.Add(new DataColumn("Track Status"));
-            tablaCAT10i.Columns.Add(new DataColumn("Mode 3/A Code"));
+            tablaCAT10i.Columns.Add(new DataColumn("Mode 3A Code"));
             tablaCAT10i.Columns.Add(new DataColumn("Target Address"));
             tablaCAT10i.Columns.Add(new DataColumn("Target ID"));
             tablaCAT10i.Columns.Add(new DataColumn("Mode S MB Data"));
@@ -285,7 +285,7 @@ namespace AsterixDecoder
             tablaCAT20i.Columns.Add(new DataColumn("Position Cartesian Coords"));
             tablaCAT20i.Columns.Add(new DataColumn("Track Number"));
             tablaCAT20i.Columns.Add(new DataColumn("Track Status"));
-            tablaCAT20i.Columns.Add(new DataColumn("Mode 3/A Code"));
+            tablaCAT20i.Columns.Add(new DataColumn("Mode 3A Code"));
             tablaCAT20i.Columns.Add(new DataColumn("Calculated Velocity"));
             tablaCAT20i.Columns.Add(new DataColumn("Flight Level"));
             tablaCAT20i.Columns.Add(new DataColumn("Mode C Code"));

@@ -132,6 +132,7 @@ namespace AsterixDisplay
                 marker.Offset = new System.Windows.Point(-15, -15);
             }
 
+            marker.Tag = contador;
             checkVisible(marker);
             mapView.Markers.Add(marker);
         }
@@ -158,7 +159,6 @@ namespace AsterixDisplay
                     Width = 30,
                     Height = 30,
                     Source = new BitmapImage(new System.Uri("pack://application:,,,/Resources/unidentified.png"))
-
                 };
                 marker.ZIndex = 1; //Index = 1, non airplane
                 marker.Offset = new System.Windows.Point(-15, -15);
@@ -331,16 +331,32 @@ namespace AsterixDisplay
         private void speed1but_Click(object sender, RoutedEventArgs e)
         {
             this.speed = 1000;
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, this.speed);
         }
 
         private void speed4but_Click(object sender, RoutedEventArgs e)
         {
             this.speed = 250;
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, this.speed);
         }
 
         private void speed2but_Click(object sender, RoutedEventArgs e)
         {
             this.speed = 500;
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, this.speed);
         }
+
+        /*
+        private void mapView_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            GMapControl map = (GMapControl)sender;
+            GMapMarker marker = map.Markers[map.ta]
+            int num = Convert.ToInt32(marker.Tag);
+
+            CAT20 paquete = CAT20s[num];
+
+            MessageBox.Show(paquete.callsign);
+        }
+        */
     }
 }
