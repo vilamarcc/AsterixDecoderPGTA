@@ -166,8 +166,61 @@ namespace AsterixDisplay
 
         private void filldataexpandedCAT21(int index)
         {
+            DataTable expanded = new DataTable();
+            CAT21 cat21exp = f.getCAT21(index);
 
+            expanded.Columns.Add(new DataColumn());
+            expanded.Columns.Add(new DataColumn());
+
+            expanded.Rows.Add("Package #", index + 1);
+            if (cat21exp.DataSourceID != null) { expanded.Rows.Add("Data Source", cat21exp.DataSourceID); }
+            if (cat21exp.TargetID != null) { expanded.Rows.Add("Target Identification", cat21exp.TargetID); }
+            if (cat21exp.TargetReport != null) { expanded.Rows.Add("Target Report", cat21exp.TargetReport); }
+            if (cat21exp.TOD != null) { expanded.Rows.Add("Time of Day", cat21exp.TOD); }
+            if (cat21exp.positionWGS != null) { expanded.Rows.Add("Position WGS-84 coordinates\n[Latitude, Longitude]", cat21exp.positionWGS); }
+            if (cat21exp.HRpositionWGS != null) { expanded.Rows.Add("High Resolution position WGS-84\n[Latitude, Longitude]", cat21exp.HRpositionWGS); }
+            if (cat21exp.FlightLevel != null) { expanded.Rows.Add("FLight Level", cat21exp.FlightLevel); }
+            if (cat21exp.GeometricHeight != null) { expanded.Rows.Add("Geometric Height", cat21exp.GeometricHeight); }
+            if (cat21exp.OperationalStatus != null) { expanded.Rows.Add("Operational Status", cat21exp.OperationalStatus); }
+            if (cat21exp.AirSpeed != null) { expanded.Rows.Add("Air Speed", cat21exp.AirSpeed); }
+            if (cat21exp.TrueAirspeed != null) { expanded.Rows.Add("True Air Speed", cat21exp.TrueAirspeed); }
+            if (cat21exp.AirborneGroundVector != null) { expanded.Rows.Add("Airborne Ground vector\n[Ground Speed, Track Angle]", cat21exp.AirborneGroundVector); }
+            if (cat21exp.SelectedAltitude_IS != null) { expanded.Rows.Add("Selected Altitude\nIntermediate State", cat21exp.SelectedAltitude_IS); }
+            if (cat21exp.SelectedAltitude_FS != null) { expanded.Rows.Add("Selected Altitude\nFinal State", cat21exp.SelectedAltitude_FS); }
+            if (cat21exp.MOPS != null) { expanded.Rows.Add("MOPS version", cat21exp.MOPS); }
+            if (cat21exp.MagneticHeading != null) { expanded.Rows.Add("Magnetic Heading", cat21exp.MagneticHeading); }
+            if (cat21exp.BarometricVerticalRate != null) { expanded.Rows.Add("Barometric Vertical rate", cat21exp.BarometricVerticalRate); }
+            if (cat21exp.GeometricVerticalRate != null) { expanded.Rows.Add("Geometric Vertical rate", cat21exp.GeometricVerticalRate); }
+            if (cat21exp.Mode3ACode != null) { expanded.Rows.Add("Mode 3A Code", cat21exp.Mode3ACode); }
+            if (cat21exp.MetReport != null) { expanded.Rows.Add("Met Report", cat21exp.MetReport); }
+            if (cat21exp.ECAT != null) { expanded.Rows.Add("Emitter category", cat21exp.ECAT); }
+            if (cat21exp.TargetStatus != null) { expanded.Rows.Add("Target Status", cat21exp.TargetStatus); }
+            if (cat21exp.RateOfTurn != null) { expanded.Rows.Add("Rate of Turn", cat21exp.RateOfTurn); }
+            if (cat21exp.RollAngle != null) { expanded.Rows.Add("Roll Angle", cat21exp.RollAngle); }
+            if (cat21exp.serviceID != null) { expanded.Rows.Add("Service Identification", cat21exp.serviceID); }
+            if (cat21exp.QualityIndicators != null) { expanded.Rows.Add("Quality Indicators", cat21exp.QualityIndicators); }
+            if (cat21exp.ModeS != null) { expanded.Rows.Add("Mode S", cat21exp.ModeS); }
+            if (cat21exp.LinkTech != null) { expanded.Rows.Add("Link Technology", cat21exp.LinkTech); }
+            if (cat21exp.RP != null) { expanded.Rows.Add("Report period", cat21exp.RP); }
+            if (cat21exp.MSGampl != null) { expanded.Rows.Add("Message amplitude", cat21exp.MSGampl); }
+            if (cat21exp.TrackAngleRate != null) { expanded.Rows.Add("Track Angle rate", cat21exp.TrackAngleRate); }
+            if (cat21exp.RID != null) { expanded.Rows.Add("Receiver ID", cat21exp.RID); }
+            if (cat21exp.TimeOfApplicabilityForPosition_ != null) { expanded.Rows.Add("Time of Applicability\nfor position", cat21exp.TimeOfApplicabilityForPosition_); }
+            if (cat21exp.TimeOfApplicabilityForVelocity_ != null) { expanded.Rows.Add("Time of Applicability\nfor velocity", cat21exp.TimeOfApplicabilityForVelocity_); }
+            if (cat21exp.TimeOfMessageReceptionForPosition_ != null) { expanded.Rows.Add("Time of Message Reception\nfor position", cat21exp.TimeOfMessageReceptionForPosition_); }
+            if (cat21exp.TimeOfMessageReceptionForVelocity_ != null) { expanded.Rows.Add("Time of Message Reception\nfor velocity", cat21exp.TimeOfMessageReceptionForVelocity_); }
+            if (cat21exp.TimeOfMessageReceptionForPosition_HighPrecision_ != null) { expanded.Rows.Add("Time of Message Reception\nfor position - High Resolution", cat21exp.TimeOfMessageReceptionForPosition_HighPrecision_); }
+            if (cat21exp.TimeOfMessageReceptionForVelocity_HighPrecision_ != null) { expanded.Rows.Add("Time of Message Reception\nfor velocity - High Resolution", cat21exp.TimeOfMessageReceptionForVelocity_HighPrecision_); }
+            if (cat21exp.TimeOfAsterixReportTransmission_ != null) { expanded.Rows.Add("Time of ASTERIX Report Transmission", cat21exp.TimeOfAsterixReportTransmission_); }
+            if (cat21exp.TrajectoryIntentData != null) { expanded.Rows.Add("Trajectory Intent Data", cat21exp.TrajectoryIntentData); }
+            if (cat21exp.posAccuracy != null) { expanded.Rows.Add("Position accuracy", cat21exp.posAccuracy); }
+            if (cat21exp.velAccuracy != null) { expanded.Rows.Add("Velocity accuracy", cat21exp.velAccuracy); }
+            if (cat21exp.TODaccuracy != null) { expanded.Rows.Add("Time of Day accuracy", cat21exp.TODaccuracy); }
+
+            dataexpanded.ItemsSource = expanded.DefaultView;
+            dataexpanded.Items.Refresh();
         }
+
         private void filldataexpandedCAT10(int index)
         {
             DataTable expanded = new DataTable();
