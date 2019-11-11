@@ -65,7 +65,7 @@ namespace AsterixDisplay
                     ((IProgress<int>)progress).Report(70);
 
                     //decimos que se ha cargado ya el fichero
-                    MessageBox.Show("Archivo cargado");
+                    MessageBox.Show("Loaded file");
                     ((IProgress<int>)progress).Report(75);
 
                     //guardamos las tablas y mostramos la que toque (this.cat)
@@ -164,10 +164,10 @@ namespace AsterixDisplay
                     MessageBox.Show(paquete.TargetReport);
                 if (c == 10) //Operational Status
                     MessageBox.Show(paquete.OperationalStatus);
-                //if (c == 45) //Figure Of Merit
-                //    MessageBox.Show(paquete.FigureOfMerit);
-                //if (c == 46) //Data ages
-                //    MessageBox.Show(paquete.ages);
+                if (c == 45) //Figure Of Merit
+                    MessageBox.Show(paquete.FigureOfMerit);
+                if (c == 46) //Data ages
+                    MessageBox.Show(paquete.ages);
                 if (c == 41) //Trajectory Intent Data
                     MessageBox.Show(paquete.TrajectoryIntentData);
                 if (c == 29) //Link Technology

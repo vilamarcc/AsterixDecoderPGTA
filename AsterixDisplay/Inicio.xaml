@@ -9,7 +9,7 @@
     <Grid Margin="0,0,-6.667,-0.333">
         <Image HorizontalAlignment="Left" Height="135" VerticalAlignment="Top" Width="600" Margin="25,20,0,0" Source="/Resources/UPC-logo.jpg" Grid.ColumnSpan="2">
         </Image>
-        <Button x:Name="iniciatbut" Content="Iniciar " HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="700,382,0,0" Background="{x:Null}" Click="iniciatbut_Click"/>
+        <Button x:Name="iniciatbut" Content="Start" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="700,382,0,0" Background="{x:Null}" Click="iniciatbut_Click"/>
         <Button Content="About Us" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="95,381,0,0" Background="{x:Null}" Click="Button_Click"/>
         <Button Content="Help" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="15,381,0,0" Background="{x:Null}"/>
         <TextBlock Text="© Laura Parga, Marc Vila, Mercè Cuixart, Irene Medina, Irene Rodríguez for PGTA" Margin="190,390,122,7" TextWrapping="Wrap"></TextBlock>

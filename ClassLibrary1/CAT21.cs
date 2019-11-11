@@ -11,7 +11,7 @@ namespace AsterixDecoder
 
         public string FSPEC;
 
-        public int version = 24;
+        public int version = 23;
 
         public string RA;
         public string TC;
@@ -836,7 +836,7 @@ namespace AsterixDecoder
             if (this.SAC == "0" && this.SIC == "107")
                 this.DataSourceID = "Data flow local to the airport: Barcelona - LEBL";
             else
-                this.DataSourceID = "SAC: " + this.SACnum.ToString() + ", SIC: " + this.SICnum.ToString();
+                this.DataSourceID = "SAC: " + this.SAC.ToString() + ", SIC: " + this.SIC.ToString();
         }
 
         public void ComputeFigureOfMerit(string octetos) // Data Item I021/090
@@ -1201,7 +1201,7 @@ namespace AsterixDecoder
         public void ComputeMode3ACode(string octetos) // Data Item I021/070
         {
             //string de bits
-            string bits = Convert.ToString(Convert.ToInt32(octetos, 16), 2).PadLeft(8, '0');
+            string bits = Convert.ToString(Convert.ToInt32(octetos, 16), 2).PadLeft(16, '0');
 
             this.Mode3ACode = bits.Substring(4, 12);
         }
@@ -1260,7 +1260,9 @@ namespace AsterixDecoder
             if (this.FSI_Position == "01")
                 segundos = segundos + 1;
 
-            this.TimeOfMessageReceptionForPosition_HighPrecision_ = segundos.ToString() + " s";
+            double segundos_red = Math.Round(10000 * segundos) / 10000;
+
+            this.TimeOfMessageReceptionForPosition_HighPrecision_ = segundos_red.ToString() + " s";
         }
 
             public void ComputeTimeOfMessageReceptionForVelocity(string octetos) // Data Item I021/075
@@ -1295,7 +1297,9 @@ namespace AsterixDecoder
             if (this.FSI_Velocity == "01")
                 segundos = segundos + 1;
 
-            this.TimeOfMessageReceptionForVelocity_HighPrecision_ = segundos.ToString() + " s";
+            double segundos_red = Math.Round(10000 * segundos) / 10000;
+
+            this.TimeOfMessageReceptionForVelocity_HighPrecision_ = segundos_red.ToString() + " s";
         }
 
         public void ComputeTimeOfAsterixReportTransmission(string octetos) // Data Item I021/077
@@ -1518,7 +1522,7 @@ namespace AsterixDecoder
 
             //fem el complement a2 que ens torna els bit en doubles i multipliquem per la resolució
             this.LatitudeWGS_HR = Math.Round(1000 * this.ComputeComplementoA2(lat) * (180 / Math.Pow(2, 31))) / 1000;
-            this.LongitudeWGS_HR = Math.Round(1000 * this.ComputeComplementoA2(lat) * (180 / Math.Pow(2, 31))) / 1000;
+            this.LongitudeWGS_HR = Math.Round(1000 * this.ComputeComplementoA2(lon) * (180 / Math.Pow(2, 31))) / 1000;
 
             this.HRpositionWGS = "[" + this.LatitudeWGS_HR + "º, " + this.LongitudeWGS_HR + "º]";
         }
@@ -1563,7 +1567,15 @@ namespace AsterixDecoder
 
             //separem SAS, Source i l'altitud en string de bits
             this.SAS = octetos_bits.Substring(0, 1);
-            this.Source = octetos_bits.Substring(1, 2);
+            string s = octetos_bits.Substring(1, 2);
+            if (s == "00")
+                this.Source = "Unknown source";
+            if (s == "01")
+                this.Source = "Aircraft altitude";
+            if (s == "10")
+                this.Source = "MCP/FCU selected altitude";
+            if (s == "11")
+                this.Source = "FMS selected altitude";
             string altitude_bits = octetos_bits.Substring(3, 13);
 
             //complement a2 y resolució a l'altitud
@@ -1619,7 +1631,7 @@ namespace AsterixDecoder
         public void ComputeTrueAirspeed(string octetos) // Data Item I021/151
         {
             //string de bits
-            string octetos_bits = Convert.ToString(Convert.ToInt32(octetos, 16), 2).PadLeft(8, '0');
+            string octetos_bits = Convert.ToString(Convert.ToInt32(octetos, 16), 2).PadLeft(16, '0');
 
             string airspeed_bits = "0";
             if (this.version == 24)
@@ -1692,7 +1704,6 @@ namespace AsterixDecoder
             string BarometricVR_bits = "0";
             if (this.version == 24)
             { 
-                //separem 
                 this.RE_BarometricVerticalRate = octetos_bits.Substring(0, 1);
                 BarometricVR_bits = octetos_bits.Substring(1, 15);
             }
@@ -1700,7 +1711,7 @@ namespace AsterixDecoder
                 BarometricVR_bits = octetos_bits.Substring(0, 16);
 
             //passem a int i resolució
-            this.BarometricVerticalRateNum = 6.25 * Convert.ToInt64(BarometricVR_bits);
+            this.BarometricVerticalRateNum = 6.25 * this.ComputeComplementoA2(BarometricVR_bits);
 
             this.BarometricVerticalRate = this.BarometricVerticalRateNum + " feet/minute";
         }
@@ -1856,7 +1867,7 @@ namespace AsterixDecoder
             if (SS == 3)
                 this.SS = "Surveillance Status: SPI set";
 
-            this.TargetStatus = "\n - " + this.ICF + "\n - " + this.LNAV + "\n - " + this.ME + "\n - " + this.PS + "\n - " + this.SS;
+            this.TargetStatus = " - " + this.ICF + "\n - " + this.LNAV + "\n - " + this.ME + "\n - " + this.PS + "\n - " + this.SS;
         }
 
         public void ComputeTargetStatus23(string octeto) // Data Item I021/200
@@ -2108,43 +2119,43 @@ namespace AsterixDecoder
             {
                 this.AOS_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                 cont++;
-                this.ages = " - " + this.AOS_age;
+                this.ages = " - Aircraft Operational Status: " + this.AOS_age;
             }
             if (octeto1.Substring(1, 1) == "1") // Subfield #2
             {
                 this.TRD_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                 cont++;
-                this.ages = this.ages + "\n - " + this.TRD_age;
+                this.ages = this.ages + "\n - Target Report Descriptor: " + this.TRD_age;
             }
             if (octeto1.Substring(2, 1) == "1") // Subfield #3
             {
                 this.M3A_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                 cont++;
-                this.ages = this.ages + "\n - " + this.M3A_age;
+                this.ages = this.ages + "\n - Mode 3/A Code: " + this.M3A_age;
             }
             if (octeto1.Substring(3, 1) == "1") // Subfield #4
             {
                 this.QI_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                 cont++;
-                this.ages = this.ages + "\n - " + this.QI_age;
+                this.ages = this.ages + "\n - Quality Indicators: " + this.QI_age;
             }
             if (octeto1.Substring(4, 1) == "1") // Subfield #5
             {
                 this.TI_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                 cont++;
-                this.ages = this.ages + "\n - " + this.TI_age;
+                this.ages = this.ages + "\n - Trajectory Intent: " + this.TI_age;
             }
             if (octeto1.Substring(5, 1) == "1") // Subfield #6
             {
                 this.MAM_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                 cont++;
-                this.ages = this.ages + "\n - " + this.MAM_age;
+                this.ages = this.ages + "\n - Message Amplitude: " + this.MAM_age;
             }
             if (octeto1.Substring(6, 1) == "1") // Subfield #7
             {
                 this.GH_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                 cont++;
-                this.ages = this.ages + "\n - " + this.GH_age;
+                this.ages = this.ages + "\n - Geometric Height: " + this.GH_age;
             }
             if (longitud >= 2)
             {
@@ -2153,43 +2164,43 @@ namespace AsterixDecoder
                 {
                     this.FL_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                     cont++;
-                    this.ages = this.ages + "\n - " + this.FL_age;
+                    this.ages = this.ages + "\n - Flight Level: " + this.FL_age;
                 }
                 if (octeto2.Substring(1, 1) == "1") // Subfield #8
                 {
                     this.ISA_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                     cont++;
-                    this.ages = this.ages + "\n - " + this.ISA_age;
+                    this.ages = this.ages + "\n - Intermediate State Selected Altitude: " + this.ISA_age;
                 }
                 if (octeto2.Substring(2, 1) == "1") // Subfield #9
                 {
                     this.FSA_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                     cont++;
-                    this.ages = this.ages + "\n - " + this.FSA_age;
+                    this.ages = this.ages + "\n - Final State Selected Altitude: " + this.FSA_age;
                 }
                 if (octeto2.Substring(3, 1) == "1") // Subfield #10
                 {
                     this.AS_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                     cont++;
-                    this.ages = this.ages + "\n - " + this.AS_age;
+                    this.ages = this.ages + "\n - Air Speed: " + this.AS_age;
                 }
                 if (octeto2.Substring(4, 1) == "1") // Subfield #11
                 {
                     this.TAS_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                     cont++;
-                    this.ages = this.ages + "\n - " + this.TAS_age;
+                    this.ages = this.ages + "\n - True Air Speed: " + this.TAS_age;
                 }
                 if (octeto2.Substring(5, 1) == "1") // Subfield #12
                 {
                     this.MH_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                     cont++;
-                    this.ages = this.ages + "\n - " + this.MH_age;
+                    this.ages = this.ages + "\n - Magnetic Heading: " + this.MH_age;
                 }
                 if (octeto2.Substring(6, 1) == "1") // Subfield #13
                 {
                     this.BVR_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                     cont++;
-                    this.ages = this.ages + "\n - " + this.BVR_age;
+                    this.ages = this.ages + "\n - Barometric Vertical Rate: " + this.BVR_age;
                 }
                 if (longitud >= 3)
                 {
@@ -2198,43 +2209,43 @@ namespace AsterixDecoder
                     {
                         this.GVR_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                         cont++;
-                        this.ages = this.ages + "\n - " + this.GVR_age;
+                        this.ages = this.ages + "\n - Geometric Vertical Rate: " + this.GVR_age;
                     }
                     if (octeto3.Substring(1, 1) == "1") // Subfield #15
                     {
                         this.GV_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                         cont++;
-                        this.ages = this.ages + "\n - " + this.GV_age;
+                        this.ages = this.ages + "\n - Ground Vector: " + this.GV_age;
                     }
                     if (octeto3.Substring(2, 1) == "1") // Subfield #16
                     {
                         this.TAR_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                         cont++;
-                        this.ages = this.ages + "\n - " + this.TAR_age;
+                        this.ages = this.ages + "\n - Track Angle Rate:" + this.TAR_age;
                     }
                     if (octeto3.Substring(3, 1) == "1") // Subfield #17
                     {
                         this.TID_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                         cont++;
-                        this.ages = this.ages + "\n - " + this.TID_age;
+                        this.ages = this.ages + "\n - Target Identification: " + this.TID_age;
                     }
                     if (octeto3.Substring(4, 1) == "1") // Subfield #18
                     {
                         this.TS_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                         cont++;
-                        this.ages = this.ages + "\n - " + this.TS_age;
+                        this.ages = this.ages + "\n - Target Status: " + this.TS_age;
                     }
                     if (octeto3.Substring(5, 1) == "1") // Subfield #19
                     {
                         this.MET_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                         cont++;
-                        this.ages = this.ages + "\n - " + this.MET_age;
+                        this.ages = this.ages + "\n - Met Information: " + this.MET_age;
                     }
                     if (octeto3.Substring(6, 1) == "1") // Subfield #20
                     {
                         this.ROA_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                         cont++;
-                        this.ages = this.ages + "\n - " + this.ROA_age;
+                        this.ages = this.ages + "\n - Roll Angle: " + this.ROA_age;
                     }
                     if (longitud == 4)
                     {
@@ -2243,13 +2254,13 @@ namespace AsterixDecoder
                         {
                             this.ARA_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                             cont++;
-                            this.ages = this.ages + "\n - " + this.ARA_age;
+                            this.ages = this.ages + "\n - ACAS Resolution Advisory: " + this.ARA_age;
                         }
                         if (octeto4.Substring(1, 1) == "1") // Subfield #22
                         {
                             this.SCC_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                             cont++;
-                            this.ages = this.ages + "\n - " + this.SCC_age;
+                            this.ages = this.ages + "\n - Surface Capabilities and Characteristics: " + this.SCC_age;
                         }
                     }
                 }
