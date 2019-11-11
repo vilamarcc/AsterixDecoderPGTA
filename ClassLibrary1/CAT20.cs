@@ -636,8 +636,6 @@ namespace AsterixDecoder
             double sect = Convert.ToDouble(Convert.ToInt32(TOD, 2) / 128);
             TimeSpan time = TimeSpan.FromSeconds(sect);
 
-            //here backslash is must to tell that colon is
-            //not the part of format, it just a character that we want in output
             string tod = time.ToString(@"hh\:mm\:ss\:fff");
 
             return tod;

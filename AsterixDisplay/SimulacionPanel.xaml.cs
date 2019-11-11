@@ -34,12 +34,13 @@ namespace AsterixDisplay
         List<CAT20> CAT20s;
         List<CAT10> CAT10s;
         List<CAT21> CAT21s;
+        List<Flight> flights;
         int iscat;
         string[] tiempo;
         int speed;
 
         System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer(); //Para el tick del timer
-        public SimulacionPanel(List<CAT20> cat20s, List<CAT10> cat10s, List<CAT21> cat21s, int cat)
+        public SimulacionPanel(List<CAT20> cat20s, List<CAT10> cat10s, List<CAT21> cat21s, int cat, List<Flight> listflights)
         {
             InitializeComponent();
             MLATcoords[0] = 41.29706278;
@@ -50,13 +51,13 @@ namespace AsterixDisplay
             this.CAT20s = cat20s;
             this.CAT10s = cat10s;
             this.CAT21s = cat21s;
+            this.flights = listflights;
             this.iscat = cat;
             this.speed = 1000;
 
             //Update clock with time of the first package
-            if (cat == 20) { clockUpdate(cat20s[0].TOD.Split(':')); }
-            if (cat == 10) { clockUpdate(cat10s[0].TimeOfDay.Split(':')); }
-            //if (cat == 21) { clockUpdate(cat21s[0].Tod); }
+            this.tiempo = flights[0].TODs[0].Split(':');
+            this.tiempo = (flights[0].TODs[0].Split(':'));
         }
 
         private void mapView_Loaded(object sender, RoutedEventArgs e)
@@ -104,7 +105,7 @@ namespace AsterixDisplay
             return coordinates;
         }
 
-        private void addMarkerMLAT(double X, double Y, string callsign)
+        private void addMarkerMLAT(double X, double Y, string callsign, int tracknum)
         {
             GMapMarker marker = new GMapMarker((fromXYtoLatLongMLAT(X, Y)));
             marker.Position = (fromXYtoLatLongMLAT(X, Y));
@@ -116,7 +117,8 @@ namespace AsterixDisplay
                     Height = 15,
                     Source = new BitmapImage(new System.Uri("pack://application:,,,/Resources/airplane1.png"))
                 };
-                marker.ZIndex = 0; //Indice = 0, airplane
+                marker.ZIndex = tracknum; 
+                marker.Offset = new System.Windows.Point(-7.5, -7.5);
                 marker.Offset = new System.Windows.Point(-7.5, -7.5);
             }
             if (callsign == null)
@@ -128,41 +130,27 @@ namespace AsterixDisplay
                     Source = new BitmapImage(new System.Uri("pack://application:,,,/Resources/unidentified.png"))
 
                 };
-                marker.ZIndex = 1; //Index = 1, non airplane
+                marker.ZIndex = tracknum;
                 marker.Offset = new System.Windows.Point(-15, -15);
             }
 
-            marker.Tag = contador;
-            checkVisible(marker);
+            //checkVisible(marker);
             mapView.Markers.Add(marker);
         }
+
 
         private void addMarkerSMR(double X, double Y, string callsign)
         {
             GMapMarker marker = new GMapMarker((fromXYtoLatLongSMR(X, Y)));
             marker.Position = (fromXYtoLatLongSMR(X, Y));
-            if (callsign != null)
+            marker.Shape = new System.Windows.Controls.Image
             {
-                marker.Shape = new System.Windows.Controls.Image
-                {
-                    Width = 15,
-                    Height = 15,
-                    Source = new BitmapImage(new System.Uri("pack://application:,,,/Resources/airplane1.png"))
-                };
-                marker.ZIndex = 0; //Indice = 0, airplane
-                marker.Offset = new System.Windows.Point(-7.5, -7.5);
-            }
-            if (callsign == null)
-            {
-                marker.Shape = new System.Windows.Controls.Image
-                {
-                    Width = 30,
-                    Height = 30,
-                    Source = new BitmapImage(new System.Uri("pack://application:,,,/Resources/unidentified.png"))
-                };
-                marker.ZIndex = 1; //Index = 1, non airplane
-                marker.Offset = new System.Windows.Point(-15, -15);
-            }
+                Width = 15,
+                Height = 15,
+                Source = new BitmapImage(new System.Uri("pack://application:,,,/Resources/airplane1.png"))
+            };
+            marker.ZIndex = 0; //Indice = 0, airplane
+            marker.Offset = new System.Windows.Point(-7.5, -7.5);
 
             checkVisible(marker);
             mapView.Markers.Add(marker);
@@ -170,6 +158,7 @@ namespace AsterixDisplay
 
         private void playbut_Click(object sender, RoutedEventArgs e)
         {
+            //dispatcherTimer.Tick += dispatcherTimer_TickFlightCAT20;
             if (this.iscat == 20) { dispatcherTimer.Tick += dispatcherTimer_TickCAT20; }
             if (this.iscat == 10) { dispatcherTimer.Tick += dispatcherTimer_TickCAT10; }
             dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, this.speed);
@@ -181,19 +170,19 @@ namespace AsterixDisplay
             //Retreive the packages which have the same time (same second)
             Boolean t = true;
             while (t == true)
-            {           
-                    CAT20 cat20 = CAT20s[this.contador];
-                    this.tiempo = cat20.TOD.Split(':');
-                    if (Convert.ToInt32(tiempo[2]) == secact)
+            {
+                CAT20 cat20 = CAT20s[this.contador];
+                this.tiempo = cat20.TOD.Split(':');
+                if (Convert.ToInt32(tiempo[2]) == secact)
+                {
+                    addMarkerMLAT(cat20.X, cat20.Y, cat20.callsign,Convert.ToInt32(cat20.TrackNum));
+                    this.contador++;
+                    if (mapView.Markers.Count >= 200)
                     {
-                        addMarkerMLAT(cat20.X, cat20.Y, cat20.callsign);
-                        this.contador++;
-                        if (this.contador >= 200)
-                        {
-                            mapView.Markers[contador - 199].Clear();
-                        }
-                    }                
-                
+                        mapView.Markers[mapView.Markers.Count - 200].Clear();
+                    }
+                }
+
                 else
                 {
                     t = false;
@@ -214,11 +203,11 @@ namespace AsterixDisplay
                 if (Convert.ToInt32(tiempo[2]) == secact)
                 {
                     if (cat10.TYP == "PSR") { addMarkerSMR(Convert.ToDouble(cat10.Xcomponent), Convert.ToDouble(cat10.Ycomponent), cat10.TargetID); }
-                    if (cat10.TYP == "Mode S MLAT") { addMarkerMLAT(Convert.ToDouble(cat10.Xcomponent), Convert.ToDouble(cat10.Ycomponent), cat10.TargetID); }
+                    //if (cat10.TYP == "Mode S MLAT") { addMarkerMLAT(Convert.ToDouble(cat10.Xcomponent), Convert.ToDouble(cat10.Ycomponent), cat10.TargetID); }
                     this.contador++;
-                    if (this.contador >= 200)
+                    if (mapView.Markers.Count >= 200)
                     {
-                        mapView.Markers[contador - 199].Clear();
+                        mapView.Markers[mapView.Markers.Count - 200].Clear();
                     }
                 }
                 else
@@ -226,11 +215,36 @@ namespace AsterixDisplay
                     t = false;
                     secact++;
                 }
+                
                 clockUpdate(this.tiempo);
             }
         }
 
-        private void dispatcherTimer_TickCAT21(object sender, EventArgs e)
+        private void dispatcherTimer_TickFlightCAT20(object sender, EventArgs e)
+        {
+            string[] timepack = this.tiempo;
+
+            foreach (Flight f in flights)
+            {
+                int contadorTOD = 0;
+                bool t = true;
+                while (t == true && contadorTOD < f.TODs.Count())
+                {
+                    if(Convert.ToInt32(timepack[2]) == secact && Convert.ToInt32(timepack[1]) == minact && Convert.ToInt32(timepack[0]) == horaact)
+                    {
+                        this.tiempo = f.TODs[contadorTOD].Split(':');
+                        addMarkerMLAT(f.Xs[contadorTOD], f.Ys[contadorTOD], f.callsign, Convert.ToInt32(f.tracknumber));
+                        t = false;
+                    }
+                    contadorTOD++;
+                }
+            }
+            this.tiempo[2] = Convert.ToString(Convert.ToInt32(this.tiempo[2]) + 1);
+            clockUpdate(this.tiempo);
+            
+        }
+
+            private void dispatcherTimer_TickCAT21(object sender, EventArgs e)
         {
             //implementar CAT21
         }
@@ -242,8 +256,12 @@ namespace AsterixDisplay
             this.horaact = Convert.ToInt32(TODexp[0]);
             this.minact = Convert.ToInt32(TODexp[1]);
             this.secact = Convert.ToInt32(TODexp[2]);
+            
+            TimeSpan time = TimeSpan.FromSeconds(this.horaact*3600 + this.minact*60 + this.secact);
 
-            clockbox.Text = (TODexp[0] + ":" + TODexp[1] + ":" + TODexp[2]);
+            string tod = time.ToString(@"hh\:mm\:ss");
+
+            clockbox.Text = tod;
         }
 
         private void stopbut_Click(object sender, RoutedEventArgs e)
@@ -255,22 +273,21 @@ namespace AsterixDisplay
         {
             if (checktrail.IsChecked == true)
             {
-                foreach (GMapMarker marker in mapView.Markers)
+                for (int i = 0; i < mapView.Markers.Count; i++)
                 {
-                    if (marker.Shape != null)
+                    if (mapView.Markers[i].Shape != null)
                     {
-                        marker.Shape.Visibility = Visibility.Visible;
+                        mapView.Markers[i].Shape.Visibility = Visibility.Visible;
                     }
-
                 }
             }
             if (checktrail.IsChecked == false)
             {
-                foreach (GMapMarker marker in mapView.Markers)
+                for (int i = 0; i < mapView.Markers.Count; i++)
                 {
-                    if (marker.Shape != null)
+                    if (mapView.Markers[i].Shape != null)
                     {
-                        marker.Shape.Visibility = Visibility.Collapsed;
+                        mapView.Markers[i].Shape.Visibility = Visibility.Collapsed;
                     }
                 }
             }
@@ -280,25 +297,24 @@ namespace AsterixDisplay
         {
             if (checkairplanes.IsChecked == true)
             {
-                foreach (GMapMarker marker in mapView.Markers)
+                for (int i = 0; i < mapView.Markers.Count; i++)
                 {
-                    if (marker.Shape != null)
+                    if (mapView.Markers[i].Shape != null)
                     {
-                        if (marker.ZIndex == 0)
-                            marker.Shape.Visibility = Visibility.Visible;
-                        else if (marker.ZIndex == 1)
-                            marker.Shape.Visibility = Visibility.Collapsed;
+                        if (mapView.Markers[i].ZIndex == 0)
+                            mapView.Markers[i].Shape.Visibility = Visibility.Visible;
+                        else if (mapView.Markers[i].ZIndex == 1)
+                            mapView.Markers[i].Shape.Visibility = Visibility.Collapsed;
                     }
-
                 }
             }
             if (checkairplanes.IsChecked == false)
             {
-                foreach (GMapMarker marker in mapView.Markers)
+                for (int i = 0; i < mapView.Markers.Count; i++)
                 {
-                    if (marker.Shape != null)
+                    if (mapView.Markers[i].Shape != null)
                     {
-                        marker.Shape.Visibility = Visibility.Visible;
+                        mapView.Markers[i].Shape.Visibility = Visibility.Visible;
                     }
                 }
             }
@@ -318,11 +334,11 @@ namespace AsterixDisplay
         {
             if (checktrail.IsChecked == false)
             {
-                foreach (GMapMarker marker in mapView.Markers)
+                for (int i = 0; i < mapView.Markers.Count; i++)
                 {
-                    if (marker.Shape != null)
+                    if (mapView.Markers[i].Shape != null)
                     {
-                        marker.Shape.Visibility = Visibility.Collapsed;
+                        mapView.Markers[i].Shape.Visibility = Visibility.Collapsed;
                     }
                 }
             }
@@ -345,6 +361,7 @@ namespace AsterixDisplay
             this.speed = 500;
             dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, this.speed);
         }
+
 
         /*
         private void mapView_MouseUp(object sender, MouseButtonEventArgs e)

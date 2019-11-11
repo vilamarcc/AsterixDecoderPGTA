@@ -19,6 +19,7 @@ namespace AsterixDecoder
         List<CAT10> listaCAT10 = new List<CAT10>();
         List<CAT20> listaCAT20 = new List<CAT20>();
         List<CAT21> listaCAT21 = new List<CAT21>();
+        List<Flight> listflights = new List<Flight>();
 
         //tablas con los datos --> las cargamos cuando tengamos las listas
         DataTable tablaCAT10 = new DataTable();
@@ -431,6 +432,57 @@ namespace AsterixDecoder
                 return true;
             else
                 return false;
+        }
+
+        public List<String> getcallsignsCAT20()
+        {
+            List<String> callsigns = new List<string>();
+
+            if (this.listaCAT20.Count != 0)
+            {
+                for (int i = 0; i < this.listaCAT20.Count; i++)
+                {
+                    if(callsigns.Contains(this.listaCAT20[i].callsign) == false)
+                    {
+                        callsigns.Add(this.listaCAT20[i].callsign);
+                    }
+                }
+            }
+            return callsigns;
+        }
+
+        public void computeFlights()
+        {
+            List<String> tracknums = new List<string>();
+
+            for (int c = 0; c < this.listaCAT20.Count;c++)
+            {
+                if (this.listaCAT20.Count != 0)
+                {
+
+                    if (tracknums.Contains(this.listaCAT20[c].TrackNum) == false)
+                    {
+                        tracknums.Add(this.listaCAT20[c].TrackNum);
+                        listflights.Add(new Flight(this.listaCAT20[c], c));
+                    }
+                    else
+                    {
+                        foreach(Flight flight in this.listflights)
+                        {
+                            if(flight.tracknumber == listaCAT20[c].TrackNum)
+                            {
+                                flight.updateFlight(listaCAT20[c],c);
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+
+        public List<Flight> getFlightList()
+        {
+            return this.listflights;
         }
     }
 }

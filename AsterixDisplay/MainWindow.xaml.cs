@@ -147,9 +147,9 @@ namespace AsterixDisplay
                 //expandimos información:
                 if (c == 3)
                     MessageBox.Show(paquete.getTargetReportDescriptortoString());
-                if (c == 8) //Track status
+                if (c == 9) //Track status
                     MessageBox.Show(paquete.getTrackStatusToString());
-                if (c == 20) //Pos Accuracy
+                if (c == 21) //Pos Accuracy
                     MessageBox.Show(paquete.getPositionAccuracyToString());
 
                 //mostramos las características de ese paquete a parte:
@@ -404,7 +404,9 @@ namespace AsterixDisplay
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            SimulacionPanel sim = new SimulacionPanel(f.getListCAT20(),f.getListCAT10(),f.getListCAT21(),this.cat);
+            this.f.computeFlights();
+            List<Flight> flightsim = f.getFlightList();
+            SimulacionPanel sim = new SimulacionPanel(f.getListCAT20(),f.getListCAT10(),f.getListCAT21(),this.cat, flightsim);
             this.Hide();
             sim.ShowDialog();
             this.Show();
