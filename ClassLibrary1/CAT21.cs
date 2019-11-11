@@ -11,7 +11,7 @@ namespace AsterixDecoder
 
         public string FSPEC;
 
-        public int version = 23;
+        public int version = 24;
 
         public string RA;
         public string TC;
@@ -75,27 +75,20 @@ namespace AsterixDecoder
 
         public string TODaccuracy;
 
-        public double TimeOfApplicabilityForPosition;
         public string TimeOfApplicabilityForPosition_;
 
-        public double TimeOfApplicabilityForVelocity;
         public string TimeOfApplicabilityForVelocity_;
 
-        public double TimeOfMessageReceptionForPosition;
         public string TimeOfMessageReceptionForPosition_;
 
         public string FSI_Position;
-        public double TimeOfMessageReceptionForPosition_HighPrecision;
         public string TimeOfMessageReceptionForPosition_HighPrecision_;
 
-        public double TimeOfMessageReceptionForVelocity;
         public string TimeOfMessageReceptionForVelocity_;
 
         public string FSI_Velocity;
-        public double TimeOfMessageReceptionForVelocity_HighPrecision;
         public string TimeOfMessageReceptionForVelocity_HighPrecision_;
 
-        public double TimeOfAsterixReportTransmission;
         public string TimeOfAsterixReportTransmission_;
 
         public string TargetAddress;
@@ -251,6 +244,7 @@ namespace AsterixDecoder
         public double ROA_age;
         public double ARA_age;
         public double SCC_age;
+        public string ages;
 
         public string RID;
 
@@ -481,6 +475,7 @@ namespace AsterixDecoder
                 if (Convert.ToString(this.FSPEC[3]) == "1")
                 {
                     this.ComputeServiceIdentification(paquete[pos]);
+                    pos++;
                 }
 
                 // Time of Applicability for Position
@@ -840,6 +835,8 @@ namespace AsterixDecoder
 
             if (this.SAC == "0" && this.SIC == "107")
                 this.DataSourceID = "Data flow local to the airport: Barcelona - LEBL";
+            else
+                this.DataSourceID = "SAC: " + this.SACnum.ToString() + ", SIC: " + this.SICnum.ToString();
         }
 
         public void ComputeFigureOfMerit(string octetos) // Data Item I021/090
@@ -878,7 +875,7 @@ namespace AsterixDecoder
             if (DC == "11")
                 this.DC = "Differential correction: invalid";
 
-            this.FigureOfMerit = "\n - " + this.AC + "\n - " + this.MN + "\n - " + this.DC;
+            this.FigureOfMerit = " - " + this.AC + "\n - " + this.MN + "\n - " + this.DC;
 
             int PA = Convert.ToInt32(bits.Substring(12, 4), 2);
             this.posAccuracy = Convert.ToString(PA);
@@ -887,7 +884,9 @@ namespace AsterixDecoder
         public void ComputeServiceIdentification(string octeto) // Data Item I021/015
         {
             //passem a string de bits
-            this.serviceID = Convert.ToString(Convert.ToInt32(octeto, 16), 2).PadLeft(8, '0');
+            int servID = int.Parse(octeto, System.Globalization.NumberStyles.HexNumber);
+
+            this.serviceID = Convert.ToString(servID);
         }
 
         public void ComputeTimeOfDay(string octetoTimeOfDay) // Data Item I021/030
@@ -1209,35 +1208,35 @@ namespace AsterixDecoder
 
         public void ComputeTimeOfApplicabilityForPosition(string octetos) // Data Item I021/071
         {
-            //passem a int
-            int time = int.Parse(octetos, System.Globalization.NumberStyles.HexNumber);
+            //calculem quin segon del dia és
+            int seg = int.Parse(octetos, System.Globalization.NumberStyles.HexNumber);
+            double segundos = Convert.ToSingle(seg) / 128; //resolució
 
-            //multipliquem per a la resolució
-            this.TimeOfApplicabilityForPosition = time / 128;
+            TimeSpan time = TimeSpan.FromSeconds(segundos);
 
-            this.TimeOfApplicabilityForPosition_ = this.TimeOfApplicabilityForPosition.ToString() + " s";
+            this.TimeOfApplicabilityForPosition_ = time.ToString(@"hh\:mm\:ss\:fff");
         }
 
         public void ComputeTimeOfApplicabilityForVelocity(string octetos) // Data Item I021/072
         {
-            //passem a int
-            int time = int.Parse(octetos, System.Globalization.NumberStyles.HexNumber);
+            //calculem quin segon del dia és
+            int seg = int.Parse(octetos, System.Globalization.NumberStyles.HexNumber);
+            double segundos = Convert.ToSingle(seg) / 128; //resolució
 
-            //multipliquem per a la resolució
-            this.TimeOfApplicabilityForVelocity = time / 128;
+            TimeSpan time = TimeSpan.FromSeconds(segundos);
 
-            this.TimeOfApplicabilityForVelocity_ = this.TimeOfApplicabilityForVelocity.ToString() + " s";
+            this.TimeOfApplicabilityForVelocity_ = time.ToString(@"hh\:mm\:ss\:fff");
         }
 
         public void ComputeTimeOfMessageReceptionForPosition(string octetos) // Data Item I021/073
         {
-            //passem a int
-            int time = int.Parse(octetos, System.Globalization.NumberStyles.HexNumber);
+            //calculem quin segon del dia és
+            int seg = int.Parse(octetos, System.Globalization.NumberStyles.HexNumber);
+            double segundos = Convert.ToSingle(seg) / 128; //resolució
 
-            //multipliquem per a la resolució
-            this.TimeOfMessageReceptionForPosition = time / 128;
+            TimeSpan time = TimeSpan.FromSeconds(segundos);
 
-            this.TimeOfMessageReceptionForPosition_ = this.TimeOfMessageReceptionForPosition.ToString() + " s";
+            this.TimeOfMessageReceptionForPosition_ = time.ToString(@"hh\:mm\:ss\:fff");
         }
 
         public void ComputeTimeOfMessageReceptionForPosition_HighPrecision(string octetos) // Data Item I021/074
@@ -1251,30 +1250,28 @@ namespace AsterixDecoder
             //agafem els segons
             string time_bits = octetos_bits.Substring(2, 30);
 
-            //passem a int
-            int time = Convert.ToInt32(time_bits, 2);
-
-            //multipliquem per la resolució
-            this.TimeOfMessageReceptionForPosition_HighPrecision = time * Math.Pow(2, -30);
+            //calculem quin segon del dia és
+            int seg = Convert.ToInt32(time_bits, 2);//resolució
+            double segundos = seg * Math.Pow(2, -30);
 
             //afegim el FSI:
             if (this.FSI_Position == "10")
-                this.TimeOfMessageReceptionForPosition_HighPrecision = this.TimeOfMessageReceptionForPosition_HighPrecision - 1;
+                segundos = segundos - 1;
             if (this.FSI_Position == "01")
-                this.TimeOfMessageReceptionForPosition_HighPrecision = this.TimeOfMessageReceptionForPosition_HighPrecision + 1;
+                segundos = segundos + 1;
 
-            this.TimeOfMessageReceptionForPosition_HighPrecision_ = this.TimeOfMessageReceptionForPosition_HighPrecision.ToString() + " ns";
+            this.TimeOfMessageReceptionForPosition_HighPrecision_ = segundos.ToString() + " s";
         }
 
-        public void ComputeTimeOfMessageReceptionForVelocity(string octetos) // Data Item I021/075
+            public void ComputeTimeOfMessageReceptionForVelocity(string octetos) // Data Item I021/075
         {
-            //passem a int
-            int time = int.Parse(octetos, System.Globalization.NumberStyles.HexNumber);
+            //calculem quin segon del dia és
+            int seg = int.Parse(octetos, System.Globalization.NumberStyles.HexNumber);
+            double segundos = Convert.ToSingle(seg) / 128; //resolució
 
-            //multipliquem per a la resolució
-            this.TimeOfMessageReceptionForVelocity = time / 128;
+            TimeSpan time = TimeSpan.FromSeconds(segundos);
 
-            this.TimeOfMessageReceptionForVelocity_ = this.TimeOfMessageReceptionForVelocity.ToString() + " s";
+            this.TimeOfMessageReceptionForVelocity_ = time.ToString(@"hh\:mm\:ss\:fff");
         }
 
         public void ComputeTimeOfMessageReceptionForVelocity_HighPrecision(string octetos) // Data Item I021/076
@@ -1288,35 +1285,33 @@ namespace AsterixDecoder
             //agafem els segons
             string time_bits = octetos_bits.Substring(2, 30);
 
-            //passem a int
-            int time = Convert.ToInt32(time_bits, 2);
-
-            //multipliquem per la resolució
-            this.TimeOfMessageReceptionForVelocity_HighPrecision = time * Math.Pow(2, -30);
+            //calculem quin segon del dia és
+            int seg = Convert.ToInt32(time_bits, 2);
+            double segundos = seg * Math.Pow(2, -30);
 
             //afegim el FSI:
             if (this.FSI_Velocity == "10")
-                this.TimeOfMessageReceptionForVelocity_HighPrecision = this.TimeOfMessageReceptionForVelocity_HighPrecision - 1;
+                segundos = segundos - 1;
             if (this.FSI_Velocity == "01")
-                this.TimeOfMessageReceptionForVelocity_HighPrecision = this.TimeOfMessageReceptionForVelocity_HighPrecision + 1;
+                segundos = segundos + 1;
 
-            this.TimeOfMessageReceptionForVelocity_HighPrecision_ = this.TimeOfMessageReceptionForVelocity_HighPrecision.ToString() + " ns";
+            this.TimeOfMessageReceptionForVelocity_HighPrecision_ = segundos.ToString() + " s";
         }
 
         public void ComputeTimeOfAsterixReportTransmission(string octetos) // Data Item I021/077
         {
-            //passem a int
-            int time = int.Parse(octetos, System.Globalization.NumberStyles.HexNumber);
+            //calculem quin segon del dia és
+            int seg = int.Parse(octetos, System.Globalization.NumberStyles.HexNumber);
+            double segundos = Convert.ToSingle(seg) / 128; //resolució
 
-            //multipliquem per a la resolució
-            this.TimeOfAsterixReportTransmission = time / 128;
+            TimeSpan time = TimeSpan.FromSeconds(segundos);
 
-            this.TimeOfAsterixReportTransmission_ = this.TimeOfAsterixReportTransmission.ToString() + " ns";
+            this.TimeOfAsterixReportTransmission_ = time.ToString(@"hh\:mm\:ss\:fff");
         }
 
         public void ComputeTargetAddress(string octetos) // Data Item I021/080
         {
-            this.TargetAddress = Convert.ToString(Convert.ToInt32(octetos, 16), 2);
+            this.TargetAddress = octetos;
         }
 
         public int ComputeQualityIndicators(string[] paquete, int pos) // Data Item I021/090
@@ -1505,21 +1500,21 @@ namespace AsterixDecoder
         public void ComputePositionInWGS84(string OctLatWGS, string OctLonWGS) // Data Item I021/130
         {
             //passem a string de bits
-            string lat = Convert.ToString(Convert.ToInt32(OctLatWGS, 16), 2);
-            string lon = Convert.ToString(Convert.ToInt32(OctLonWGS, 16), 2);
+            string lat = Convert.ToString(Convert.ToInt32(OctLatWGS, 16), 2).PadLeft(24, '0');
+            string lon = Convert.ToString(Convert.ToInt32(OctLonWGS, 16), 2).PadLeft(24, '0');
 
             //fem el complement a2 que ens torna els bit en doubles i multipliquem per la resolució
             this.LatitudeWGS = Math.Round(1000 * this.ComputeComplementoA2(lat) * (180 / Math.Pow(2, 23))) / 1000;
             this.LongitudeWGS = Math.Round(1000 * this.ComputeComplementoA2(lon) * (180 / Math.Pow(2, 23))) / 1000;
 
-            this.positionWGS = "[" + this.LatitudeWGS + "º, " + this.LongitudeWGS + "]";
+            this.positionWGS = "[" + this.LatitudeWGS + "º, " + this.LongitudeWGS + "º]";
         }
 
         public void ComputeHighResolutionPositionInWGS84(string OctLatWGS, string OctLonWGS) // Data Item I021/131
         {
             //passem a string de bits
-            string lat = Convert.ToString(Convert.ToInt32(OctLatWGS, 16), 2);
-            string lon = Convert.ToString(Convert.ToInt32(OctLonWGS, 16), 2);
+            string lat = Convert.ToString(Convert.ToInt32(OctLatWGS, 16), 2).PadLeft(32, '0');
+            string lon = Convert.ToString(Convert.ToInt32(OctLonWGS, 16), 2).PadLeft(32, '0');
 
             //fem el complement a2 que ens torna els bit en doubles i multipliquem per la resolució
             this.LatitudeWGS_HR = Math.Round(1000 * this.ComputeComplementoA2(lat) * (180 / Math.Pow(2, 31))) / 1000;
@@ -1531,7 +1526,7 @@ namespace AsterixDecoder
         public void ComputeMessageAmplitude(string octeto) // Data Item I021/132
         {
             //string de bits
-            string bits = Convert.ToString(Convert.ToInt32(octeto, 16), 2);
+            string bits = Convert.ToString(Convert.ToInt32(octeto, 16), 2).PadLeft(8, '0');
 
             //complement a2 + resolució
             this.MAM = 1 * this.ComputeComplementoA2(bits);
@@ -1542,7 +1537,7 @@ namespace AsterixDecoder
         public void ComputeGeometricHeight(string octetos) // Data Item I021/140
         {
             //string de bits
-            string bits = Convert.ToString(Convert.ToInt32(octetos, 16), 2);
+            string bits = Convert.ToString(Convert.ToInt32(octetos, 16), 2).PadLeft(16, '0');
 
             //complemento a2 + resolució
             this.GH = 6.25 * this.ComputeComplementoA2(bits);
@@ -1686,7 +1681,7 @@ namespace AsterixDecoder
             if (otr == "1")
                 this.OTR = "Other Technology: used";
 
-            this.LinkTech = "\n - " + this.DTI + "\n - " + this.MDS + "\n - " + this.UAT + "\n - " + this.VDL + "\n - " + this.OTR;
+            this.LinkTech = " - " + this.DTI + "\n - " + this.MDS + "\n - " + this.UAT + "\n - " + this.VDL + "\n - " + this.OTR;
         }
 
         public void ComputeBarometricVerticalRate(string octetos) // Data Item I021/155
@@ -1748,7 +1743,10 @@ namespace AsterixDecoder
                 this.TrackAngle = (360 / Math.Pow(2, 16)) * Convert.ToInt32(octetos_bits.Substring(16, 16), 2);
             }
 
-            this.AirborneGroundVector = "[" + this.GroundSpeed.ToString() + " NM/s, " + this.TrackAngle.ToString() + "º]";
+            double gs_red = Math.Round(1000000 * this.GroundSpeed) / 1000000;
+            double ta_red = Math.Round(1000 * this.TrackAngle) / 1000;
+
+            this.AirborneGroundVector = "[" + gs_red.ToString() + " NM/s, " + ta_red.ToString() + "º]";
         }
 
         public void ComputeTrackNumber(string octetos) // Data Item I021/161
@@ -2095,9 +2093,9 @@ namespace AsterixDecoder
             {
                 string octeto = Convert.ToString(Convert.ToInt32(paquete[pos + longitud], 16), 2).PadLeft(8, '0');
 
-                if (octeto.Substring(7, 1) == "1")
-                    longitud++;
-                else
+                longitud++;
+                
+                if (octeto.Substring(7, 1) != "1")
                     continua = false;
             }
 
@@ -2110,36 +2108,43 @@ namespace AsterixDecoder
             {
                 this.AOS_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                 cont++;
+                this.ages = " - " + this.AOS_age;
             }
             if (octeto1.Substring(1, 1) == "1") // Subfield #2
             {
                 this.TRD_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                 cont++;
+                this.ages = this.ages + "\n - " + this.TRD_age;
             }
             if (octeto1.Substring(2, 1) == "1") // Subfield #3
             {
                 this.M3A_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                 cont++;
+                this.ages = this.ages + "\n - " + this.M3A_age;
             }
             if (octeto1.Substring(3, 1) == "1") // Subfield #4
             {
                 this.QI_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                 cont++;
+                this.ages = this.ages + "\n - " + this.QI_age;
             }
             if (octeto1.Substring(4, 1) == "1") // Subfield #5
             {
                 this.TI_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                 cont++;
+                this.ages = this.ages + "\n - " + this.TI_age;
             }
             if (octeto1.Substring(5, 1) == "1") // Subfield #6
             {
                 this.MAM_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                 cont++;
+                this.ages = this.ages + "\n - " + this.MAM_age;
             }
             if (octeto1.Substring(6, 1) == "1") // Subfield #7
             {
                 this.GH_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                 cont++;
+                this.ages = this.ages + "\n - " + this.GH_age;
             }
             if (longitud >= 2)
             {
@@ -2148,74 +2153,88 @@ namespace AsterixDecoder
                 {
                     this.FL_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                     cont++;
+                    this.ages = this.ages + "\n - " + this.FL_age;
                 }
                 if (octeto2.Substring(1, 1) == "1") // Subfield #8
                 {
                     this.ISA_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                     cont++;
+                    this.ages = this.ages + "\n - " + this.ISA_age;
                 }
                 if (octeto2.Substring(2, 1) == "1") // Subfield #9
                 {
                     this.FSA_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                     cont++;
+                    this.ages = this.ages + "\n - " + this.FSA_age;
                 }
                 if (octeto2.Substring(3, 1) == "1") // Subfield #10
                 {
                     this.AS_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                     cont++;
+                    this.ages = this.ages + "\n - " + this.AS_age;
                 }
                 if (octeto2.Substring(4, 1) == "1") // Subfield #11
                 {
                     this.TAS_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                     cont++;
+                    this.ages = this.ages + "\n - " + this.TAS_age;
                 }
                 if (octeto2.Substring(5, 1) == "1") // Subfield #12
                 {
                     this.MH_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                     cont++;
+                    this.ages = this.ages + "\n - " + this.MH_age;
                 }
                 if (octeto2.Substring(6, 1) == "1") // Subfield #13
                 {
                     this.BVR_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                     cont++;
+                    this.ages = this.ages + "\n - " + this.BVR_age;
                 }
                 if (longitud >= 3)
                 {
-                    string octeto3 = Convert.ToString(Convert.ToInt32(paquete[pos + 2], 2), 16).PadLeft(8, '0');
+                    string octeto3 = Convert.ToString(Convert.ToInt32(paquete[pos + 2], 16), 2).PadLeft(8, '0');
                     if (octeto3.Substring(0, 1) == "1") // Subfield #14
                     {
                         this.GVR_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                         cont++;
+                        this.ages = this.ages + "\n - " + this.GVR_age;
                     }
                     if (octeto3.Substring(1, 1) == "1") // Subfield #15
                     {
                         this.GV_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                         cont++;
+                        this.ages = this.ages + "\n - " + this.GV_age;
                     }
                     if (octeto3.Substring(2, 1) == "1") // Subfield #16
                     {
                         this.TAR_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                         cont++;
+                        this.ages = this.ages + "\n - " + this.TAR_age;
                     }
                     if (octeto3.Substring(3, 1) == "1") // Subfield #17
                     {
                         this.TID_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                         cont++;
+                        this.ages = this.ages + "\n - " + this.TID_age;
                     }
                     if (octeto3.Substring(4, 1) == "1") // Subfield #18
                     {
                         this.TS_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                         cont++;
+                        this.ages = this.ages + "\n - " + this.TS_age;
                     }
                     if (octeto3.Substring(5, 1) == "1") // Subfield #19
                     {
                         this.MET_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                         cont++;
+                        this.ages = this.ages + "\n - " + this.MET_age;
                     }
                     if (octeto3.Substring(6, 1) == "1") // Subfield #20
                     {
                         this.ROA_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                         cont++;
+                        this.ages = this.ages + "\n - " + this.ROA_age;
                     }
                     if (longitud == 4)
                     {
@@ -2224,11 +2243,13 @@ namespace AsterixDecoder
                         {
                             this.ARA_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                             cont++;
+                            this.ages = this.ages + "\n - " + this.ARA_age;
                         }
                         if (octeto4.Substring(1, 1) == "1") // Subfield #22
                         {
                             this.SCC_age = 0.1 * int.Parse(paquete[pos + cont], System.Globalization.NumberStyles.HexNumber);
                             cont++;
+                            this.ages = this.ages + "\n - " + this.SCC_age;
                         }
                     }
                 }

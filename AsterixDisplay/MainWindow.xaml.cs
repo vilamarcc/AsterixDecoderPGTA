@@ -143,6 +143,7 @@ namespace AsterixDisplay
             if (this.cat == 20)
             {
                 CAT20 paquete = f.getCAT20(fil);
+
                 //expandimos información:
                 if (c == 3)
                     MessageBox.Show(paquete.getTargetReportDescriptortoString());
@@ -156,8 +157,31 @@ namespace AsterixDisplay
             }
             if (this.cat == 21)
             {
+                CAT21 paquete = f.getCAT21(fil);
+
                 //expandimos información:
-                
+                if (c == 4) //Target Report Descriptor
+                    MessageBox.Show(paquete.TargetReport);
+                if (c == 10) //Operational Status
+                    MessageBox.Show(paquete.OperationalStatus);
+                //if (c == 45) //Figure Of Merit
+                //    MessageBox.Show(paquete.FigureOfMerit);
+                //if (c == 46) //Data ages
+                //    MessageBox.Show(paquete.ages);
+                if (c == 41) //Trajectory Intent Data
+                    MessageBox.Show(paquete.TrajectoryIntentData);
+                if (c == 29) //Link Technology
+                    MessageBox.Show(paquete.LinkTech);
+                if (c == 23) //Target Status
+                    MessageBox.Show(paquete.TargetStatus);
+                if (c == 21) //Met Report
+                    MessageBox.Show(paquete.MetReport);
+                if (c == 27) //Quality Indicators
+                    MessageBox.Show(paquete.QualityIndicators);
+                if (c == 28) //Mode S
+                    MessageBox.Show(paquete.ModeS);
+                if (c == 16) //MOPS version
+                    MessageBox.Show(paquete.MOPS);
 
                 //mostramos las características de ese paquete a parte:
                 filldataexpandedCAT21(fil);
@@ -216,6 +240,8 @@ namespace AsterixDisplay
             if (cat21exp.posAccuracy != null) { expanded.Rows.Add("Position accuracy", cat21exp.posAccuracy); }
             if (cat21exp.velAccuracy != null) { expanded.Rows.Add("Velocity accuracy", cat21exp.velAccuracy); }
             if (cat21exp.TODaccuracy != null) { expanded.Rows.Add("Time of Day accuracy", cat21exp.TODaccuracy); }
+            if (cat21exp.FigureOfMerit != null) { expanded.Rows.Add("Figure of merit", cat21exp.FigureOfMerit); }
+            if (cat21exp.ages != null) { expanded.Rows.Add("Data Ages", cat21exp.ages); }
 
             dataexpanded.ItemsSource = expanded.DefaultView;
             dataexpanded.Items.Refresh();

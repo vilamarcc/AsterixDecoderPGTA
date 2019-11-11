@@ -353,7 +353,9 @@ namespace AsterixDecoder
             if (this.SACnum == "0" && this.SICnum == "107")
                 this.DataSourceID = "Data flow local to the airport: Barcelona - LEBL";
             if (this.SACnum == "0" && this.SICnum == "7")
-                this.DataSourceID = "Data flow local to the airport: -";
+                this.DataSourceID = "Data flow local to the airport: Barcelona - LEBL";
+            else
+                this.DataSourceID = "SAC: " + this.SACnum.ToString() + ", SIC: " + this.SICnum.ToString();
         }
 
         public void ComputeMessageType(string octetoMT) // Data Item I010/000
@@ -740,7 +742,7 @@ namespace AsterixDecoder
 
         public void ComputeTargetAddress(string octetos) // Data Item I010/220
         {
-            this.TargetAddress = Convert.ToString(Convert.ToInt32(octetos, 16), 2).PadLeft(24, '0');
+            this.TargetAddress = octetos;
         }
 
         public void ComputeTargetIdentification(string octetos) // Data Item I010/245
