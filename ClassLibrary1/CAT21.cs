@@ -286,7 +286,7 @@ namespace AsterixDecoder
                 // Target Report Descriptor
                 if (Convert.ToString(this.FSPEC[1]) == "1")
                 {
-                    this.ComputeTargetReportDescriptor23(paquete[pos] + paquete[pos]);
+                    this.ComputeTargetReportDescriptor23(paquete[pos] + paquete[pos + 1]);
                     pos = pos + 2;
                 }
 
@@ -379,46 +379,46 @@ namespace AsterixDecoder
                     if(longFSPEC>=3)
                     {
                         // Geometric Vertical Rate
-                        if (Convert.ToString(FSPEC[15]) == "1")
+                        if (Convert.ToString(FSPEC[16]) == "1")
                         {
                             this.ComputeGeometricVerticalRate(paquete[pos] + paquete[pos + 1]);
                             pos = pos + 2;
                         }
 
                         // Ground Vector
-                        if (Convert.ToString(FSPEC[16]) == "1")
+                        if (Convert.ToString(FSPEC[17]) == "1")
                         {
                             this.ComputeAirborneGroundVector(paquete[pos] + paquete[pos + 1] + paquete[pos + 2] + paquete[pos + 3]);
                             pos = pos + 4;
                         }
 
                         // Rate of Turn
-                        if (Convert.ToString(FSPEC[17]) == "1")
-                            this.ComputeRateOfAngle(paquete, pos);
+                        if (Convert.ToString(FSPEC[18]) == "1")
+                            pos = pos + this.ComputeRateOfAngle(paquete, pos);
 
                         // Target Identification
-                        if (Convert.ToString(FSPEC[18]) == "1")
+                        if (Convert.ToString(FSPEC[19]) == "1")
                         {
                             this.ComputeTargetIdentification(paquete[pos] + paquete[pos + 1] + paquete[pos + 2] + paquete[pos + 3] + paquete[pos + 4] + paquete[pos + 5]);
                             pos = pos + 6;
                         }
 
                         // Velocity Accuracy
-                        if(Convert.ToString(FSPEC[19])=="1")
+                        if(Convert.ToString(FSPEC[20])=="1")
                         {
                             this.ComputeVelocityAccuracy(paquete[pos]);
                             pos++;
                         }
 
                         // Time of day accuracy
-                        if (Convert.ToString(FSPEC[20]) == "1")
+                        if (Convert.ToString(FSPEC[21]) == "1")
                         {
                             this.ComputeTODaccuracy(paquete[pos]);
                             pos++;
                         }
 
                         // Target Status
-                        if (Convert.ToString(FSPEC[21]) == "1")
+                        if (Convert.ToString(FSPEC[22]) == "1")
                         {
                             this.ComputeTargetStatus23(paquete[pos]);
                             pos++;
@@ -427,18 +427,18 @@ namespace AsterixDecoder
                         if (longFSPEC>=4)
                         {
                             // Emitter Category
-                            if (Convert.ToString(FSPEC[23]) == "1")
+                            if (Convert.ToString(FSPEC[24]) == "1")
                             {
                                 this.ComputeEmitterCategory(paquete[pos]);
                                 pos++;
                             }
 
                             // Met report
-                            if (Convert.ToString(FSPEC[24]) == "1")
+                            if (Convert.ToString(FSPEC[25]) == "1")
                                 pos = pos + this.ComputeMetInformation(paquete, pos);
 
                             // Intermediate State Selected Altitude
-                            if (Convert.ToString(FSPEC[25]) == "1")
+                            if (Convert.ToString(FSPEC[26]) == "1")
                             {
                                 this.ComputeSelectedAltitude(paquete[pos] + paquete[pos + 1]);
                                 pos = pos + 2;
@@ -1055,7 +1055,7 @@ namespace AsterixDecoder
             if (ARC == 0)
                 this.ARC = "Altitude Reporting Capability: Unknown";
 
-            this.TargetReport = " - " + this.DCR + "\n - " + this.GBS + "\n - " + this.SIM + "\n - " + this.TST + "\n - " + this.RAB + "\n - " + this.SAA + "\n - " + this.SPI + "\n - " + this.ATP + "\n - " + this.SPI;
+            this.TargetReport = " - " + this.DCR + "\n - " + this.GBS + "\n - " + this.SIM + "\n - " + this.TST + "\n - " + this.RAB + "\n - " + this.SAA + "\n - " + this.SPI + "\n - " + this.ATP + "\n - " + this.ARC;
         }
 
         public int ComputeTargetReportDescriptor24(string[] paquete, int pos) // Data Item I021/040
@@ -1509,8 +1509,8 @@ namespace AsterixDecoder
             string lon = Convert.ToString(Convert.ToInt32(OctLonWGS, 16), 2);
 
             //fem el complement a2 que ens torna els bit en doubles i multipliquem per la resolució
-            this.LatitudeWGS = this.ComputeComplementoA2(lat) * (180 / Math.Pow(2, 23));
-            this.LongitudeWGS = this.ComputeComplementoA2(lon) * (180 / Math.Pow(2, 23));
+            this.LatitudeWGS = Math.Round(1000 * this.ComputeComplementoA2(lat) * (180 / Math.Pow(2, 23))) / 1000;
+            this.LongitudeWGS = Math.Round(1000 * this.ComputeComplementoA2(lon) * (180 / Math.Pow(2, 23))) / 1000;
 
             this.positionWGS = "[" + this.LatitudeWGS + "º, " + this.LongitudeWGS + "]";
         }
@@ -1522,8 +1522,8 @@ namespace AsterixDecoder
             string lon = Convert.ToString(Convert.ToInt32(OctLonWGS, 16), 2);
 
             //fem el complement a2 que ens torna els bit en doubles i multipliquem per la resolució
-            this.LatitudeWGS_HR = this.ComputeComplementoA2(lat) * (180 / Math.Pow(2, 31));
-            this.LongitudeWGS_HR = this.ComputeComplementoA2(lon) * (180 / Math.Pow(2, 31));
+            this.LatitudeWGS_HR = Math.Round(1000 * this.ComputeComplementoA2(lat) * (180 / Math.Pow(2, 31))) / 1000;
+            this.LongitudeWGS_HR = Math.Round(1000 * this.ComputeComplementoA2(lat) * (180 / Math.Pow(2, 31))) / 1000;
 
             this.HRpositionWGS = "[" + this.LatitudeWGS_HR + "º, " + this.LongitudeWGS_HR + "º]";
         }
@@ -1553,10 +1553,10 @@ namespace AsterixDecoder
         public void ComputeFL(string octetos) // Data Item I021/145
         {
             //string de bits
-            string bits = Convert.ToString(Convert.ToInt32(octetos, 16), 2);
+            string bits = Convert.ToString(Convert.ToInt32(octetos, 16), 2).PadLeft(16,'0');
 
             //complemento a2 + resolució
-            this.FL = (1 / 4) * this.ComputeComplementoA2(bits);
+            this.FL = 0.25 * this.ComputeComplementoA2(bits);
 
             this.FlightLevel = "FL" + this.FL.ToString();
         }
@@ -1715,9 +1715,14 @@ namespace AsterixDecoder
             //string de bits
             string octetos_bits = Convert.ToString(Convert.ToInt32(octetos, 16), 2).PadLeft(16, '0');
 
-            //separem 
-            this.RE_GeometricVerticalRate = octetos_bits.Substring(0, 1);
-            string GeometricVR_bits = octetos_bits.Substring(1, 15);
+            string GeometricVR_bits = "0";
+            if (this.version==23)
+                GeometricVR_bits = octetos_bits.Substring(0, 16);
+            if (this.version == 24)
+            {
+                this.RE_GeometricVerticalRate = octetos_bits.Substring(0, 1);
+                GeometricVR_bits = octetos_bits.Substring(1, 15);
+            }
 
             //complement a2 i resolució
             this.GeometricVerticalRateNum = 6.25 * this.ComputeComplementoA2(GeometricVR_bits);
@@ -1775,7 +1780,7 @@ namespace AsterixDecoder
         public void ComputeTargetIdentification(string octetos) // Data Item I021/170
         {
             //string de bits
-            string targetID = Convert.ToString(Convert.ToInt32(octetos, 16), 2).PadLeft(8, '0');
+            string targetID = Convert.ToString(Convert.ToInt64(octetos, 16), 2).PadLeft(48, '0');
 
             //llegim
             int nchar = 0;
@@ -1797,8 +1802,10 @@ namespace AsterixDecoder
             //lista per decodificar 
             List<string> code = new List<string>() { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
-            //decodifiquem
-            return code[character_int - 1];
+            if (character_int == 0)
+                return "";
+            else
+                return code[character_int - 1];
         }
 
         public void ComputeTargetStatus24(string octeto) // Data Item I021/200
@@ -2244,7 +2251,10 @@ namespace AsterixDecoder
             else
             {
                 if (Convert.ToString(bits[0]) == "0")
-                    return Convert.ToDouble(Convert.ToInt32(bits, 2));
+                {
+                    int num = Convert.ToInt32(bits, 2);
+                    return Convert.ToSingle(num);
+                }
                 else
                 {
                     //elimino primer bit
@@ -2263,12 +2273,11 @@ namespace AsterixDecoder
                     }
 
                     //convertimos a int
-                    double num = Convert.ToDouble(Convert.ToInt32(newbits, 2));
+                    double num = Convert.ToInt32(newbits, 2);
 
                     return -(num + 1);
                 }
             }
         }
-
     }
 }
