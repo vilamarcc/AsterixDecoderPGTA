@@ -81,7 +81,7 @@ namespace AsterixDisplay
         {
             double R = 6371 * 1000;
             double d = Math.Sqrt((X * X) + (Y * Y));
-            double brng = Math.Atan2(Y, -X) - (Math.PI / 2);
+            double brng = Math.Atan2(Y, - X) - (Math.PI / 2);
             double φ1 = MLATcoords[0] * (Math.PI / 180);
             double λ1 = MLATcoords[1] * (Math.PI / 180);
             var φ2 = Math.Asin(Math.Sin(φ1) * Math.Cos(d / R) + Math.Cos(φ1) * Math.Sin(d / R) * Math.Cos(brng));
@@ -117,8 +117,7 @@ namespace AsterixDisplay
                     Height = 15,
                     Source = new BitmapImage(new System.Uri("pack://application:,,,/Resources/airplane1.png"))
                 };
-                marker.ZIndex = tracknum; 
-                marker.Offset = new System.Windows.Point(-7.5, -7.5);
+                marker.ZIndex = 0; // Index 0 == Aeronave
                 marker.Offset = new System.Windows.Point(-7.5, -7.5);
             }
             if (callsign == null)
@@ -130,11 +129,11 @@ namespace AsterixDisplay
                     Source = new BitmapImage(new System.Uri("pack://application:,,,/Resources/unidentified.png"))
 
                 };
-                marker.ZIndex = tracknum;
+                marker.ZIndex = 1; //Index 1 == non airplane
                 marker.Offset = new System.Windows.Point(-15, -15);
             }
 
-            //checkVisible(marker);
+            checkVisible(marker);
             mapView.Markers.Add(marker);
         }
 
