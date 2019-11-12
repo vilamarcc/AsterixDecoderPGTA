@@ -11,7 +11,7 @@ namespace AsterixDecoder
 {
     public class Fichero
     {
-        // ATRIBUTS:
+            // ATRIBUTS:
         //fichero elegido
         string path;
 
@@ -26,15 +26,15 @@ namespace AsterixDecoder
         DataTable tablaCAT20 = new DataTable();
         DataTable tablaCAT21 = new DataTable();
 
-        // CONSTRUCTOR:
-        public Fichero(string nombre)
+            // CONSTRUCTOR:
+        public Fichero(string nombre) //coge el nombre del fichero y crea la tabla (columnas)
         {
             this.path = nombre;
 
             this.CrearTablas();
         }
 
-        // GETTERS:
+            // GETTERS:
         public List<CAT10> getListCAT10()
         {
             return listaCAT10;
@@ -65,17 +65,14 @@ namespace AsterixDecoder
             return tablaCAT21;
         }
 
-        // ALTRES MÈTODES:
-        public void Read() //lee el fichero y crea las listas y las tablas
+            // ALTRES MÈTODES:
+        public void Read(int version) //lee el fichero y crea las listas y las tablas
         {
-            //StreamReader fichero = new StreamReader(path);
-            //string linea_1 = fichero.ReadLine();
             byte[] fileBytes = File.ReadAllBytes(path);
             List<byte[]> listabyte = new List<byte[]>();
+
             int i = 0;
             int contador = fileBytes[2];
-            //int length = 0;
-
             while (i < fileBytes.Length)
             {
                 byte[] array = new byte[contador];
@@ -85,7 +82,6 @@ namespace AsterixDecoder
                     i++;
                 }
                 listabyte.Add(array);
-                //length += array.Length;
                 if (i + 2 < fileBytes.Length)
                     contador = fileBytes[i + 2];
             }
@@ -138,17 +134,16 @@ namespace AsterixDecoder
                 {
                     contadorCAT21++;
                     //llegim
-                    CAT21 newcat21 = new CAT21(arraystring);
+                    CAT21 newcat21 = new CAT21(arraystring, version);
                     //afegim a la llista
                     listaCAT21.Add(newcat21);
                     //afegim a la taula
                     tablaCAT21.Rows.Add(contadorCAT21, newcat21.SAC, newcat21.SIC, newcat21.TargetID, "Click to expand", newcat21.TOD, newcat21.positionWGS, newcat21.HRpositionWGS, newcat21.FlightLevel, newcat21.GeometricHeight, "Click to expand", newcat21.AirSpeed, newcat21.TrueAirspeed, newcat21.AirborneGroundVector, newcat21.SelectedAltitude_IS, newcat21.SelectedAltitude_FS, "Click to expand", newcat21.MagneticHeading, newcat21.BarometricVerticalRate, newcat21.GeometricVerticalRate, newcat21.Mode3ACode, "Click to expand", newcat21.ECAT, "Click to expand", newcat21.RateOfTurn, newcat21.RollAngle, newcat21.serviceID, "Click to expand", "Click to expand", "Click to expand", newcat21.RP, newcat21.MSGampl, newcat21.TrackAngleRate, newcat21.RID, newcat21.TimeOfApplicabilityForPosition_, newcat21.TimeOfApplicabilityForVelocity_, newcat21.TimeOfMessageReceptionForPosition_, newcat21.TimeOfMessageReceptionForVelocity_, newcat21.TimeOfMessageReceptionForPosition_HighPrecision_, newcat21.TimeOfMessageReceptionForVelocity_HighPrecision_, newcat21.TimeOfAsterixReportTransmission_, newcat21.TrajectoryIntentData, newcat21.posAccuracy, newcat21.velAccuracy, newcat21.TODaccuracy, "Click to expand", "Click to expand");
                 }
             }
-            i++;
         }
 
-        public void CrearTablas()
+        public void CrearTablas() //crea las columnas de la tabla, dependiendo de la cat
         {
             //CAT20
             tablaCAT20.Columns.Add(new DataColumn("#"));
@@ -278,7 +273,7 @@ namespace AsterixDecoder
             return listaCAT21[pack];
         }
 
-        public DataTable getTablaCAT10Indv(CAT10 newcat10, int q)
+        public DataTable getTablaCAT10Indv(CAT10 newcat10, int q) //crea la tabla con el paquete dado como input (q es el número de paquete)
         {
             DataTable tablaCAT10i = new DataTable();
 
@@ -318,7 +313,7 @@ namespace AsterixDecoder
             return tablaCAT10i;
         }
 
-        public DataTable getTablaCAT20Indv(CAT20 newcat20, int q)
+        public DataTable getTablaCAT20Indv(CAT20 newcat20, int q) //crea la tabla con el paquete dado como input (q es el número de paquete)
         {
             DataTable tablaCAT20i = new DataTable();
 
@@ -357,7 +352,7 @@ namespace AsterixDecoder
             return tablaCAT20i;
         }
 
-        public DataTable getTablaCAT21Indv(CAT21 newcat21, int q)
+        public DataTable getTablaCAT21Indv(CAT21 newcat21, int q) //crea la tabla con el paquete dado como input (q es el número de paquete)
         {
             DataTable tablaCAT21i = new DataTable();
 
@@ -487,6 +482,316 @@ namespace AsterixDecoder
         public List<Flight> getFlightList()
         {
             return this.listflights;
+        }
+
+        public DataTable SearchCallsignCAT10(string callsign) //buscar paquetes por el target id 
+        {
+            DataTable tablaCAT10i = new DataTable();
+
+            tablaCAT10i.Columns.Add(new DataColumn("#"));
+            tablaCAT10i.Columns.Add(new DataColumn("Message type"));
+            tablaCAT10i.Columns.Add(new DataColumn("SAC"));
+            tablaCAT10i.Columns.Add(new DataColumn("SIC"));
+            tablaCAT10i.Columns.Add(new DataColumn("Data Type"));
+            tablaCAT10i.Columns.Add(new DataColumn("Data Characteristics"));
+            tablaCAT10i.Columns.Add(new DataColumn("Time Of Day (UTC)"));
+            tablaCAT10i.Columns.Add(new DataColumn("Position WSG-84 [Latitude, Longitude]"));
+            tablaCAT10i.Columns.Add(new DataColumn("Position Polar Coords [Distance, Angle]"));
+            tablaCAT10i.Columns.Add(new DataColumn("Position Cartesian Coords [X, Y]"));
+            tablaCAT10i.Columns.Add(new DataColumn("Track Velocity Polar Coords [Ground Speed, Track Angle]"));
+            tablaCAT10i.Columns.Add(new DataColumn("Track Velocity Cartesian Coords [Vx, Vy]"));
+            tablaCAT10i.Columns.Add(new DataColumn("Track Number"));
+            tablaCAT10i.Columns.Add(new DataColumn("Track Status"));
+            tablaCAT10i.Columns.Add(new DataColumn("Mode 3A Code"));
+            tablaCAT10i.Columns.Add(new DataColumn("Target Address"));
+            tablaCAT10i.Columns.Add(new DataColumn("Target ID"));
+            tablaCAT10i.Columns.Add(new DataColumn("Mode S MB Data"));
+            tablaCAT10i.Columns.Add(new DataColumn("Vehicle Fleet ID"));
+            tablaCAT10i.Columns.Add(new DataColumn("Flight Level"));
+            tablaCAT10i.Columns.Add(new DataColumn("Measured Height"));
+            tablaCAT10i.Columns.Add(new DataColumn("Target Size [Length x Width]"));
+            tablaCAT10i.Columns.Add(new DataColumn("Target Orientation"));
+            tablaCAT10i.Columns.Add(new DataColumn("System Status"));
+            tablaCAT10i.Columns.Add(new DataColumn("Pre Programmed MSG"));
+            tablaCAT10i.Columns.Add(new DataColumn("Standard Deviation of Position [X, Y]"));
+            tablaCAT10i.Columns.Add(new DataColumn("Covariance of deviation"));
+            tablaCAT10i.Columns.Add(new DataColumn("Presence"));
+            tablaCAT10i.Columns.Add(new DataColumn("Amplitude of Primary Plot"));
+            tablaCAT10i.Columns.Add(new DataColumn("Calculated Acceleration [Ax, Ay]"));
+
+            int q = 0;
+            while (q < listaCAT10.Count)
+            {
+                CAT10 newcat10 = listaCAT10[q];
+                if (newcat10.TargetID == callsign)
+                    tablaCAT10i.Rows.Add(q + 1, newcat10.MessageType, newcat10.SACnum, newcat10.SICnum, newcat10.TYP, "Click to expand", newcat10.TimeOfDay, newcat10.positionWGS, newcat10.positionPolar, newcat10.positionCartesian, newcat10.velocityPolar, newcat10.velocityCartesian, newcat10.TrackNumber, "Click to expand", newcat10.Mode3ACode, newcat10.TargetAddress, newcat10.TargetID, "Click to expand", newcat10.VFI, newcat10.FlightLevel, newcat10.MeasuredHeight, newcat10.TargetSize, newcat10.TargetOrientation_, "Click to expand", newcat10.MSG, newcat10.deviation, newcat10.covariance, "Click to expand", newcat10.amplitudePP, newcat10.acceleration);
+                q++;
+            }
+            return tablaCAT10i;
+        }
+
+        public DataTable SearchCallsignCAT20(string callsign) //buscar paquetes por el target id 
+        {
+            DataTable tablaCAT20i = new DataTable();
+
+            tablaCAT20i.Columns.Add(new DataColumn("#"));
+            tablaCAT20i.Columns.Add(new DataColumn("Message Type"));
+            tablaCAT20i.Columns.Add(new DataColumn("SAC"));
+            tablaCAT20i.Columns.Add(new DataColumn("SIC"));
+            tablaCAT20i.Columns.Add(new DataColumn("Target Report Descriptor"));
+            tablaCAT20i.Columns.Add(new DataColumn("Time Of Day (UTC)"));
+            tablaCAT20i.Columns.Add(new DataColumn("Position WSG-84"));
+            tablaCAT20i.Columns.Add(new DataColumn("Position Cartesian Coords"));
+            tablaCAT20i.Columns.Add(new DataColumn("Track Number"));
+            tablaCAT20i.Columns.Add(new DataColumn("Track Status"));
+            tablaCAT20i.Columns.Add(new DataColumn("Mode 3A Code"));
+            tablaCAT20i.Columns.Add(new DataColumn("Calculated Velocity"));
+            tablaCAT20i.Columns.Add(new DataColumn("Flight Level"));
+            tablaCAT20i.Columns.Add(new DataColumn("Mode C Code"));
+            tablaCAT20i.Columns.Add(new DataColumn("Target Address"));
+            tablaCAT20i.Columns.Add(new DataColumn("Target ID"));
+            tablaCAT20i.Columns.Add(new DataColumn("Measured Height"));
+            tablaCAT20i.Columns.Add(new DataColumn("Geometric Height (WSG-84)"));
+            tablaCAT20i.Columns.Add(new DataColumn("Calculated Acceleration"));
+            tablaCAT20i.Columns.Add(new DataColumn("Vehicle Fleet ID"));
+            tablaCAT20i.Columns.Add(new DataColumn("Pre Programmed MSG"));
+            tablaCAT20i.Columns.Add(new DataColumn("Position Accuracy"));
+            tablaCAT20i.Columns.Add(new DataColumn("Contributing Devices (Receivers)"));
+            tablaCAT20i.Columns.Add(new DataColumn("Mode S MB Data"));
+            tablaCAT20i.Columns.Add(new DataColumn("Comms/ACAS Capability and Flight Status"));
+            tablaCAT20i.Columns.Add(new DataColumn("ACAS RA Report"));
+            tablaCAT20i.Columns.Add(new DataColumn("Warning/Error Conditions"));
+            tablaCAT20i.Columns.Add(new DataColumn("Mode 1 Code"));
+            tablaCAT20i.Columns.Add(new DataColumn("Mode 2 Code"));
+
+            int q = 0;
+            while (q < listaCAT20.Count)
+            {
+                CAT20 newcat20 = listaCAT20[q];
+                if (newcat20.callsign == callsign)
+                    tablaCAT20i.Rows.Add(q + 1, newcat20.getMessageType(), newcat20.SAC, newcat20.SIC, newcat20.TargetReport, newcat20.TOD, newcat20.LonWSG, "[" + newcat20.coordscc[0].ToString() + "," + newcat20.coordscc[1].ToString() + "] m", newcat20.TrackNum, "Click to expand", newcat20.Mode3A, "[" + newcat20.Velocitycc[0].ToString() + "," + newcat20.Velocitycc[1].ToString() + "] m/s", newcat20.FL[2], newcat20.ModeC, newcat20.TargetAddress, newcat20.TargetID, newcat20.MeasuredHeight, newcat20.geoHeight, newcat20.calcAccel, newcat20.VehicleFleetID, newcat20.PPMsg, newcat20.DOP, newcat20.Receivers, newcat20.ModeSData, newcat20.ACAScap, newcat20.ACASRAreport, newcat20.warning, newcat20.Mode1Code, newcat20.Mode2Code);
+                q++;
+            }
+            return tablaCAT20i;
+        }
+
+        public DataTable SearchCallsignCAT21(string callsign) //buscar paquetes por el target id 
+        {
+            DataTable tablaCAT21i = new DataTable();
+
+            tablaCAT21i.Columns.Add(new DataColumn("#"));
+            tablaCAT21i.Columns.Add(new DataColumn("SAC"));
+            tablaCAT21i.Columns.Add(new DataColumn("SIC"));
+            tablaCAT21i.Columns.Add(new DataColumn("Target Identification"));
+            tablaCAT21i.Columns.Add(new DataColumn("Target Report"));
+            tablaCAT21i.Columns.Add(new DataColumn("Time Of Day"));
+            tablaCAT21i.Columns.Add(new DataColumn("Position WSG-84 [Latitude, Longitude]"));
+            tablaCAT21i.Columns.Add(new DataColumn("High Resolution Position WGS-84"));
+            tablaCAT21i.Columns.Add(new DataColumn("Flight Level"));
+            tablaCAT21i.Columns.Add(new DataColumn("Geometric Height"));
+            tablaCAT21i.Columns.Add(new DataColumn("Operational Status"));
+            tablaCAT21i.Columns.Add(new DataColumn("AirSpeed"));
+            tablaCAT21i.Columns.Add(new DataColumn("True Airspeed"));
+            tablaCAT21i.Columns.Add(new DataColumn("Airborne Ground Vector [Ground Speed, Track Angle]"));
+            tablaCAT21i.Columns.Add(new DataColumn("Intermediate Stage Selected Altitude"));
+            tablaCAT21i.Columns.Add(new DataColumn("Final Stage Selected Altitude"));
+            tablaCAT21i.Columns.Add(new DataColumn("MOPS"));
+            tablaCAT21i.Columns.Add(new DataColumn("Magnetic Heading"));
+            tablaCAT21i.Columns.Add(new DataColumn("Barometric Vertical Rate"));
+            tablaCAT21i.Columns.Add(new DataColumn("Geometric Vertical Rate"));
+            tablaCAT21i.Columns.Add(new DataColumn("Mode 3A Code"));
+            tablaCAT21i.Columns.Add(new DataColumn("Met Report"));
+            tablaCAT21i.Columns.Add(new DataColumn("Emitter Category"));
+            tablaCAT21i.Columns.Add(new DataColumn("Target Status"));
+            tablaCAT21i.Columns.Add(new DataColumn("Rate of Angle"));
+            tablaCAT21i.Columns.Add(new DataColumn("Roll Angle"));
+            tablaCAT21i.Columns.Add(new DataColumn("Service Identification"));
+            tablaCAT21i.Columns.Add(new DataColumn("Quality Indicators"));
+            tablaCAT21i.Columns.Add(new DataColumn("Mode S"));
+            tablaCAT21i.Columns.Add(new DataColumn("Link Technology"));
+            tablaCAT21i.Columns.Add(new DataColumn("Report period"));
+            tablaCAT21i.Columns.Add(new DataColumn("Message amplitude"));
+            tablaCAT21i.Columns.Add(new DataColumn("Track angle rate"));
+            tablaCAT21i.Columns.Add(new DataColumn("Receiver ID"));
+            tablaCAT21i.Columns.Add(new DataColumn("Time of Applicability for position"));
+            tablaCAT21i.Columns.Add(new DataColumn("Time of Applicability for velocity"));
+            tablaCAT21i.Columns.Add(new DataColumn("Time of Message Reception for position"));
+            tablaCAT21i.Columns.Add(new DataColumn("Time of Message Reception for velocity"));
+            tablaCAT21i.Columns.Add(new DataColumn("Time of Message Reception for position - High precision"));
+            tablaCAT21i.Columns.Add(new DataColumn("Time of Message Reception for velocity - High precision"));
+            tablaCAT21i.Columns.Add(new DataColumn("Time of ASTERIX Report Transmission"));
+            tablaCAT21i.Columns.Add(new DataColumn("Trajectory Intent Data"));
+            tablaCAT21i.Columns.Add(new DataColumn("Position accuracy"));
+            tablaCAT21i.Columns.Add(new DataColumn("Velocity accuracy"));
+            tablaCAT21i.Columns.Add(new DataColumn("Time of Day accuracy"));
+            tablaCAT21i.Columns.Add(new DataColumn("Figure of merit"));
+            tablaCAT21i.Columns.Add(new DataColumn("Data ages"));
+
+            int q = 0;
+            while (q < listaCAT20.Count)
+            {
+                CAT21 newcat21 = listaCAT21[q];
+                if (newcat21.TargetID == callsign)
+                    tablaCAT21i.Rows.Add(q + 1, newcat21.SAC, newcat21.SIC, newcat21.TargetID, "Click to expand", newcat21.TOD, newcat21.positionWGS, newcat21.HRpositionWGS, newcat21.FlightLevel, newcat21.GeometricHeight, "Click to expand", newcat21.AirSpeed, newcat21.TrueAirspeed, newcat21.AirborneGroundVector, newcat21.SelectedAltitude_IS, newcat21.SelectedAltitude_FS, "Click to expand", newcat21.MagneticHeading, newcat21.BarometricVerticalRate, newcat21.GeometricVerticalRate, newcat21.Mode3ACode, "Click to expand", newcat21.ECAT, "Click to expand", newcat21.RateOfTurn, newcat21.RollAngle, newcat21.serviceID, "Click to expand", "Click to expand", "Click to expand", newcat21.RP, newcat21.MSGampl, newcat21.TrackAngleRate, newcat21.RID, newcat21.TimeOfApplicabilityForPosition_, newcat21.TimeOfApplicabilityForVelocity_, newcat21.TimeOfMessageReceptionForPosition_, newcat21.TimeOfMessageReceptionForVelocity_, newcat21.TimeOfMessageReceptionForPosition_HighPrecision_, newcat21.TimeOfMessageReceptionForVelocity_HighPrecision_, newcat21.TimeOfAsterixReportTransmission_, newcat21.TrajectoryIntentData, newcat21.posAccuracy, newcat21.velAccuracy, newcat21.TODaccuracy, "Click to expand", "Click to expand");
+                q++;
+            }
+
+            return tablaCAT21i;
+        }
+
+        public DataTable SearchTargetAddressCAT10(string targetaddres) //buscar paquetes por el target address 
+        {
+            DataTable tablaCAT10i = new DataTable();
+
+            tablaCAT10i.Columns.Add(new DataColumn("#"));
+            tablaCAT10i.Columns.Add(new DataColumn("Message type"));
+            tablaCAT10i.Columns.Add(new DataColumn("SAC"));
+            tablaCAT10i.Columns.Add(new DataColumn("SIC"));
+            tablaCAT10i.Columns.Add(new DataColumn("Data Type"));
+            tablaCAT10i.Columns.Add(new DataColumn("Data Characteristics"));
+            tablaCAT10i.Columns.Add(new DataColumn("Time Of Day (UTC)"));
+            tablaCAT10i.Columns.Add(new DataColumn("Position WSG-84 [Latitude, Longitude]"));
+            tablaCAT10i.Columns.Add(new DataColumn("Position Polar Coords [Distance, Angle]"));
+            tablaCAT10i.Columns.Add(new DataColumn("Position Cartesian Coords [X, Y]"));
+            tablaCAT10i.Columns.Add(new DataColumn("Track Velocity Polar Coords [Ground Speed, Track Angle]"));
+            tablaCAT10i.Columns.Add(new DataColumn("Track Velocity Cartesian Coords [Vx, Vy]"));
+            tablaCAT10i.Columns.Add(new DataColumn("Track Number"));
+            tablaCAT10i.Columns.Add(new DataColumn("Track Status"));
+            tablaCAT10i.Columns.Add(new DataColumn("Mode 3A Code"));
+            tablaCAT10i.Columns.Add(new DataColumn("Target Address"));
+            tablaCAT10i.Columns.Add(new DataColumn("Target ID"));
+            tablaCAT10i.Columns.Add(new DataColumn("Mode S MB Data"));
+            tablaCAT10i.Columns.Add(new DataColumn("Vehicle Fleet ID"));
+            tablaCAT10i.Columns.Add(new DataColumn("Flight Level"));
+            tablaCAT10i.Columns.Add(new DataColumn("Measured Height"));
+            tablaCAT10i.Columns.Add(new DataColumn("Target Size [Length x Width]"));
+            tablaCAT10i.Columns.Add(new DataColumn("Target Orientation"));
+            tablaCAT10i.Columns.Add(new DataColumn("System Status"));
+            tablaCAT10i.Columns.Add(new DataColumn("Pre Programmed MSG"));
+            tablaCAT10i.Columns.Add(new DataColumn("Standard Deviation of Position [X, Y]"));
+            tablaCAT10i.Columns.Add(new DataColumn("Covariance of deviation"));
+            tablaCAT10i.Columns.Add(new DataColumn("Presence"));
+            tablaCAT10i.Columns.Add(new DataColumn("Amplitude of Primary Plot"));
+            tablaCAT10i.Columns.Add(new DataColumn("Calculated Acceleration [Ax, Ay]"));
+
+            int q = 0;
+            while (q < listaCAT10.Count)
+            {
+                CAT10 newcat10 = listaCAT10[q];
+                if (newcat10.TargetAddress == targetaddres)
+                    tablaCAT10i.Rows.Add(q + 1, newcat10.MessageType, newcat10.SACnum, newcat10.SICnum, newcat10.TYP, "Click to expand", newcat10.TimeOfDay, newcat10.positionWGS, newcat10.positionPolar, newcat10.positionCartesian, newcat10.velocityPolar, newcat10.velocityCartesian, newcat10.TrackNumber, "Click to expand", newcat10.Mode3ACode, newcat10.TargetAddress, newcat10.TargetID, "Click to expand", newcat10.VFI, newcat10.FlightLevel, newcat10.MeasuredHeight, newcat10.TargetSize, newcat10.TargetOrientation_, "Click to expand", newcat10.MSG, newcat10.deviation, newcat10.covariance, "Click to expand", newcat10.amplitudePP, newcat10.acceleration);
+                q++;
+            }
+            return tablaCAT10i;
+        }
+
+        public DataTable SearchTargetAddressCAT20(string targetaddress) //buscar paquetes por el target address
+        {
+            DataTable tablaCAT20i = new DataTable();
+
+            tablaCAT20i.Columns.Add(new DataColumn("#"));
+            tablaCAT20i.Columns.Add(new DataColumn("Message Type"));
+            tablaCAT20i.Columns.Add(new DataColumn("SAC"));
+            tablaCAT20i.Columns.Add(new DataColumn("SIC"));
+            tablaCAT20i.Columns.Add(new DataColumn("Target Report Descriptor"));
+            tablaCAT20i.Columns.Add(new DataColumn("Time Of Day (UTC)"));
+            tablaCAT20i.Columns.Add(new DataColumn("Position WSG-84"));
+            tablaCAT20i.Columns.Add(new DataColumn("Position Cartesian Coords"));
+            tablaCAT20i.Columns.Add(new DataColumn("Track Number"));
+            tablaCAT20i.Columns.Add(new DataColumn("Track Status"));
+            tablaCAT20i.Columns.Add(new DataColumn("Mode 3A Code"));
+            tablaCAT20i.Columns.Add(new DataColumn("Calculated Velocity"));
+            tablaCAT20i.Columns.Add(new DataColumn("Flight Level"));
+            tablaCAT20i.Columns.Add(new DataColumn("Mode C Code"));
+            tablaCAT20i.Columns.Add(new DataColumn("Target Address"));
+            tablaCAT20i.Columns.Add(new DataColumn("Target ID"));
+            tablaCAT20i.Columns.Add(new DataColumn("Measured Height"));
+            tablaCAT20i.Columns.Add(new DataColumn("Geometric Height (WSG-84)"));
+            tablaCAT20i.Columns.Add(new DataColumn("Calculated Acceleration"));
+            tablaCAT20i.Columns.Add(new DataColumn("Vehicle Fleet ID"));
+            tablaCAT20i.Columns.Add(new DataColumn("Pre Programmed MSG"));
+            tablaCAT20i.Columns.Add(new DataColumn("Position Accuracy"));
+            tablaCAT20i.Columns.Add(new DataColumn("Contributing Devices (Receivers)"));
+            tablaCAT20i.Columns.Add(new DataColumn("Mode S MB Data"));
+            tablaCAT20i.Columns.Add(new DataColumn("Comms/ACAS Capability and Flight Status"));
+            tablaCAT20i.Columns.Add(new DataColumn("ACAS RA Report"));
+            tablaCAT20i.Columns.Add(new DataColumn("Warning/Error Conditions"));
+            tablaCAT20i.Columns.Add(new DataColumn("Mode 1 Code"));
+            tablaCAT20i.Columns.Add(new DataColumn("Mode 2 Code"));
+
+            int q = 0;
+            while (q < listaCAT20.Count)
+            {
+                CAT20 newcat20 = listaCAT20[q];
+                if (newcat20.TargetAddress == targetaddress)
+                    tablaCAT20i.Rows.Add(q + 1, newcat20.getMessageType(), newcat20.SAC, newcat20.SIC, newcat20.TargetReport, newcat20.TOD, newcat20.LonWSG, "[" + newcat20.coordscc[0].ToString() + "," + newcat20.coordscc[1].ToString() + "] m", newcat20.TrackNum, "Click to expand", newcat20.Mode3A, "[" + newcat20.Velocitycc[0].ToString() + "," + newcat20.Velocitycc[1].ToString() + "] m/s", newcat20.FL[2], newcat20.ModeC, newcat20.TargetAddress, newcat20.TargetID, newcat20.MeasuredHeight, newcat20.geoHeight, newcat20.calcAccel, newcat20.VehicleFleetID, newcat20.PPMsg, newcat20.DOP, newcat20.Receivers, newcat20.ModeSData, newcat20.ACAScap, newcat20.ACASRAreport, newcat20.warning, newcat20.Mode1Code, newcat20.Mode2Code);
+                q++;
+            }
+            return tablaCAT20i;
+        }
+
+        public DataTable SearchTargetAddressCAT21(string targetaddress) //buscar paquetes por el target address 
+        {
+            DataTable tablaCAT21i = new DataTable();
+
+            tablaCAT21i.Columns.Add(new DataColumn("#"));
+            tablaCAT21i.Columns.Add(new DataColumn("SAC"));
+            tablaCAT21i.Columns.Add(new DataColumn("SIC"));
+            tablaCAT21i.Columns.Add(new DataColumn("Target Identification"));
+            tablaCAT21i.Columns.Add(new DataColumn("Target Report"));
+            tablaCAT21i.Columns.Add(new DataColumn("Time Of Day"));
+            tablaCAT21i.Columns.Add(new DataColumn("Position WSG-84 [Latitude, Longitude]"));
+            tablaCAT21i.Columns.Add(new DataColumn("High Resolution Position WGS-84"));
+            tablaCAT21i.Columns.Add(new DataColumn("Flight Level"));
+            tablaCAT21i.Columns.Add(new DataColumn("Geometric Height"));
+            tablaCAT21i.Columns.Add(new DataColumn("Operational Status"));
+            tablaCAT21i.Columns.Add(new DataColumn("AirSpeed"));
+            tablaCAT21i.Columns.Add(new DataColumn("True Airspeed"));
+            tablaCAT21i.Columns.Add(new DataColumn("Airborne Ground Vector [Ground Speed, Track Angle]"));
+            tablaCAT21i.Columns.Add(new DataColumn("Intermediate Stage Selected Altitude"));
+            tablaCAT21i.Columns.Add(new DataColumn("Final Stage Selected Altitude"));
+            tablaCAT21i.Columns.Add(new DataColumn("MOPS"));
+            tablaCAT21i.Columns.Add(new DataColumn("Magnetic Heading"));
+            tablaCAT21i.Columns.Add(new DataColumn("Barometric Vertical Rate"));
+            tablaCAT21i.Columns.Add(new DataColumn("Geometric Vertical Rate"));
+            tablaCAT21i.Columns.Add(new DataColumn("Mode 3A Code"));
+            tablaCAT21i.Columns.Add(new DataColumn("Met Report"));
+            tablaCAT21i.Columns.Add(new DataColumn("Emitter Category"));
+            tablaCAT21i.Columns.Add(new DataColumn("Target Status"));
+            tablaCAT21i.Columns.Add(new DataColumn("Rate of Angle"));
+            tablaCAT21i.Columns.Add(new DataColumn("Roll Angle"));
+            tablaCAT21i.Columns.Add(new DataColumn("Service Identification"));
+            tablaCAT21i.Columns.Add(new DataColumn("Quality Indicators"));
+            tablaCAT21i.Columns.Add(new DataColumn("Mode S"));
+            tablaCAT21i.Columns.Add(new DataColumn("Link Technology"));
+            tablaCAT21i.Columns.Add(new DataColumn("Report period"));
+            tablaCAT21i.Columns.Add(new DataColumn("Message amplitude"));
+            tablaCAT21i.Columns.Add(new DataColumn("Track angle rate"));
+            tablaCAT21i.Columns.Add(new DataColumn("Receiver ID"));
+            tablaCAT21i.Columns.Add(new DataColumn("Time of Applicability for position"));
+            tablaCAT21i.Columns.Add(new DataColumn("Time of Applicability for velocity"));
+            tablaCAT21i.Columns.Add(new DataColumn("Time of Message Reception for position"));
+            tablaCAT21i.Columns.Add(new DataColumn("Time of Message Reception for velocity"));
+            tablaCAT21i.Columns.Add(new DataColumn("Time of Message Reception for position - High precision"));
+            tablaCAT21i.Columns.Add(new DataColumn("Time of Message Reception for velocity - High precision"));
+            tablaCAT21i.Columns.Add(new DataColumn("Time of ASTERIX Report Transmission"));
+            tablaCAT21i.Columns.Add(new DataColumn("Trajectory Intent Data"));
+            tablaCAT21i.Columns.Add(new DataColumn("Position accuracy"));
+            tablaCAT21i.Columns.Add(new DataColumn("Velocity accuracy"));
+            tablaCAT21i.Columns.Add(new DataColumn("Time of Day accuracy"));
+            tablaCAT21i.Columns.Add(new DataColumn("Figure of merit"));
+            tablaCAT21i.Columns.Add(new DataColumn("Data ages"));
+
+            int q = 0;
+            while (q < listaCAT20.Count)
+            {
+                CAT21 newcat21 = listaCAT21[q];
+                if (newcat21.TargetAddress == targetaddress)
+                    tablaCAT21i.Rows.Add(q + 1, newcat21.SAC, newcat21.SIC, newcat21.TargetID, "Click to expand", newcat21.TOD, newcat21.positionWGS, newcat21.HRpositionWGS, newcat21.FlightLevel, newcat21.GeometricHeight, "Click to expand", newcat21.AirSpeed, newcat21.TrueAirspeed, newcat21.AirborneGroundVector, newcat21.SelectedAltitude_IS, newcat21.SelectedAltitude_FS, "Click to expand", newcat21.MagneticHeading, newcat21.BarometricVerticalRate, newcat21.GeometricVerticalRate, newcat21.Mode3ACode, "Click to expand", newcat21.ECAT, "Click to expand", newcat21.RateOfTurn, newcat21.RollAngle, newcat21.serviceID, "Click to expand", "Click to expand", "Click to expand", newcat21.RP, newcat21.MSGampl, newcat21.TrackAngleRate, newcat21.RID, newcat21.TimeOfApplicabilityForPosition_, newcat21.TimeOfApplicabilityForVelocity_, newcat21.TimeOfMessageReceptionForPosition_, newcat21.TimeOfMessageReceptionForVelocity_, newcat21.TimeOfMessageReceptionForPosition_HighPrecision_, newcat21.TimeOfMessageReceptionForVelocity_HighPrecision_, newcat21.TimeOfAsterixReportTransmission_, newcat21.TrajectoryIntentData, newcat21.posAccuracy, newcat21.velAccuracy, newcat21.TODaccuracy, "Click to expand", "Click to expand");
+                q++;
+            }
+
+            return tablaCAT21i;
         }
     }
 }

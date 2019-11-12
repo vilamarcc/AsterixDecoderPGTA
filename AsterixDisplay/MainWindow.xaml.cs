@@ -41,10 +41,34 @@ namespace AsterixDisplay
         public MainWindow()
         {
             InitializeComponent();
+
+            //escondemos botones para evitar erroes
+            searchbox.Visibility = Visibility.Hidden;
+            clearsearchbut.Visibility = Visibility.Hidden;
+            searchbut.Visibility = Visibility.Hidden;
+            combobox.Visibility = Visibility.Hidden;
+            cat10_butt.Visibility = Visibility.Hidden;
+            cat20_butt.Visibility = Visibility.Hidden;
+            cat21_butt.Visibility = Visibility.Hidden;
         }
 
         private async void cargarbut_Click(object sender, RoutedEventArgs e) // botón OPEN FILE
         {
+            //vaciamos las tablas
+            gridCAT.ItemsSource = null;
+            dataexpanded.ItemsSource = null;
+            gridCAT.Items.Clear();
+            dataexpanded.Items.Clear();
+
+            //escondemos botones para evitar erroes
+            searchbox.Visibility = Visibility.Hidden;
+            clearsearchbut.Visibility = Visibility.Hidden;
+            searchbut.Visibility = Visibility.Hidden;
+            combobox.Visibility = Visibility.Hidden;
+            cat10_butt.Visibility = Visibility.Hidden;
+            cat20_butt.Visibility = Visibility.Hidden;
+            cat21_butt.Visibility = Visibility.Hidden;
+
             //mostramos la barra de progreso
             var progress = new Progress<int>(value => progressbar1.Value = value);
             progressbar1.Visibility = Visibility.Visible;
@@ -53,6 +77,11 @@ namespace AsterixDisplay
             ofd.Filter = "AST |*.ast";
             if (ofd.ShowDialog() == true)
             {
+                //preguntamos versión de la cat21
+                versionCAT21 vc = new versionCAT21();
+                vc.ShowDialog();
+                int version = vc.GetVersion();
+                
                 await Task.Run(() =>
                 {
                     //leemos fichero
@@ -61,7 +90,7 @@ namespace AsterixDisplay
                     ((IProgress<int>)progress).Report(10);
 
                     //leemos los paquetes 
-                    f.Read();
+                    f.Read(version);
                     ((IProgress<int>)progress).Report(70);
 
                     //decimos que se ha cargado ya el fichero
@@ -75,12 +104,12 @@ namespace AsterixDisplay
                     ((IProgress<int>)progress).Report(85);
 
                     //cat que vamos a mostrar por defecto 
-                        //si el archivo tiene más de una cat se mostrará la más pequeña (por defecto), pero luego se puede elegir ver otra
+                    //si el archivo tiene más de una cat se mostrará la más pequeña (por defecto), pero luego se puede elegir ver otra
                     if (f.ComprobarCAT10() == true)
                         this.cat = 10;
-                    else if (f.ComprobarCAT20() == true)
+                    if (f.ComprobarCAT20() == true)
                         this.cat = 20;
-                    else if (f.ComprobarCAT21() == true)
+                    if (f.ComprobarCAT21() == true)
                         this.cat = 21;
                     ((IProgress<int>)progress).Report(100);
                 });
@@ -102,12 +131,23 @@ namespace AsterixDisplay
                     this.fillgridwithdata(this.dataCAT21);
                 }
 
+                //enseñamos los botones
+                searchbox.Visibility = Visibility.Visible;
+                clearsearchbut.Visibility = Visibility.Visible;
+                searchbut.Visibility = Visibility.Visible;
+                combobox.Visibility = Visibility.Visible;
+                cat10_butt.Visibility = Visibility.Visible;
+                cat20_butt.Visibility = Visibility.Visible;
+                cat21_butt.Visibility = Visibility.Visible;
+
+                //escondemos la barra de progreso
                 progressbar1.Visibility = Visibility.Hidden;
             }
         }
 
         public void fillgridwithdata(DataTable data) //enseña en pantalla la tabla que le damos como input
         {
+            gridCAT.ItemsSource = data.DefaultView;
             gridCAT.DataContext = data.DefaultView;
             gridCAT.Items.Refresh();
         }
@@ -188,7 +228,7 @@ namespace AsterixDisplay
             }
         }
 
-        private void filldataexpandedCAT21(int index)
+        private void filldataexpandedCAT21(int index) //crea la tabla pequeña de CAT21 (solo con los items que existan)
         {
             DataTable expanded = new DataTable();
             CAT21 cat21exp = f.getCAT21(index);
@@ -247,7 +287,7 @@ namespace AsterixDisplay
             dataexpanded.Items.Refresh();
         }
 
-        private void filldataexpandedCAT10(int index)
+        private void filldataexpandedCAT10(int index) //crea la tabla pequeña de CAT10 (solo con los items que existan)
         {
             DataTable expanded = new DataTable();
             CAT10 cat10exp = f.getCAT10(index);
@@ -307,7 +347,7 @@ namespace AsterixDisplay
             dataexpanded.Items.Refresh();
         }
 
-        private void filldataexpandedCAT20(int index)
+        private void filldataexpandedCAT20(int index) //crea la tabla pequeña de CAT20 (solo con los items que existan)
         {
             DataTable expanded = new DataTable();
             CAT20 cat20exp = f.getCAT20(index);
@@ -342,49 +382,114 @@ namespace AsterixDisplay
             dataexpanded.Items.Refresh();
         }
 
-        private void searchbut_Click(object sender, RoutedEventArgs e)
+        private void searchbut_Click(object sender, RoutedEventArgs e) // botón SEARCH
         {
-            try
+            if (combobox.SelectedIndex == 0) // buscar por número de paquete
             {
-                int package = Convert.ToInt32(searchbox.Text) - 1;
-
-                if (this.cat == 10)
+                try
                 {
-                    CAT10 cat10search = f.getCAT10(package);
+                    int package = Convert.ToInt32(searchbox.Text) - 1;
 
-                    dataCATsearch = f.getTablaCAT10Indv(cat10search, package);
+                    if (this.cat == 10)
+                    {
+                        CAT10 cat10search = f.getCAT10(package);
 
-                    gridCAT.ItemsSource = dataCATsearch.DefaultView;
-                    gridCAT.Items.Refresh();
+                        dataCATsearch = f.getTablaCAT10Indv(cat10search, package);
 
-                    filldataexpandedCAT10(package);
+                        gridCAT.ItemsSource = dataCATsearch.DefaultView;
+                        gridCAT.Items.Refresh();
+
+                        filldataexpandedCAT10(package);
+                    }
+                    if (this.cat == 20)
+                    {
+                        CAT20 cat20search = f.getCAT20(package);
+
+                        dataCATsearch = f.getTablaCAT20Indv(cat20search, package);
+
+                        gridCAT.ItemsSource = dataCATsearch.DefaultView;
+                        gridCAT.Items.Refresh();
+
+                        filldataexpandedCAT20(package);
+                    }
+                    if (this.cat == 21)
+                    {
+                        CAT21 cat21search = f.getCAT21(package);
+
+                        dataCATsearch = f.getTablaCAT21Indv(cat21search, package);
+
+                        gridCAT.ItemsSource = dataCATsearch.DefaultView;
+                        gridCAT.Items.Refresh();
+
+                        filldataexpandedCAT21(package);
+                    }
                 }
-                if (this.cat == 20)
+                catch
                 {
-                    CAT20 cat20search = f.getCAT20(package);
-
-                    dataCATsearch = f.getTablaCAT20Indv(cat20search, package);
-
-                    gridCAT.ItemsSource = dataCATsearch.DefaultView;
-                    gridCAT.Items.Refresh();
-
-                    filldataexpandedCAT20(package);
-                }
-                if (this.cat == 21)
-                {
-                    CAT21 cat21search = f.getCAT21(package);
-
-                    dataCATsearch = f.getTablaCAT21Indv(cat21search, package);
-
-                    gridCAT.ItemsSource = dataCATsearch.DefaultView;
-                    gridCAT.Items.Refresh();
-
-                    filldataexpandedCAT21(package);
+                    MessageBox.Show("Package not available, check the number");
                 }
             }
-            catch
+            if(combobox.SelectedIndex == 1)
             {
-                MessageBox.Show("Packete no dispoible, comprueba el #");
+                try
+                {
+                    if (this.cat == 10)
+                    {
+                        dataCATsearch = f.SearchCallsignCAT10(searchbox.Text);
+
+                        gridCAT.ItemsSource = dataCATsearch.DefaultView;
+                        gridCAT.Items.Refresh();
+                    }
+                    if (this.cat == 20)
+                    {
+                        dataCATsearch = f.SearchCallsignCAT20(searchbox.Text);
+
+                        gridCAT.ItemsSource = dataCATsearch.DefaultView;
+                        gridCAT.Items.Refresh();
+                    }
+                    if (this.cat == 21)
+                    {
+                        dataCATsearch = f.SearchCallsignCAT21(searchbox.Text);
+
+                        gridCAT.ItemsSource = dataCATsearch.DefaultView;
+                        gridCAT.Items.Refresh();
+                    }
+                }
+                catch
+                {
+                    MessageBox.Show("Package not available, check the callsign");
+                }
+            }
+            if (combobox.SelectedIndex == 2)
+            {
+                try
+                {
+                    if (this.cat == 10)
+                    {
+                        dataCATsearch = f.SearchTargetAddressCAT10(searchbox.Text);
+
+                        gridCAT.ItemsSource = dataCATsearch.DefaultView;
+                        gridCAT.Items.Refresh();
+                    }
+                    if (this.cat == 20)
+                    {
+                        dataCATsearch = f.SearchTargetAddressCAT20(searchbox.Text);
+
+                        gridCAT.ItemsSource = dataCATsearch.DefaultView;
+                        gridCAT.Items.Refresh();
+                    }
+                    if (this.cat == 21)
+                    {
+                        dataCATsearch = f.SearchTargetAddressCAT21(searchbox.Text);
+
+                        gridCAT.ItemsSource = dataCATsearch.DefaultView;
+                        gridCAT.Items.Refresh();
+                    }
+                }
+                catch
+                {
+                    MessageBox.Show("Package not available, check the target address");
+                }
             }
         }
 
@@ -392,9 +497,13 @@ namespace AsterixDisplay
         {
             try
             {
-                if(this.cat == 20) { gridCAT.ItemsSource = dataCAT20.DefaultView; }
-                if(this.cat == 10) { gridCAT.ItemsSource = dataCAT10.DefaultView; }
-                if(this.cat == 21) { gridCAT.ItemsSource = dataCAT21.DefaultView; }
+                //llenamos la tabla grande con todo el paquete
+                if (this.cat == 20) { gridCAT.ItemsSource = dataCAT20.DefaultView; }
+                if (this.cat == 10) { gridCAT.ItemsSource = dataCAT10.DefaultView; }
+                if (this.cat == 21) { gridCAT.ItemsSource = dataCAT21.DefaultView; }
+                //vaciamos la tabla pequeña
+                dataexpanded.ItemsSource = null;
+                dataexpanded.Items.Clear();
             }
             catch
             {
@@ -426,6 +535,10 @@ namespace AsterixDisplay
                 MessageBox.Show("There is no CAT10 packages");
 
                 cat10_butt.IsChecked = false;
+                if (this.cat == 20)
+                    cat20_butt.IsChecked = true;
+                if (this.cat == 21)
+                    cat21_butt.IsChecked = true;
             }
         }
 
@@ -443,6 +556,10 @@ namespace AsterixDisplay
                 MessageBox.Show("There is no CAT20 packages");
 
                 cat20_butt.IsChecked = false;
+                if (this.cat == 10)
+                    cat10_butt.IsChecked = true;
+                if (this.cat == 21)
+                    cat21_butt.IsChecked = true;
             }
         }
 
@@ -460,6 +577,10 @@ namespace AsterixDisplay
                 MessageBox.Show("There is no CAT21 packages");
 
                 cat21_butt.IsChecked = false;
+                if (this.cat == 20)
+                    cat20_butt.IsChecked = true;
+                if (this.cat == 10)
+                    cat10_butt.IsChecked = true;
             }
         }
 
@@ -474,6 +595,16 @@ namespace AsterixDisplay
         {
             AboutUs au = new AboutUs();
             au.ShowDialog();
+        }
+
+        private void combobox_selectionchanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (combobox.SelectedIndex == 0)
+                searchbox.Text = "Package #";
+            if (combobox.SelectedIndex == 1)
+                searchbox.Text = "Callsign";
+            if (combobox.SelectedIndex == 2)
+                searchbox.Text = "Target Address";
         }
     }
 }

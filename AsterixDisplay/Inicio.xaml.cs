@@ -29,7 +29,6 @@ namespace AsterixDisplay
             MainWindow main = new MainWindow();
             this.Close();
             main.ShowDialog();
-
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

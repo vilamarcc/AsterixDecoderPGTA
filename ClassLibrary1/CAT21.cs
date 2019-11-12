@@ -11,7 +11,7 @@ namespace AsterixDecoder
 
         public string FSPEC;
 
-        public int version = 23;
+        public int version;
 
         public string RA;
         public string TC;
@@ -252,8 +252,10 @@ namespace AsterixDecoder
 
 
         // CONSTRUCTOR:
-        public CAT21(string[] paquete) //decodifica el missatge (paquet)
+        public CAT21(string[] paquete, int vers) //decodifica el missatge (paquet)
         {
+            this.version = vers;
+
             //el primer octet (posició 0) és la categoria --> ja l'hem llegida
 
             //els segon i tercet octet (posicions 1 i 2) és la longitud del missatge = nombre d'octets
@@ -1587,7 +1589,7 @@ namespace AsterixDecoder
         public void ComputeFinalStateSelectedAltitude(string octetos) // Data Item I021/148
         {
             //string de bits
-            string octetos_bits = Convert.ToString(Convert.ToInt32(octetos, 16), 2).PadLeft(8, '0');
+            string octetos_bits = Convert.ToString(Convert.ToInt32(octetos, 16), 2).PadLeft(16, '0');
 
             //separem 
             this.MV = octetos_bits.Substring(0, 1);
@@ -1604,7 +1606,7 @@ namespace AsterixDecoder
         public void ComputeAirSpeed(string octetos) // Data Item I021/150
         {
             //string de bits
-            string octetos_bits = Convert.ToString(Convert.ToInt32(octetos, 16), 2).PadLeft(8, '0');
+            string octetos_bits = Convert.ToString(Convert.ToInt32(octetos, 16), 2).PadLeft(16, '0');
 
             //separem 
             this.IM = octetos_bits.Substring(0, 1);
