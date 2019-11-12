@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AsterixDisplay"
         mc:Ignorable="d"
-        Title="Asterix Decoder" Height="450" Width="800" FontFamily="Lucida Sans Unicode">
-    <Grid Margin="0,0,-6.667,-0.333">
+        Title="Asterix Decoder" Height="450" Width="809" FontFamily="Lucida Sans Unicode">
+    <Grid Margin="0,0,-12,0">
         <Image HorizontalAlignment="Left" Height="135" VerticalAlignment="Top" Width="600" Margin="25,20,0,0" Source="/Resources/UPC-logo.jpg" Grid.ColumnSpan="2">
         </Image>
         <Button x:Name="iniciatbut" Content="Start" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="700,382,0,0" Background="{x:Null}" Click="iniciatbut_Click"/>
