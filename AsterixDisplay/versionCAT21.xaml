@@ -1,0 +1,18 @@
+﻿<Window x:Class="AsterixDisplay.versionCAT21"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AsterixDisplay"
+        mc:Ignorable="d"
+        Title="versionCAT21" Height="217" Width="299">
+    <Grid>
+        <Label Content="Maybe in this file there are some packages of CAT21" HorizontalAlignment="Center" Margin="5,35,1,0" VerticalAlignment="Top" Width="285"/>
+        <Label Content="In affirmative case, which CAT21 version" HorizontalAlignment="Left" Margin="5,65,0,0" VerticalAlignment="Top"/>
+        <Label Content="are these packages using?" HorizontalAlignment="Left" Margin="5,80,0,0" VerticalAlignment="Top"/>
+        <CheckBox Content="v023" Name="v23" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="40,110,0,0" Click="v23_Click"/>
+        <CheckBox Content="v2.4" Name="v24" HorizontalAlignment="Left" Margin="40,140,0,0" VerticalAlignment="Top" Click="v24_Click"/>
+        <Button Content="OK" Name="buttonOK" HorizontalAlignment="Right" Margin="0,125,40,0" VerticalAlignment="Top" Width="75" Click="buttonOK_Click"/>
+
+    </Grid>
+</Window>
