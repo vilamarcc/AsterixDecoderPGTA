@@ -111,6 +111,11 @@ namespace AsterixDecoder
 
         public int length;
 
+        public string targetreport;
+        public string trackstatus;
+        public string posaccuracy;
+
+
         public CAT20(string[] array)
         {
             int Length = int.Parse(array[1] + array[2], System.Globalization.NumberStyles.HexNumber);
@@ -525,13 +530,16 @@ namespace AsterixDecoder
                         this.BDS2 = Octeto_250_9.Substring(4, 4);
                     }
                     i++;
-                        
                 }
+            }
 
-                
-                    }
-
-                }
+            if (this.getTargetReportDescriptortoString() != null)
+                this.targetreport = "Click to expand";
+            if (this.getTrackStatusToString() != null)
+                this.trackstatus = "Click to expand";
+            if (this.getPositionAccuracyToString() != null)
+                this.posaccuracy = "Click to expand";
+        }
 
         private void computeFSPEC(string[] paquete)
         {

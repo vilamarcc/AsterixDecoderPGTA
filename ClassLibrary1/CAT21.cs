@@ -250,6 +250,17 @@ namespace AsterixDecoder
 
         public string TOD;
 
+        public string targetreport;
+        public string operationalstatus;
+        public string figureofmerit;
+        public string ages_;
+        public string trajectoryintentdata;
+        public string linktech;
+        public string targetstatus;
+        public string metreport;
+        public string qualityindicators;
+        public string modes;
+        public string mopsv;
 
         // CONSTRUCTOR:
         public CAT21(string[] paquete, int vers) //decodifica el missatge (paquet)
@@ -749,7 +760,28 @@ namespace AsterixDecoder
                 }
             }
 
-
+            if (this.TargetReport != null)
+                this.targetreport = "Click to expand";
+            if (this.OperationalStatus != null)
+                this.operationalstatus = "Click to expand";
+            if (this.FigureOfMerit != null)
+                this.figureofmerit = "Click to expand";
+            if (this.ages != null)
+                this.ages_ = "Click to expand";
+            if (this.TrajectoryIntentData != null)
+                this.trajectoryintentdata = "Click to expand";
+            if (this.LinkTech != null)
+                this.linktech = "Click to expand";
+            if (this.TargetStatus != null)
+                this.targetstatus = "Click to expand";
+            if (this.MetReport != null)
+                this.metreport = "Click to expand";
+            if (this.QualityIndicators != null)
+                this.qualityindicators = "Click to expand";
+            if (this.ModeS != null)
+                this.modes = "Click to expand";
+            if (this.MOPS != null)
+                this.mopsv = "Click to expand";
         }
 
         // MÈTODES:

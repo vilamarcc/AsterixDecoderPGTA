@@ -126,6 +126,12 @@ namespace AsterixDecoder
         public string Ay;
         public string acceleration;
 
+        public string datachar_;
+        public string trackstatus_;
+        public string presence_;
+        public string modes_;
+        public string systemstatus;
+
         // CONSTRUCTOR:
         public CAT10(string[] paquete) //decodifica el missatge (paquet)
         {
@@ -316,6 +322,17 @@ namespace AsterixDecoder
                     }
                 }
             }
+
+            if (this.DataCharacteristics != null)
+                this.datachar_ = "Click to expand";
+            if (this.TrackStatus != null)
+                this.trackstatus_ = "Click to expand";
+            if (this.Presence != null)
+                this.presence_ = "Click to expand";
+            if (this.ModeS != null)
+                this.modes_ = "Click to expand";
+            if (this.systemstatus != null)
+                this.systemstatus = "Click to expand";
         }
 
         // MÈTODES:

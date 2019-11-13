@@ -166,15 +166,15 @@ namespace AsterixDisplay
                 CAT10 paquete = f.getCAT10(fil);
 
                 //expandimos información:
-                if (c == 5) // Target Report - Data Characteristics
+                if (c == 5 && paquete.DataCharacteristics!=null) // Target Report - Data Characteristics
                     MessageBox.Show(paquete.DataCharacteristics);
-                if (c == 13) // Track Status
+                if (c == 13 && paquete.TrackStatus != null) // Track Status
                     MessageBox.Show(paquete.TrackStatus);
-                if (c == 27) // Presence
+                if (c == 27 && paquete.Presence != null) // Presence
                     MessageBox.Show(paquete.Presence);
-                if (c == 17) // Mode S MB Data
+                if (c == 17 && paquete.ModeS != null) // Mode S MB Data
                     MessageBox.Show(paquete.ModeS);
-                if (c == 23) // System Status
+                if (c == 23 && paquete.SystemStatus != null) // System Status
                     MessageBox.Show(paquete.SystemStatus);
 
                 //mostramos las características de ese paquete a parte:
@@ -185,11 +185,11 @@ namespace AsterixDisplay
                 CAT20 paquete = f.getCAT20(fil);
 
                 //expandimos información:
-                if (c == 3)
+                if (c == 4 && paquete.getTargetReportDescriptortoString() != null)
                     MessageBox.Show(paquete.getTargetReportDescriptortoString());
-                if (c == 9) //Track status
+                if (c == 9 && paquete.getTrackStatusToString() != null) //Track status
                     MessageBox.Show(paquete.getTrackStatusToString());
-                if (c == 21) //Pos Accuracy
+                if (c == 21 && paquete.getPositionAccuracyToString() != null) //Pos Accuracy
                     MessageBox.Show(paquete.getPositionAccuracyToString());
 
                 //mostramos las características de ese paquete a parte:
@@ -200,27 +200,27 @@ namespace AsterixDisplay
                 CAT21 paquete = f.getCAT21(fil);
 
                 //expandimos información:
-                if (c == 4) //Target Report Descriptor
+                if (c == 4 && paquete.TargetReport != null) //Target Report Descriptor
                     MessageBox.Show(paquete.TargetReport);
-                if (c == 10) //Operational Status
+                if (c == 10 && paquete.OperationalStatus != null) //Operational Status
                     MessageBox.Show(paquete.OperationalStatus);
-                if (c == 45) //Figure Of Merit
+                if (c == 45 && paquete.FigureOfMerit != null) //Figure Of Merit
                     MessageBox.Show(paquete.FigureOfMerit);
-                if (c == 46) //Data ages
+                if (c == 46 && paquete.ages != null) //Data ages
                     MessageBox.Show(paquete.ages);
-                if (c == 41) //Trajectory Intent Data
+                if (c == 41 && paquete.TrajectoryIntentData != null) //Trajectory Intent Data
                     MessageBox.Show(paquete.TrajectoryIntentData);
-                if (c == 29) //Link Technology
+                if (c == 29 && paquete.LinkTech != null) //Link Technology
                     MessageBox.Show(paquete.LinkTech);
-                if (c == 23) //Target Status
+                if (c == 23 && paquete.TargetStatus != null) //Target Status
                     MessageBox.Show(paquete.TargetStatus);
-                if (c == 21) //Met Report
+                if (c == 21 && paquete.MetReport != null) //Met Report
                     MessageBox.Show(paquete.MetReport);
-                if (c == 27) //Quality Indicators
+                if (c == 27 && paquete.QualityIndicators != null) //Quality Indicators
                     MessageBox.Show(paquete.QualityIndicators);
-                if (c == 28) //Mode S
+                if (c == 28 && paquete.ModeS != null) //Mode S
                     MessageBox.Show(paquete.ModeS);
-                if (c == 16) //MOPS version
+                if (c == 16 && paquete.MOPS != null) //MOPS version
                     MessageBox.Show(paquete.MOPS);
 
                 //mostramos las características de ese paquete a parte:
