@@ -359,20 +359,15 @@ namespace AsterixDecoder
         public void ComputeDataSourceIdentifier(string octetoSAC, string octetoSIC) // Data Item I010/010
         {
             //passem a string de bits
-            string SAC = Convert.ToString(Convert.ToInt32(octetoSAC, 16), 2).PadLeft(8, '0');
-            string SIC = Convert.ToString(Convert.ToInt32(octetoSIC, 16), 2).PadLeft(8, '0');
-
-            //passem a número
-            this.SACnum = Convert.ToString(Convert.ToInt32(SAC, 2));
-            this.SICnum = Convert.ToString(Convert.ToInt32(SIC, 2));
+            this.SACnum = Convert.ToString(Convert.ToInt32(octetoSAC, 16));
+            this.SICnum = Convert.ToString(Convert.ToInt32(octetoSIC, 16));
 
             //decodifiquem (hi ha més codis però aquests són els únics que sortiran)
+            this.DataSourceID = "SAC: " + this.SACnum + ", SIC: " + this.SICnum;
             if (this.SACnum == "0" && this.SICnum == "107")
                 this.DataSourceID = "Data flow local to the airport: Barcelona - LEBL";
             if (this.SACnum == "0" && this.SICnum == "7")
                 this.DataSourceID = "Data flow local to the airport: Barcelona - LEBL";
-            else
-                this.DataSourceID = "SAC: " + this.SACnum.ToString() + ", SIC: " + this.SICnum.ToString();
         }
 
         public void ComputeMessageType(string octetoMT) // Data Item I010/000
@@ -533,8 +528,11 @@ namespace AsterixDecoder
             double lati = this.ComputeComplementoA2(lat) * (180 / Math.Pow(2, 31));
             double longi = this.ComputeComplementoA2(lon) * (180 / Math.Pow(2, 31));
 
-            this.LatitudeWGS = Convert.ToString(Math.Round(1000 * lati) / 1000);
-            this.LongitudeWGS = Convert.ToString(Math.Round(1000 * longi) / 1000);
+            this.LatitudeWGS = Convert.ToString(lati);
+            this.LongitudeWGS = Convert.ToString(longi);
+
+            double lat_red = Math.Round(1000 * lati) / 1000;
+            double lon_red = Math.Round(1000 * longi) / 1000;
 
             this.positionWGS = "[" + this.LatitudeWGS + ", : " + this.LongitudeWGS + "] º";
         }
@@ -550,9 +548,10 @@ namespace AsterixDecoder
             double THETA = Convert.ToSingle(theta) * (360 / Math.Pow(2, 16));
 
             this.RHO = Convert.ToString(Rho);
-            this.Theta = Convert.ToString(Math.Round(100 * THETA) / 100);
+            this.Theta = Convert.ToString(THETA);
+            double theta_red = Math.Round(100 * THETA) / 100;
 
-            this.positionPolar = "[" + this.RHO + " m, : " + this.Theta + "º]";
+            this.positionPolar = "[" + this.RHO + " m, " + theta_red.ToString() + "º]";
         }
 
         public void ComputePositionInCartesian(string OctX, string OctY) // Data Item I010/042

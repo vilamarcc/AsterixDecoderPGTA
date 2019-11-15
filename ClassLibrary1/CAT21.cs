@@ -1541,11 +1541,14 @@ namespace AsterixDecoder
             string lat = Convert.ToString(Convert.ToInt32(OctLatWGS, 16), 2).PadLeft(24, '0');
             string lon = Convert.ToString(Convert.ToInt32(OctLonWGS, 16), 2).PadLeft(24, '0');
 
-            //fem el complement a2 que ens torna els bit en doubles i multipliquem per la resolució
-            this.LatitudeWGS = Math.Round(1000 * this.ComputeComplementoA2(lat) * (180 / Math.Pow(2, 23))) / 1000;
-            this.LongitudeWGS = Math.Round(1000 * this.ComputeComplementoA2(lon) * (180 / Math.Pow(2, 23))) / 1000;
+            //fem el complement a2 que ens torna els bit en doubles, multipliquem per la resolució i arrodonim
+            this.LatitudeWGS = this.ComputeComplementoA2(lat) * (180 / Math.Pow(2, 23));
+            this.LongitudeWGS = this.ComputeComplementoA2(lon) * (180 / Math.Pow(2, 23));
 
-            this.positionWGS = "[" + this.LatitudeWGS + "º, " + this.LongitudeWGS + "º]";
+            double lat_red= Math.Round(1000 * this.LatitudeWGS) / 1000;
+            double lon_red = Math.Round(1000 * this.LongitudeWGS) / 1000;
+
+            this.positionWGS = "[" + lat_red.ToString() + "º, " + lon_red.ToString() + "º]";
         }
 
         public void ComputeHighResolutionPositionInWGS84(string OctLatWGS, string OctLonWGS) // Data Item I021/131
@@ -1558,7 +1561,7 @@ namespace AsterixDecoder
             this.LatitudeWGS_HR = Math.Round(1000 * this.ComputeComplementoA2(lat) * (180 / Math.Pow(2, 31))) / 1000;
             this.LongitudeWGS_HR = Math.Round(1000 * this.ComputeComplementoA2(lon) * (180 / Math.Pow(2, 31))) / 1000;
 
-            this.HRpositionWGS = "[" + this.LatitudeWGS_HR + "º, " + this.LongitudeWGS_HR + "º]";
+            this.HRpositionWGS = "[" + this.LatitudeWGS_HR.ToString() + "º, " + this.LongitudeWGS_HR.ToString() + "º]";
         }
 
         public void ComputeMessageAmplitude(string octeto) // Data Item I021/132
@@ -1791,7 +1794,10 @@ namespace AsterixDecoder
             double gs_red = Math.Round(1000000 * this.GroundSpeed) / 1000000;
             double ta_red = Math.Round(1000 * this.TrackAngle) / 1000;
 
-            this.AirborneGroundVector = "[" + gs_red.ToString() + " NM/s, " + ta_red.ToString() + "º]";
+            string gs = Convert.ToString(gs_red);
+            string ta = Convert.ToString(ta_red);
+
+            this.AirborneGroundVector = "[" + gs + " NM/s, " + ta + "º]";
         }
 
         public void ComputeTrackNumber(string octetos) // Data Item I021/161

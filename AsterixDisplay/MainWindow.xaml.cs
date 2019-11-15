@@ -41,6 +41,7 @@ namespace AsterixDisplay
         public MainWindow()
         {
             InitializeComponent();
+            this.WindowState = WindowState.Maximized;
 
             //escondemos botones para evitar erroes
             searchbox.Visibility = Visibility.Hidden;
@@ -104,7 +105,7 @@ namespace AsterixDisplay
                     ((IProgress<int>)progress).Report(85);
 
                     //cat que vamos a mostrar por defecto 
-                    //si el archivo tiene más de una cat se mostrará la más pequeña (por defecto), pero luego se puede elegir ver otra
+                    //si el archivo tiene más de una cat se mostrará la más grande (por defecto), pero luego se puede elegir ver otra
                     if (f.ComprobarCAT10() == true)
                         this.cat = 10;
                     if (f.ComprobarCAT20() == true)
@@ -243,7 +244,7 @@ namespace AsterixDisplay
             if (cat21exp.TOD != null) { expanded.Rows.Add("Time of Day", cat21exp.TOD); }
             if (cat21exp.positionWGS != null) { expanded.Rows.Add("Position WGS-84 coordinates\n[Latitude, Longitude]", cat21exp.positionWGS); }
             if (cat21exp.HRpositionWGS != null) { expanded.Rows.Add("High Resolution position WGS-84\n[Latitude, Longitude]", cat21exp.HRpositionWGS); }
-            if (cat21exp.FlightLevel != null) { expanded.Rows.Add("FLight Level", cat21exp.FlightLevel); }
+            if (cat21exp.FlightLevel != null) { expanded.Rows.Add("Flight Level", cat21exp.FlightLevel); }
             if (cat21exp.GeometricHeight != null) { expanded.Rows.Add("Geometric Height", cat21exp.GeometricHeight); }
             if (cat21exp.OperationalStatus != null) { expanded.Rows.Add("Operational Status", cat21exp.OperationalStatus); }
             if (cat21exp.AirSpeed != null) { expanded.Rows.Add("Air Speed", cat21exp.AirSpeed); }
