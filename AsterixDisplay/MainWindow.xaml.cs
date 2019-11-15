@@ -530,6 +530,10 @@ namespace AsterixDisplay
                 this.fillgridwithdata(this.dataCAT10);
 
                 cat10_butt.IsChecked = true;
+
+                //vaciamos la tabla pequeña
+                dataexpanded.ItemsSource = null;
+                dataexpanded.Items.Clear();
             }
             else
             {
@@ -551,6 +555,10 @@ namespace AsterixDisplay
                 this.fillgridwithdata(this.dataCAT20);
 
                 cat20_butt.IsChecked = true;
+
+                //vaciamos la tabla pequeña
+                dataexpanded.ItemsSource = null;
+                dataexpanded.Items.Clear();
             }
             else
             {
@@ -572,6 +580,10 @@ namespace AsterixDisplay
                 this.fillgridwithdata(this.dataCAT21);
 
                 cat21_butt.IsChecked = true;
+
+                //vaciamos la tabla pequeña
+                dataexpanded.ItemsSource = null;
+                dataexpanded.Items.Clear();
             }
             else
             {

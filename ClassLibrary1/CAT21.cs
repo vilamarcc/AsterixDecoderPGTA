@@ -1931,9 +1931,7 @@ namespace AsterixDecoder
         {
             string bits = Convert.ToString(Convert.ToInt32(octeto, 16), 2).PadLeft(8, '0');
 
-            // HAY QUE DECODIFICAR
-
-            this.velAccuracy = bits;
+            this.velAccuracy = Convert.ToString(Convert.ToInt32(bits, 2));
         }
 
         public void ComputeTODaccuracy(string octeto)

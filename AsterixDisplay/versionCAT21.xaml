@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AsterixDisplay"
         mc:Ignorable="d"
-        Title="versionCAT21" Height="277" Width="299">
+        Title="versionCAT21" Height="267" Width="299">
     <Grid>
         <Label Content="Maybe in this file there are some packages of CAT21" HorizontalAlignment="Center" Margin="5,35,1,0" VerticalAlignment="Top" Width="285"/>
         <Label Content="In affirmative case, which CAT21 version" HorizontalAlignment="Left" Margin="5,65,0,0" VerticalAlignment="Top"/>
@@ -13,10 +13,9 @@
         <CheckBox Content="v023" Name="v23" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="40,110,0,0" Click="v23_Click"/>
         <CheckBox Content="v2.4" Name="v24" HorizontalAlignment="Left" Margin="40,140,0,0" VerticalAlignment="Top" Click="v24_Click"/>
         <Button Content="OK" Name="buttonOK" HorizontalAlignment="Right" Margin="0,125,40,0" VerticalAlignment="Top" Width="75" Click="buttonOK_Click"/>
-        <Label Content="(1) If you don't select any of them and the file" HorizontalAlignment="Left" Margin="5,160,0,0" VerticalAlignment="Top"/>
-        <Label Content="contains CAT21 packages, it would not decodify it" HorizontalAlignment="Left" Margin="5,170,0,0" VerticalAlignment="Top"/>
-        <Label Content="(2) If you select one of them and the file contains" HorizontalAlignment="Left" Margin="5,190,0,0" VerticalAlignment="Top"/>
-        <Label Content="CAT21 packages of the other version, the data will" HorizontalAlignment="Left" Margin="5,200,0,0" VerticalAlignment="Top"/>
-        <Label Content="be incorrect" HorizontalAlignment="Left" Margin="5,210,0,0" VerticalAlignment="Top"/>
+        <Label Content="(1) If you don't select any of them and the file contains" HorizontalAlignment="Left" Margin="5,165,0,0" VerticalAlignment="Top" FontSize="10"/>
+        <Label Content="CAT21 packages, it would not decodify it" HorizontalAlignment="Left" Margin="5,175,0,0" VerticalAlignment="Top" FontSize="10"/>
+        <Label Content="(2) If you select one of them and the file contains CAT21" HorizontalAlignment="Left" Margin="5,195,0,0" VerticalAlignment="Top" FontSize="10"/>
+        <Label Content="packages of the other version, the data will be incorrect" HorizontalAlignment="Left" Margin="5,205,0,0" VerticalAlignment="Top" FontSize="10"/>
     </Grid>
 </Window>
