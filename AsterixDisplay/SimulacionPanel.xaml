@@ -18,7 +18,7 @@
         <Button x:Name="stopbut" HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}" Width="45" Margin="1020,140,0,0" Height="45" Click="stopbut_Click" BorderBrush="#FFFCFAFA">
             <Image Source="Resources/pause.png" Stretch="Uniform"/>
         </Button>
-        <Button x:Name="resetbut" HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}" Width="46" Margin="1110,139,0,0" Height="46" BorderBrush="White">
+        <Button x:Name="resetbut" HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}" Width="46" Margin="1110,139,0,0" Height="46" BorderBrush="White" Click="resetbut_Click">
             <Image Source="Resources/reset.png" Stretch="Uniform" Height="40" Width="38"/>
         </Button>
         <Button x:Name="speed1but" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="973,190,0,0" Content="x1" Click="speed1but_Click" Background="{x:Null}" />

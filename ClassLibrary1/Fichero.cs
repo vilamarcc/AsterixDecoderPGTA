@@ -454,10 +454,11 @@ namespace AsterixDecoder
         {
             List<String> tracknums = new List<string>();
 
-            for (int c = 0; c < this.listaCAT20.Count;c++)
+            if (this.listaCAT20.Count != 0)
             {
-                if (this.listaCAT20.Count != 0)
+                for (int c = 0; c < this.listaCAT20.Count; c++)
                 {
+
 
                     if (tracknums.Contains(this.listaCAT20[c].TrackNum) == false)
                     {
@@ -466,11 +467,61 @@ namespace AsterixDecoder
                     }
                     else
                     {
-                        foreach(Flight flight in this.listflights)
+                        foreach (Flight flight in this.listflights)
                         {
-                            if(flight.tracknumber == listaCAT20[c].TrackNum)
+                            if (flight.tracknumber == listaCAT20[c].TrackNum)
                             {
-                                flight.updateFlight(listaCAT20[c],c);
+                                flight.updateFlight(listaCAT20[c], c);
+                            }
+                        }
+                    }
+
+                }
+            }
+
+            if( this.listaCAT10.Count != 0)
+            {
+                for (int c = 0; c < this.listaCAT10.Count; c++)
+                {
+
+
+                    if (tracknums.Contains(this.listaCAT10[c].TrackNumber) == false)
+                    {
+                        tracknums.Add(this.listaCAT10[c].TrackNumber);
+                        listflights.Add(new Flight(this.listaCAT10[c], c));
+                    }
+                    else
+                    {
+                        foreach (Flight flight in this.listflights)
+                        {
+                            if (flight.tracknumber == listaCAT10[c].TrackNumber)
+                            {
+                                flight.updateFlight(listaCAT10[c], c);
+                            }
+                        }
+                    }
+
+                }
+            }
+
+            if (this.listaCAT21.Count != 0)
+            {
+                for (int c = 0; c < this.listaCAT21.Count; c++)
+                {
+
+
+                    if (tracknums.Contains(Convert.ToString(this.listaCAT21[c].TrackNumber)) == false)
+                    {
+                        tracknums.Add(Convert.ToString(this.listaCAT21[c].TrackNumber));
+                        listflights.Add(new Flight(this.listaCAT21[c], c));
+                    }
+                    else
+                    {
+                        foreach (Flight flight in this.listflights)
+                        {
+                            if (flight.tracknumber == Convert.ToString(listaCAT21[c].TrackNumber))
+                            {
+                                flight.updateFlight(listaCAT21[c], c);
                             }
                         }
                     }

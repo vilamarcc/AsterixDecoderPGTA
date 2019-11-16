@@ -17,6 +17,7 @@ using GMap.NET.MapProviders;
 using AsterixDecoder;
 using System.Drawing;
 using System.Resources;
+using System.Data;
 
 namespace AsterixDisplay
 {
@@ -35,6 +36,7 @@ namespace AsterixDisplay
         List<CAT10> CAT10s;
         List<CAT21> CAT21s;
         List<Flight> flights;
+        DataTable flightdata;
         int iscat;
         string[] tiempo;
         int speed;
@@ -55,9 +57,7 @@ namespace AsterixDisplay
             this.iscat = cat;
             this.speed = 1000;
 
-            //Update clock with time of the first package
-            this.tiempo = flights[0].TODs[0].Split(':');
-            this.tiempo = (flights[0].TODs[0].Split(':'));
+            resetbut.Click += resetbut_Click; ;
         }
 
         private void mapView_Loaded(object sender, RoutedEventArgs e)
@@ -105,7 +105,7 @@ namespace AsterixDisplay
             return coordinates;
         }
 
-        private void addMarkerMLAT(double X, double Y, string callsign, int tracknum)
+        private void addMarkerMLAT(double X, double Y, string callsign)
         {
             GMapMarker marker = new GMapMarker((fromXYtoLatLongMLAT(X, Y)));
             marker.Position = (fromXYtoLatLongMLAT(X, Y));
@@ -155,11 +155,29 @@ namespace AsterixDisplay
             mapView.Markers.Add(marker);
         }
 
+        private void addMarkerADSB(double lat, double lng, string callsing)
+        {
+            GMapMarker marker = new GMapMarker(new PointLatLng(lat, lng));
+            marker.Position = new PointLatLng(lat, lng);
+            marker.Shape = new System.Windows.Controls.Image
+            {
+                Width = 15,
+                Height = 15,
+                Source = new BitmapImage(new System.Uri("pack://application:,,,/Resources/airplane1.png"))
+            };
+            marker.ZIndex = 0; // Index 0 == Aeronave
+            marker.Offset = new System.Windows.Point(-7.5, -7.5);
+
+            checkVisible(marker);
+            mapView.Markers.Add(marker);
+        }
+
         private void playbut_Click(object sender, RoutedEventArgs e)
         {
             //dispatcherTimer.Tick += dispatcherTimer_TickFlightCAT20;
             if (this.iscat == 20) { dispatcherTimer.Tick += dispatcherTimer_TickCAT20; }
             if (this.iscat == 10) { dispatcherTimer.Tick += dispatcherTimer_TickCAT10; }
+            if (this.iscat == 21) { dispatcherTimer.Tick += dispatcherTimer_TickCAT21; }
             dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, this.speed);
             dispatcherTimer.Start();
         }
@@ -174,7 +192,7 @@ namespace AsterixDisplay
                 this.tiempo = cat20.TOD.Split(':');
                 if (Convert.ToInt32(tiempo[2]) == secact)
                 {
-                    addMarkerMLAT(cat20.X, cat20.Y, cat20.callsign,Convert.ToInt32(cat20.TrackNum));
+                    addMarkerMLAT(cat20.X, cat20.Y, cat20.callsign);
                     this.contador++;
                     if (mapView.Markers.Count >= 200)
                     {
@@ -202,7 +220,7 @@ namespace AsterixDisplay
                 if (Convert.ToInt32(tiempo[2]) == secact)
                 {
                     if (cat10.TYP == "PSR") { addMarkerSMR(Convert.ToDouble(cat10.Xcomponent), Convert.ToDouble(cat10.Ycomponent), cat10.TargetID); }
-                    //if (cat10.TYP == "Mode S MLAT") { addMarkerMLAT(Convert.ToDouble(cat10.Xcomponent), Convert.ToDouble(cat10.Ycomponent), cat10.TargetID); }
+                    if (cat10.TYP == "Mode S MLAT") { addMarkerMLAT(Convert.ToDouble(cat10.Xcomponent), Convert.ToDouble(cat10.Ycomponent), cat10.TargetID); }
                     this.contador++;
                     if (mapView.Markers.Count >= 200)
                     {
@@ -219,6 +237,34 @@ namespace AsterixDisplay
             }
         }
 
+        private void dispatcherTimer_TickCAT21(object sender, EventArgs e)
+        {
+            checkActual();
+            Boolean t = true;
+            while (t == true)
+            {
+                CAT21 cat21 = CAT21s[this.contador];
+                this.tiempo = cat21.TOD.Split(':');
+                if (Convert.ToInt32(tiempo[2]) == secact)
+                {
+                    addMarkerADSB(cat21.LatitudeWGS, cat21.LongitudeWGS, cat21.TargetID);
+                    this.contador++;
+                    if (mapView.Markers.Count >= 200)
+                    {
+                        mapView.Markers[mapView.Markers.Count - 200].Clear();
+                    }
+                }
+                else
+                {
+                    t = false;
+                    secact++;
+                }
+
+                clockUpdate(this.tiempo);
+            }
+        }
+
+        /*
         private void dispatcherTimer_TickFlightCAT20(object sender, EventArgs e)
         {
             string[] timepack = this.tiempo;
@@ -242,11 +288,7 @@ namespace AsterixDisplay
             clockUpdate(this.tiempo);
             
         }
-
-            private void dispatcherTimer_TickCAT21(object sender, EventArgs e)
-        {
-            //implementar CAT21
-        }
+        */
 
         private void clockUpdate(string[] TOD)
         {
@@ -361,18 +403,14 @@ namespace AsterixDisplay
             dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, this.speed);
         }
 
-
-        /*
-        private void mapView_MouseUp(object sender, MouseButtonEventArgs e)
+        private void resetbut_Click(object sender, RoutedEventArgs e)
         {
-            GMapControl map = (GMapControl)sender;
-            GMapMarker marker = map.Markers[map.ta]
-            int num = Convert.ToInt32(marker.Tag);
-
-            CAT20 paquete = CAT20s[num];
-
-            MessageBox.Show(paquete.callsign);
+            dispatcherTimer.Stop();
+            mapView.Markers.Clear();
+            this.contador = 0;
+            if(this.CAT10s.Count != 0) { clockUpdate(CAT10s[0].TimeOfDay.Split(':')); }
+            if (this.CAT20s.Count != 0) { clockUpdate(CAT20s[0].TOD.Split(':')); }
+            if (this.CAT21s.Count != 0) { clockUpdate(CAT21s[0].TOD.Split(':')); }
         }
-        */
     }
 }
