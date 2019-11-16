@@ -61,8 +61,8 @@ namespace AsterixDisplay
             //Set up the table:
             flightdata.Columns.Add(new DataColumn("CallSign"));
             flightdata.Columns.Add(new DataColumn("Track Number"));
-            if (this.iscat == 21) { flightdata.Columns.Add(new DataColumn("Position in WSG-84 [Lat, Lng]")); }
-            else { flightdata.Columns.Add(new DataColumn("Local Position [X, Y]")); }
+            if (this.iscat == 21) { flightdata.Columns.Add(new DataColumn("Position in WSG-84 (Lat, Lng)")); }
+            else { flightdata.Columns.Add(new DataColumn("Local Position (X, Y)")); }
             flightdata.Columns.Add(new DataColumn("Flight Level"));
 
             resetbut.Click += resetbut_Click; ;
@@ -152,29 +152,45 @@ namespace AsterixDisplay
             marker.Position = (fromXYtoLatLongSMR(X, Y));
             marker.Shape = new Ellipse
             {
-                StrokeThickness = 2,
+                StrokeThickness = 0.1,
                 Stroke = System.Windows.Media.Brushes.Black,
-                Height = 15,
-                Width = 15,
+                Height = 5,
+                Width = 5,
                 Fill = System.Windows.Media.Brushes.Black
             };
             marker.ZIndex = 0; //Indice = 0, airplane
-            marker.Offset = new System.Windows.Point(-7.5, -7.5);
+            marker.Offset = new System.Windows.Point(-2.5, -2.5);
 
-            checkVisible(marker);
             mapView.Markers.Add(marker);
         }
 
-        private void addMarkerADSB(double lat, double lng, string callsing)
+        private void addMarkerADSB(double lat, double lng, string callsign)
         {
             GMapMarker marker = new GMapMarker(new PointLatLng(lat, lng));
             marker.Position = new PointLatLng(lat, lng);
-            marker.Shape = new System.Windows.Controls.Image
+            if (callsign != null)
             {
-                Width = 15,
-                Height = 15,
-                Source = new BitmapImage(new System.Uri("pack://application:,,,/Resources/airplane1.png"))
-            };
+                marker.Shape = new System.Windows.Controls.Image
+                {
+                    Width = 15,
+                    Height = 15,
+                    Source = new BitmapImage(new System.Uri("pack://application:,,,/Resources/airplane1.png"))
+                };
+                marker.ZIndex = 0; // Index 0 == Aeronave
+                marker.Offset = new System.Windows.Point(-7.5, -7.5);
+            }
+            if (callsign == null)
+            {
+                marker.Shape = new System.Windows.Controls.Image
+                {
+                    Width = 30,
+                    Height = 30,
+                    Source = new BitmapImage(new System.Uri("pack://application:,,,/Resources/unidentified.png"))
+
+                };
+                marker.ZIndex = 1; //Index 1 == non airplane
+                marker.Offset = new System.Windows.Point(-15, -15);
+            }
             marker.ZIndex = 0; // Index 0 == Aeronave
             marker.Offset = new System.Windows.Point(-7.5, -7.5);
 
@@ -184,14 +200,14 @@ namespace AsterixDisplay
 
         private void playbut_Click(object sender, RoutedEventArgs e)
         {
-            //dispatcherTimer.Tick += dispatcherTimer_TickFlightCAT20;
+            //Decides which cat the file is to plot into the maps
             if (this.iscat == 20) { dispatcherTimer.Tick += dispatcherTimer_TickCAT20; }
             if (this.iscat == 10) { dispatcherTimer.Tick += dispatcherTimer_TickCAT10; }
             if (this.iscat == 21) { dispatcherTimer.Tick += dispatcherTimer_TickCAT21; }
             dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, this.speed);
             dispatcherTimer.Start();
         }
-        private void dispatcherTimer_TickCAT20(object sender, EventArgs e) //lo que hace cada interval del timer
+        private void dispatcherTimer_TickCAT20(object sender, EventArgs e) 
         {
             checkActual();
             //Retreive the packages which have the same time (same second)
@@ -279,32 +295,6 @@ namespace AsterixDisplay
             flightdata.Rows.Clear();
             fillGridFlightsCAT21();
         }
-
-        /*
-        private void dispatcherTimer_TickFlightCAT20(object sender, EventArgs e)
-        {
-            string[] timepack = this.tiempo;
-
-            foreach (Flight f in flights)
-            {
-                int contadorTOD = 0;
-                bool t = true;
-                while (t == true && contadorTOD < f.TODs.Count())
-                {
-                    if(Convert.ToInt32(timepack[2]) == secact && Convert.ToInt32(timepack[1]) == minact && Convert.ToInt32(timepack[0]) == horaact)
-                    {
-                        this.tiempo = f.TODs[contadorTOD].Split(':');
-                        addMarkerMLAT(f.Xs[contadorTOD], f.Ys[contadorTOD], f.callsign, Convert.ToInt32(f.tracknumber));
-                        t = false;
-                    }
-                    contadorTOD++;
-                }
-            }
-            this.tiempo[2] = Convert.ToString(Convert.ToInt32(this.tiempo[2]) + 1);
-            clockUpdate(this.tiempo);
-            
-        }
-        */
 
         private void clockUpdate(string[] TOD)
         {
@@ -470,7 +460,7 @@ namespace AsterixDisplay
                     }
                     i++;
                 }
-                if (act == true) { flightdata.Rows.Add(f.callsign, f.tracknumber, "[" + f.Xs[pf] + "," + f.Ys[pf] + "]", "FL " + f.fls[pf]); }
+                if (act == true) { flightdata.Rows.Add(f.callsign, f.tracknumber, "[" + f.Xs[pf] + "," + f.Ys[pf] + "]", f.fls[pf]); }
             }
             gridFlights.ItemsSource = flightdata.DefaultView;
         }
@@ -493,7 +483,7 @@ namespace AsterixDisplay
                     }
                     i++;
                 }
-                if (act == true) { flightdata.Rows.Add(f.callsign, f.tracknumber, "[" + f.lats[pf] + "," + f.lngs[pf] + "]", "FL " + f.fls[pf]); }
+                if (act == true) { flightdata.Rows.Add(f.callsign, f.tracknumber, "Lat: " + f.lats[pf] + "\nLng: " + f.lngs[pf], f.fls[pf]); }
             }
             gridFlights.ItemsSource = flightdata.DefaultView;
         }

@@ -172,7 +172,7 @@ namespace AsterixDecoder
         public double TrackAngle;
         public string AirborneGroundVector;
 
-        public int TrackNumber;
+        public string TrackNumber;
 
         public double TAR;
         public string TrackAngleRate;
@@ -998,7 +998,7 @@ namespace AsterixDecoder
                 this.ECAT = "Reserved";
         }
 
-        public int ComputeRateOfAngle(string[] paquete, int pos)
+        public int ComputeRateOfAngle(string[] paquete, int pos) // Data Item I021/165
         {
             //octeto 1
             int cont = 1;
@@ -1022,7 +1022,7 @@ namespace AsterixDecoder
             return cont;
         }
 
-        public void ComputeTargetReportDescriptor23(string octetos)
+        public void ComputeTargetReportDescriptor23(string octetos) // Data Item I021/040
         {
             string bits = Convert.ToString(Convert.ToInt32(octetos, 16), 2).PadLeft(16, '0');
 
@@ -1299,7 +1299,7 @@ namespace AsterixDecoder
             this.TimeOfMessageReceptionForPosition_HighPrecision_ = segundos_red.ToString() + " s";
         }
 
-            public void ComputeTimeOfMessageReceptionForVelocity(string octetos) // Data Item I021/075
+        public void ComputeTimeOfMessageReceptionForVelocity(string octetos) // Data Item I021/075
         {
             //calculem quin segon del dia és
             int seg = int.Parse(octetos, System.Globalization.NumberStyles.HexNumber);
@@ -1694,7 +1694,7 @@ namespace AsterixDecoder
             this.MagneticHeading = this.MagneticHeadingNum + "º";
         }
 
-        public void ComputeLinkTechnology(string octeto)
+        public void ComputeLinkTechnology(string octeto) // Data Item I021/210
         {
             //string de bits
             string bits = Convert.ToString(Convert.ToInt32(octeto, 16), 2).PadLeft(8, '0');
@@ -1809,7 +1809,7 @@ namespace AsterixDecoder
             string tracknum_valid = tracknum_bin.Substring(4, 12);
 
             //passem a int
-            this.TrackNumber = Convert.ToInt32(tracknum_valid, 2);
+            this.TrackNumber = Convert.ToString(Convert.ToInt32(tracknum_valid, 2));
         }
 
         public void ComputeTrackAngleRate(string octetos) // Data Item I021/165
@@ -1843,7 +1843,7 @@ namespace AsterixDecoder
             }
         }
 
-        public string GetCode(string character_string)
+        public string GetCode(string character_string) // decodifica els caràcters del target ID (Callsign)
         {
             //número que representa el string
             int character_int = Convert.ToInt32(character_string, 2);
@@ -1927,14 +1927,14 @@ namespace AsterixDecoder
                 this.TargetStatus = "Unlawful interference";
         }
 
-        public void ComputeVelocityAccuracy(string octeto)
+        public void ComputeVelocityAccuracy(string octeto) // Data Item I021/095
         {
             string bits = Convert.ToString(Convert.ToInt32(octeto, 16), 2).PadLeft(8, '0');
 
             this.velAccuracy = Convert.ToString(Convert.ToInt32(bits, 2));
         }
 
-        public void ComputeTODaccuracy(string octeto)
+        public void ComputeTODaccuracy(string octeto) // Data Item I021/032
         {
             string bits = Convert.ToString(Convert.ToInt32(octeto, 16), 2).PadLeft(8, '0');
 

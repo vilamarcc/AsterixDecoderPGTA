@@ -239,17 +239,21 @@ namespace AsterixDisplay
 
             expanded.Rows.Add("Package #", index + 1);
             if (cat21exp.DataSourceID != null) { expanded.Rows.Add("Data Source", cat21exp.DataSourceID); }
-            if (cat21exp.TargetID != null) { expanded.Rows.Add("Target Identification", cat21exp.TargetID); }
-            if (cat21exp.TargetReport != null) { expanded.Rows.Add("Target Report", cat21exp.TargetReport); }
+            if (cat21exp.TargetID != null) { expanded.Rows.Add("Target ID", cat21exp.TargetID); }
+            if (cat21exp.TrackNumber != null) { expanded.Rows.Add("Track Number", cat21exp.TrackNumber); }
             if (cat21exp.TOD != null) { expanded.Rows.Add("Time of Day", cat21exp.TOD); }
+            if (cat21exp.TimeOfAsterixReportTransmission_ != null) { expanded.Rows.Add("Time of ASTERIX Report Transmission", cat21exp.TimeOfAsterixReportTransmission_); }
             if (cat21exp.positionWGS != null) { expanded.Rows.Add("Position WGS-84 coordinates\n[Latitude, Longitude]", cat21exp.positionWGS); }
-            if (cat21exp.HRpositionWGS != null) { expanded.Rows.Add("High Resolution position WGS-84\n[Latitude, Longitude]", cat21exp.HRpositionWGS); }
+            if (cat21exp.AirborneGroundVector != null) { expanded.Rows.Add("Airborne Ground vector\n[Ground Speed, Track Angle]", cat21exp.AirborneGroundVector); }
+            if (cat21exp.TrackAngleRate != null) { expanded.Rows.Add("Track Angle Rate", cat21exp.TrackAngleRate); }
             if (cat21exp.FlightLevel != null) { expanded.Rows.Add("Flight Level", cat21exp.FlightLevel); }
-            if (cat21exp.GeometricHeight != null) { expanded.Rows.Add("Geometric Height", cat21exp.GeometricHeight); }
+            if (cat21exp.TargetAddress != null) { expanded.Rows.Add("Target Address", cat21exp.TargetAddress); }
+            if (cat21exp.TargetReport != null) { expanded.Rows.Add("Target Report", cat21exp.TargetReport); }
             if (cat21exp.OperationalStatus != null) { expanded.Rows.Add("Operational Status", cat21exp.OperationalStatus); }
+            if (cat21exp.HRpositionWGS != null) { expanded.Rows.Add("High Resolution position WGS-84\n[Latitude, Longitude]", cat21exp.HRpositionWGS); }
             if (cat21exp.AirSpeed != null) { expanded.Rows.Add("Air Speed", cat21exp.AirSpeed); }
             if (cat21exp.TrueAirspeed != null) { expanded.Rows.Add("True Air Speed", cat21exp.TrueAirspeed); }
-            if (cat21exp.AirborneGroundVector != null) { expanded.Rows.Add("Airborne Ground vector\n[Ground Speed, Track Angle]", cat21exp.AirborneGroundVector); }
+            if (cat21exp.GeometricHeight != null) { expanded.Rows.Add("Geometric Height", cat21exp.GeometricHeight); }
             if (cat21exp.SelectedAltitude_IS != null) { expanded.Rows.Add("Selected Altitude\nIntermediate State", cat21exp.SelectedAltitude_IS); }
             if (cat21exp.SelectedAltitude_FS != null) { expanded.Rows.Add("Selected Altitude\nFinal State", cat21exp.SelectedAltitude_FS); }
             if (cat21exp.MOPS != null) { expanded.Rows.Add("MOPS version", cat21exp.MOPS); }
@@ -260,6 +264,7 @@ namespace AsterixDisplay
             if (cat21exp.MetReport != null) { expanded.Rows.Add("Met Report", cat21exp.MetReport); }
             if (cat21exp.ECAT != null) { expanded.Rows.Add("Emitter category", cat21exp.ECAT); }
             if (cat21exp.TargetStatus != null) { expanded.Rows.Add("Target Status", cat21exp.TargetStatus); }
+            if (cat21exp.TrackAngleRate != null) { expanded.Rows.Add("Track Angle Rate", cat21exp.TrackAngleRate); }
             if (cat21exp.RateOfTurn != null) { expanded.Rows.Add("Rate of Turn", cat21exp.RateOfTurn); }
             if (cat21exp.RollAngle != null) { expanded.Rows.Add("Roll Angle", cat21exp.RollAngle); }
             if (cat21exp.serviceID != null) { expanded.Rows.Add("Service Identification", cat21exp.serviceID); }
@@ -276,13 +281,13 @@ namespace AsterixDisplay
             if (cat21exp.TimeOfMessageReceptionForVelocity_ != null) { expanded.Rows.Add("Time of Message Reception\nfor velocity", cat21exp.TimeOfMessageReceptionForVelocity_); }
             if (cat21exp.TimeOfMessageReceptionForPosition_HighPrecision_ != null) { expanded.Rows.Add("Time of Message Reception\nfor position - High Resolution", cat21exp.TimeOfMessageReceptionForPosition_HighPrecision_); }
             if (cat21exp.TimeOfMessageReceptionForVelocity_HighPrecision_ != null) { expanded.Rows.Add("Time of Message Reception\nfor velocity - High Resolution", cat21exp.TimeOfMessageReceptionForVelocity_HighPrecision_); }
-            if (cat21exp.TimeOfAsterixReportTransmission_ != null) { expanded.Rows.Add("Time of ASTERIX Report Transmission", cat21exp.TimeOfAsterixReportTransmission_); }
             if (cat21exp.TrajectoryIntentData != null) { expanded.Rows.Add("Trajectory Intent Data", cat21exp.TrajectoryIntentData); }
             if (cat21exp.posAccuracy != null) { expanded.Rows.Add("Position accuracy", cat21exp.posAccuracy); }
             if (cat21exp.velAccuracy != null) { expanded.Rows.Add("Velocity accuracy", cat21exp.velAccuracy); }
             if (cat21exp.TODaccuracy != null) { expanded.Rows.Add("Time of Day accuracy", cat21exp.TODaccuracy); }
             if (cat21exp.FigureOfMerit != null) { expanded.Rows.Add("Figure of merit", cat21exp.FigureOfMerit); }
             if (cat21exp.ages != null) { expanded.Rows.Add("Data Ages", cat21exp.ages); }
+            if (cat21exp.RP != null) { expanded.Rows.Add("Service Management", cat21exp.RP); }
 
             dataexpanded.ItemsSource = expanded.DefaultView;
             dataexpanded.Items.Refresh();
@@ -297,21 +302,22 @@ namespace AsterixDisplay
             expanded.Columns.Add(new DataColumn());
 
             expanded.Rows.Add("Package #", index + 1);
-            if (cat10exp.MessageType != null) { expanded.Rows.Add("Message Type", cat10exp.MessageType); }
-            if (cat10exp.TrackNumber != null) { expanded.Rows.Add("Track Number", cat10exp.TrackNumber); }
             if (cat10exp.DataSourceID != null) { expanded.Rows.Add("Data Source ID", cat10exp.DataSourceID); }
+            if (cat10exp.TargetID != null) { expanded.Rows.Add("Target ID", cat10exp.TargetID); }
+            if (cat10exp.TrackNumber != null) { expanded.Rows.Add("Track Number", cat10exp.TrackNumber); }
             if (cat10exp.TYP != null) { expanded.Rows.Add("Data Type", cat10exp.TYP); }
-            if (cat10exp.DataCharacteristics != null) { expanded.Rows.Add("Data Characteristics", cat10exp.DataCharacteristics); }
             if (cat10exp.TimeOfDay != null) { expanded.Rows.Add("Time of Day (UTC)", cat10exp.TimeOfDay); }
             if (cat10exp.positionWGS != null) { expanded.Rows.Add("Position in WGS-84\n[Latitude, Longitude]", cat10exp.positionWGS); }
             if (cat10exp.positionPolar != null) { expanded.Rows.Add("Position in Polar\n[Distance, Angle]", cat10exp.positionPolar); }
             if (cat10exp.positionCartesian != null) { expanded.Rows.Add("Position in Cartesian\n[X, Y]", cat10exp.positionCartesian); }
             if (cat10exp.velocityPolar != null) { expanded.Rows.Add("Track Velocity in Polar\n[Ground Speed, Track Angle]", cat10exp.velocityPolar); }
             if (cat10exp.velocityCartesian != null) { expanded.Rows.Add("Track Velocity in Cartesian\n[Vx, Vy]", cat10exp.velocityCartesian); }
+            if (cat10exp.FlightLevel != null) { expanded.Rows.Add("Flight Level", cat10exp.FlightLevel); }
+            if (cat10exp.MessageType != null) { expanded.Rows.Add("Message Type", cat10exp.MessageType); }
+            if (cat10exp.DataCharacteristics != null) { expanded.Rows.Add("Data Characteristics", cat10exp.DataCharacteristics); }
             if (cat10exp.TrackStatus != null) { expanded.Rows.Add("Track Status", cat10exp.TrackStatus); }
             if (cat10exp.Mode3ACode != null) { expanded.Rows.Add("Mode 3/A Code", cat10exp.Mode3ACode); }
             if (cat10exp.TargetAddress != null) { expanded.Rows.Add("Target Address", cat10exp.TargetAddress); }
-            if (cat10exp.TargetID != null) { expanded.Rows.Add("Target ID", cat10exp.TargetID); }
             try
             {
                 int cont = 1;
@@ -323,7 +329,6 @@ namespace AsterixDisplay
             }
             catch { }
             if (cat10exp.VFI != null) { expanded.Rows.Add("Vehicle Fleet ID", cat10exp.VFI); }
-            if (cat10exp.FlightLevel != null) { expanded.Rows.Add("Flight Level", cat10exp.FlightLevel); }
             if (cat10exp.MeasuredHeight != null) { expanded.Rows.Add("Measured Height", cat10exp.MeasuredHeight); }
             if (cat10exp.TargetSize != null) { expanded.Rows.Add("Target Size\n[Length x Width]", cat10exp.TargetSize); }
             if (cat10exp.TargetOrientation_ != null) { expanded.Rows.Add("Target Orientation", cat10exp.TargetOrientation_); }
@@ -358,18 +363,18 @@ namespace AsterixDisplay
 
             expanded.Rows.Add("Package #",index + 1);
             try { expanded.Rows.Add("Data Source ID", "SAC: " + cat20exp.SAC + " SIC: " + cat20exp.SIC); } catch { }
-            try { expanded.Rows.Add("Target Report", cat20exp.getTargetReportDescriptortoString()); } catch { } //Falta desarrollar esto --> funcion en la clase para descifrar tipo de msg
+            try { expanded.Rows.Add("Target ID", cat20exp.TargetID[1]); } catch { }
+            try { expanded.Rows.Add("Track Number", cat20exp.TrackNum); } catch { }
             try { expanded.Rows.Add("Time of Day (UTC)", cat20exp.TOD); } catch { }
             try { expanded.Rows.Add("Position in WSG-84", "[" + cat20exp.LatWSG.ToString() + "," + cat20exp.LonWSG.ToString() + "]"); } catch { }
             try { expanded.Rows.Add("Position (X, Y)", "[" + cat20exp.X.ToString() + "," + cat20exp.Y.ToString() + "] m"); } catch { }
-            try { expanded.Rows.Add("Track Number", cat20exp.TrackNum); } catch { }
-            try { expanded.Rows.Add("Track Status", cat20exp.getTrackStatusToString()); } catch { }
-            try { expanded.Rows.Add("Mode-3/A Code", cat20exp.Mode3A.ToString()); } catch { }
             try { expanded.Rows.Add("Track Velocity (Vx, Vy)", "[" + cat20exp.Vy.ToString() + "," + cat20exp.Vy.ToString() + "] m/s"); } catch { }
             try { expanded.Rows.Add("Flight Level", "FL" + cat20exp.FL[2]); } catch { }
+            try { expanded.Rows.Add("Target Report", cat20exp.getTargetReportDescriptortoString()); } catch { } 
+            try { expanded.Rows.Add("Track Status", cat20exp.getTrackStatusToString()); } catch { }
+            try { expanded.Rows.Add("Mode-3/A Code", cat20exp.Mode3A.ToString()); } catch { }
             try { expanded.Rows.Add("Mode-C Code", cat20exp.ModeC.ToString()); } catch { }
             try { expanded.Rows.Add("Target Address", cat20exp.TargetAddress.ToString()); } catch { }
-            try { expanded.Rows.Add("Target ID", cat20exp.TargetID[1]);} catch { }
             try { expanded.Rows.Add("Measured Height", cat20exp.MeasuredHeight.ToString()); } catch { }
             try { expanded.Rows.Add("Geometric Height", cat20exp.geoHeight.ToString()); } catch { }
             try { expanded.Rows.Add("Calculated Accel", cat20exp.calcAccel.ToString()); } catch { }
@@ -467,21 +472,21 @@ namespace AsterixDisplay
                 {
                     if (this.cat == 10)
                     {
-                        dataCATsearch = f.SearchTargetAddressCAT10(searchbox.Text);
+                        dataCATsearch = f.SearchTrackNumberCAT10(searchbox.Text);
 
                         gridCAT.ItemsSource = dataCATsearch.DefaultView;
                         gridCAT.Items.Refresh();
                     }
                     if (this.cat == 20)
                     {
-                        dataCATsearch = f.SearchTargetAddressCAT20(searchbox.Text);
+                        dataCATsearch = f.SearchTrackNumberCAT20(searchbox.Text);
 
                         gridCAT.ItemsSource = dataCATsearch.DefaultView;
                         gridCAT.Items.Refresh();
                     }
                     if (this.cat == 21)
                     {
-                        dataCATsearch = f.SearchTargetAddressCAT21(searchbox.Text);
+                        dataCATsearch = f.SearchTrackNumberCAT21(searchbox.Text);
 
                         gridCAT.ItemsSource = dataCATsearch.DefaultView;
                         gridCAT.Items.Refresh();
@@ -502,9 +507,18 @@ namespace AsterixDisplay
                 if (this.cat == 20) { gridCAT.ItemsSource = dataCAT20.DefaultView; }
                 if (this.cat == 10) { gridCAT.ItemsSource = dataCAT10.DefaultView; }
                 if (this.cat == 21) { gridCAT.ItemsSource = dataCAT21.DefaultView; }
+
                 //vaciamos la tabla pequeña
                 dataexpanded.ItemsSource = null;
                 dataexpanded.Items.Clear();
+
+                //texto en la caja de búsqueda
+                if (combobox.SelectedIndex == 0)
+                    searchbox.Text = "Package #";
+                if (combobox.SelectedIndex == 1)
+                    searchbox.Text = "Callsign";
+                if (combobox.SelectedIndex == 2)
+                    searchbox.Text = "Track Number";
             }
             catch
             {
@@ -617,7 +631,7 @@ namespace AsterixDisplay
             if (combobox.SelectedIndex == 1)
                 searchbox.Text = "Callsign";
             if (combobox.SelectedIndex == 2)
-                searchbox.Text = "Target Address";
+                searchbox.Text = "Track Number";
         }
     }
 }

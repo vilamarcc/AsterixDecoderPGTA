@@ -14,7 +14,7 @@
             </gmaps:GMapControl>
         </Border>
 
-        <DataGrid x:Name="gridFlights" HorizontalAlignment="Left" Height="364" VerticalAlignment="Top" Width="391" Margin="930,278,0,0" CanUserReorderColumns="False" CanUserSortColumns="False" CanUserResizeRows="False"/>
+        <DataGrid x:Name="gridFlights" HorizontalAlignment="Left" Height="364" VerticalAlignment="Top" Width="391" Margin="930,278,0,0" CanUserReorderColumns="False" CanUserSortColumns="False" CanUserResizeRows="False" ColumnWidth="*"/>
         <CheckBox x:Name="checktrail" Content="Show Package Trail" HorizontalAlignment="Left" Margin="935,653,0,0" VerticalAlignment="Top" IsChecked="True" Checked="checktrail_CheckedChanged" Unchecked="checktrail_CheckedChanged"/>
         <CheckBox x:Name="checkairplanes" Content="Show Airplanes Only" HorizontalAlignment="Left" Margin="1086,653,0,0" VerticalAlignment="Top" IsChecked="False" Checked="checkairplanes_CheckedChanged" Unchecked="checkairplanes_CheckedChanged"/>
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="217" Margin="931,31,0,0" VerticalAlignment="Top" Width="387">
