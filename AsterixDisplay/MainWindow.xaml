@@ -51,7 +51,7 @@
         </Menu>
         <DataGrid x:Name="dataexpanded" Grid.Column="5" HorizontalAlignment="Center" Height="380" Margin="89.333,23,62.667,27" Grid.Row="4" Grid.RowSpan="8" VerticalAlignment="Center" Width="350" Grid.ColumnSpan="4" CanUserReorderColumns="False" CanUserSortColumns="False" ItemsSource="{Binding}" HeadersVisibility="None" CanUserAddRows="False" ColumnWidth="Auto">
         </DataGrid>
-        <TextBox x:Name="searchbox" Text="Package #" Grid.Column="7" HorizontalAlignment="Left" Height="23" Margin="39.333,22,0,12" Grid.Row="3" TextWrapping="Wrap" VerticalAlignment="Center" Width="100" FontStyle="Italic" FontSize="14" GotFocus="searchbox_GotFocus"/>
+        <TextBox x:Name="searchbox" Text="Package #" Grid.Column="7" HorizontalAlignment="Left" Height="23" Margin="39.333,22,0,12" Grid.Row="3" TextWrapping="Wrap" VerticalAlignment="Center" Width="100" FontStyle="Italic" FontSize="12" GotFocus="searchbox_GotFocus"/>
         <Button x:Name="clearsearchbut" Content="Clear" Grid.Column="7" Height="23" HorizontalAlignment="Right" Margin="0,23,17.667,12" Grid.Row="3" VerticalAlignment="Center" Width="75" Click="clearsearchbut_Click" Background="{x:Null}"/>
         <Button x:Name="searchbut" Content="Search" Grid.Column="7" Height="23" HorizontalAlignment="Center" Margin="300,22,122,13" Grid.Row="3" VerticalAlignment="Center" Width="75" Click="searchbut_Click" Background="{x:Null}"/>
         <ProgressBar x:Name="progressbar1" Grid.Column="1" Grid.Row="14" HorizontalAlignment="Left" VerticalAlignment="Center" Width="200" Height="10" Minimum="0" Maximum="100" Margin="2,18,0,1"/>
@@ -61,7 +61,7 @@
         <ComboBox Name="combobox" Grid.Column="7" HorizontalAlignment="Left" Margin="174,22,0,0" Grid.Row="3" Height="23" VerticalAlignment="Top" Width="100" SelectionChanged="combobox_selectionchanged">
             <ComboBoxItem IsSelected="True">Package #</ComboBoxItem>
             <ComboBoxItem IsSelected="False">Callsign</ComboBoxItem>
-            <ComboBoxItem IsSelected="False">Target Addres</ComboBoxItem>
+            <ComboBoxItem IsSelected="False">Track Number</ComboBoxItem>
         </ComboBox>
     </Grid>
 </Window>
