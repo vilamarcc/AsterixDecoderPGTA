@@ -70,6 +70,14 @@ namespace AsterixDisplay
             cat20_butt.Visibility = Visibility.Hidden;
             cat21_butt.Visibility = Visibility.Hidden;
 
+            //lo que ha de poner en la cajita de búsqueda
+            if (combobox.SelectedIndex == 0)
+                searchbox.Text = "Package #";
+            if (combobox.SelectedIndex == 1)
+                searchbox.Text = "Callsign";
+            if (combobox.SelectedIndex == 2)
+                searchbox.Text = "Track Number";
+
             //mostramos la barra de progreso
             var progress = new Progress<int>(value => progressbar1.Value = value);
             progressbar1.Visibility = Visibility.Visible;
@@ -105,7 +113,7 @@ namespace AsterixDisplay
                     ((IProgress<int>)progress).Report(85);
 
                     //cat que vamos a mostrar por defecto 
-                    //si el archivo tiene más de una cat se mostrará la más grande (por defecto), pero luego se puede elegir ver otra
+                    //si el archivo tiene más de una cat se mostrará la más grande (por defecto)
                     if (f.ComprobarCAT10() == true)
                         this.cat = 10;
                     if (f.ComprobarCAT20() == true)
@@ -435,7 +443,7 @@ namespace AsterixDisplay
                     MessageBox.Show("Package not available, check the number");
                 }
             }
-            if(combobox.SelectedIndex == 1)
+            if(combobox.SelectedIndex == 1) // buscar por callsign
             {
                 try
                 {
@@ -466,7 +474,7 @@ namespace AsterixDisplay
                     MessageBox.Show("Package not available, check the callsign");
                 }
             }
-            if (combobox.SelectedIndex == 2)
+            if (combobox.SelectedIndex == 2) // buscar por track number
             {
                 try
                 {
@@ -494,12 +502,12 @@ namespace AsterixDisplay
                 }
                 catch
                 {
-                    MessageBox.Show("Package not available, check the target address");
+                    MessageBox.Show("Package not available, check the track number");
                 }
             }
         }
 
-        private void clearsearchbut_Click(object sender, RoutedEventArgs e)
+        private void clearsearchbut_Click(object sender, RoutedEventArgs e) //botón CLEAR
         {
             try
             {
@@ -526,13 +534,12 @@ namespace AsterixDisplay
             }
         }
 
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        private void MenuItem_Click(object sender, RoutedEventArgs e) //botón SIMULATE
         {
             if (f != null)
             {
-                if (f.checkMultiplecat() == false)
+                if (f.checkMultiplecat() == false) //si solo hay paquetes de una cat
                 {
-
                     this.f.computeFlights();
                     List<Flight> flightsim = f.getFlightList();
                     SimulacionPanel sim = new SimulacionPanel(f.getListCAT20(), f.getListCAT10(), f.getListCAT21(), this.cat, flightsim);
@@ -548,13 +555,15 @@ namespace AsterixDisplay
             else { MessageBox.Show("File not loaded", "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
         }
 
-        private void cat10_butt_Click(object sender, RoutedEventArgs e)
+        private void cat10_butt_Click(object sender, RoutedEventArgs e) //click en la redondita CAT10
         {
-            if (f.ComprobarCAT10() == true)
+            if (f.ComprobarCAT10() == true)//si hay paquetes de CAT10
             {
+                //asignamos categoría y llenamos la tabla grande
                 this.cat = 10;
                 this.fillgridwithdata(this.dataCAT10);
 
+                //marcamos el botoncito de cat10
                 cat10_butt.IsChecked = true;
 
                 //vaciamos la tabla pequeña
@@ -565,6 +574,7 @@ namespace AsterixDisplay
             {
                 MessageBox.Show("No CAT10 packages found");
 
+                //marcamos botoncito que había marcado antes de darle
                 cat10_butt.IsChecked = false;
                 if (this.cat == 20)
                     cat20_butt.IsChecked = true;
@@ -573,13 +583,15 @@ namespace AsterixDisplay
             }
         }
 
-        private void cat20_butt_Click(object sender, RoutedEventArgs e)
+        private void cat20_butt_Click(object sender, RoutedEventArgs e) //click en la redondita CAT20
         {
-            if (f.ComprobarCAT20() == true)
+            if (f.ComprobarCAT20() == true)//si hay paquetes de CAT20
             {
+                //asignamos categoría y llenamos la tabla grande
                 this.cat = 20;
                 this.fillgridwithdata(this.dataCAT20);
 
+                //marcamos el botoncito de cat20
                 cat20_butt.IsChecked = true;
 
                 //vaciamos la tabla pequeña
@@ -590,6 +602,7 @@ namespace AsterixDisplay
             {
                 MessageBox.Show("No CAT20 packages found");
 
+                //marcamos botoncito que había marcado antes de darle
                 cat20_butt.IsChecked = false;
                 if (this.cat == 10)
                     cat10_butt.IsChecked = true;
@@ -598,13 +611,15 @@ namespace AsterixDisplay
             }
         }
 
-        private void cat21_butt_Click(object sender, RoutedEventArgs e)
+        private void cat21_butt_Click(object sender, RoutedEventArgs e) //click en la redondita CAT21
         {
-            if (f.ComprobarCAT21() == true)
+            if (f.ComprobarCAT21() == true) //si hay paquetes de CAT21
             {
+                //asignamos categoría y llenamos la tabla grande
                 this.cat = 21;
                 this.fillgridwithdata(this.dataCAT21);
 
+                //marcamos el botoncito de cat21
                 cat21_butt.IsChecked = true;
 
                 //vaciamos la tabla pequeña
@@ -615,6 +630,7 @@ namespace AsterixDisplay
             {
                 MessageBox.Show("No CAT21 packages found");
 
+                //marcamos botoncito que había marcado antes de darle
                 cat21_butt.IsChecked = false;
                 if (this.cat == 20)
                     cat20_butt.IsChecked = true;
@@ -623,20 +639,20 @@ namespace AsterixDisplay
             }
         }
 
-        private void searchbox_GotFocus(object sender, RoutedEventArgs e)
+        private void searchbox_GotFocus(object sender, RoutedEventArgs e) // cuando clicamos para escribir el filtro, se borra lo que pone
         {
             TextBox tb = (TextBox)sender;
             tb.Text = string.Empty;
             tb.GotFocus -= searchbox_GotFocus;
         }
 
-        private void MenuItem_Click_1(object sender, RoutedEventArgs e)
+        private void MenuItem_Click_1(object sender, RoutedEventArgs e) //botón ABOUT US
         {
             AboutUs au = new AboutUs();
             au.ShowDialog();
         }
 
-        private void combobox_selectionchanged(object sender, SelectionChangedEventArgs e)
+        private void combobox_selectionchanged(object sender, SelectionChangedEventArgs e) // cuando cambiamos la opción para buscar (click en el combobox)
         {
             if (combobox.SelectedIndex == 0)
                 searchbox.Text = "Package #";
@@ -644,6 +660,12 @@ namespace AsterixDisplay
                 searchbox.Text = "Callsign";
             if (combobox.SelectedIndex == 2)
                 searchbox.Text = "Track Number";
+        }
+
+        private void MenuItem_Click_2(object sender, RoutedEventArgs e) //botón HELP
+        {
+            Help help = new Help();
+            help.ShowDialog();
         }
     }
 }

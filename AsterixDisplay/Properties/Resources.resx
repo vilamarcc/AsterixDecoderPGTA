@@ -130,6 +130,12 @@
   <data name="cat" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\cat.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="CATbuttonsHelp" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CATbuttonsHelp.JPG;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DataFilterHelp" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DataFilterHelp.JPG;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="elprat" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\elprat.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -144,6 +150,9 @@
   </data>
   <data name="laura" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\laura.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="MainWindowHelp" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\MainWindowHelp.JPG;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="marc" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\marc.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

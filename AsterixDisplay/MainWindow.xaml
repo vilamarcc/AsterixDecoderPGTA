@@ -46,7 +46,7 @@
         <Menu IsMainMenu="True" Background="{x:Null}" Width="1350" Height="25" Grid.ColumnSpan="8" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top">
             <MenuItem Header="_Open File" Click="cargarbut_Click"></MenuItem>
             <MenuItem Header="_Simulate" Click="MenuItem_Click"></MenuItem>
-            <MenuItem Header="_Help"></MenuItem>
+            <MenuItem Header="_Help" Click="MenuItem_Click_2"></MenuItem>
             <MenuItem Header="_About Us" Click="MenuItem_Click_1"></MenuItem>
         </Menu>
         <DataGrid x:Name="dataexpanded" Grid.Column="5" HorizontalAlignment="Center" Height="380" Margin="39,34.667,37.333,38.5" Grid.Row="4" Grid.RowSpan="8" VerticalAlignment="Center" Width="427" Grid.ColumnSpan="3" CanUserReorderColumns="False" CanUserSortColumns="False" ItemsSource="{Binding}" HeadersVisibility="None" CanUserAddRows="False" ColumnWidth="Auto">

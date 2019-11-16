@@ -24,17 +24,23 @@ namespace AsterixDisplay
             InitializeComponent();
         }
 
-        private void iniciatbut_Click(object sender, RoutedEventArgs e)
+        private void iniciatbut_Click(object sender, RoutedEventArgs e) // botón START
         {
             MainWindow main = new MainWindow();
             this.Close();
             main.ShowDialog();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e) // botón ABOUT US
         {
             AboutUs au = new AboutUs();
             au.ShowDialog();
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e) // botón HELP
+        {
+            Help help = new Help();
+            help.ShowDialog();
         }
     }
 }

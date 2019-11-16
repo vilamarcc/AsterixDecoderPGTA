@@ -8,7 +8,7 @@
         Title="About Us" Height="223.891" Width="572.678">
     <Grid>
         <TextBlock Text="Proyect 1 credits:" Margin="9,2,402,168.667"></TextBlock>
-        <TextBlock Text="  Grupo 2 PGTA:" Margin="18,17,443,152.667"></TextBlock>
+        <TextBlock Text="  Group 2 PGTA:" Margin="18,17,443,152.667"></TextBlock>
         <Image HorizontalAlignment="Left" Height="86" VerticalAlignment="Top" Width="87" Margin="33,45,0,0" Source="/Resources/laura.jpg"/>
         <Image HorizontalAlignment="Left" Height="86" VerticalAlignment="Top" Width="87" Margin="135,45,0,0" Source="/Resources/merce.jpg"/>
         <Image HorizontalAlignment="Left" Height="86" VerticalAlignment="Top" Width="88" Margin="440,45,0,0" Source="/Resources/irenerod.jpg"/>

@@ -25,22 +25,22 @@ namespace AsterixDisplay
             InitializeComponent();
         }
 
-        private void buttonOK_Click(object sender, RoutedEventArgs e)
+        private void buttonOK_Click(object sender, RoutedEventArgs e) // botón OK
         {
             this.Close();
         }
 
-        public int GetVersion()
+        public int GetVersion() //devuelve la versión que el usuario ha escogido
         {
             return this.version;
         }
 
-        private void v24_Click(object sender, RoutedEventArgs e)
+        private void v24_Click(object sender, RoutedEventArgs e) // click en v2.4 --> assigna la versión 2.4 como la elegida
         {
             this.version = 24;
         }
 
-        private void v23_Click(object sender, RoutedEventArgs e)
+        private void v23_Click(object sender, RoutedEventArgs e) // click en v023 --> assigna la versión 23 como la elegida
         {
             this.version = 23;
         }
