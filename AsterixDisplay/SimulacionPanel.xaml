@@ -9,23 +9,41 @@
         mc:Ignorable="d"
         Title="Simulation" Height="720" Width="1350" FontFamily="Lucida Sans Unicode">
     <Grid>
-        <gmaps:GMapControl x:Name="mapView" Loaded="mapView_Loaded" Margin="20,20,460,20" BorderBrush="Black">
-        </gmaps:GMapControl>
-        <TextBlock x:Name="clockbox" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="998,70,0,0" Height="55" Width="182" FontSize="40"/>
-        <Button x:Name="playbut" HorizontalAlignment="Left" Background="{x:Null}" VerticalAlignment="Top" Width="45" Margin="1065,140,0,0" Height="45" Click="playbut_Click" BorderBrush="White">
-            <Image Source="Resources/play.png" Stretch="Uniform"/>
-        </Button>
-        <Button x:Name="stopbut" HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}" Width="45" Margin="1020,140,0,0" Height="45" Click="stopbut_Click" BorderBrush="#FFFCFAFA">
-            <Image Source="Resources/pause.png" Stretch="Uniform"/>
-        </Button>
-        <Button x:Name="resetbut" HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}" Width="46" Margin="1110,139,0,0" Height="46" BorderBrush="White" Click="resetbut_Click">
-            <Image Source="Resources/reset.png" Stretch="Uniform" Height="40" Width="38"/>
-        </Button>
-        <Button x:Name="speed1but" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="973,190,0,0" Content="x1" Click="speed1but_Click" Background="{x:Null}" />
-        <Button x:Name="speed2but" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="1053,190,0,0" Content="x2" Click="speed4but_Click" Background="{x:Null}"/>
-        <Button x:Name="speed4but" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="1133,190,0,0" Content="x4" Click="speed2but_Click" Background="{x:Null}"/>
-        <DataGrid x:Name="gridclick" HorizontalAlignment="Left" Height="320" VerticalAlignment="Top" Width="330" Margin="930,275,0,0"/>
-        <CheckBox x:Name="checktrail" Content="Show Package Trail" HorizontalAlignment="Left" Margin="908,653,0,0" VerticalAlignment="Top" IsChecked="True" Checked="checktrail_CheckedChanged" Unchecked="checktrail_CheckedChanged"/>
-        <CheckBox x:Name="checkairplanes" Content="Show Airplanes Only" HorizontalAlignment="Left" Margin="1055,653,0,0" VerticalAlignment="Top" IsChecked="False" Checked="checkairplanes_CheckedChanged" Unchecked="checkairplanes_CheckedChanged"/>
+        <Border Margin="20,20,460,20" BorderBrush="Black" BorderThickness="1.5">
+            <gmaps:GMapControl x:Name="mapView" Loaded="mapView_Loaded" BorderBrush="Black">
+            </gmaps:GMapControl>
+        </Border>
+
+        <DataGrid x:Name="gridFlights" HorizontalAlignment="Left" Height="364" VerticalAlignment="Top" Width="391" Margin="930,278,0,0" CanUserReorderColumns="False" CanUserSortColumns="False" CanUserResizeRows="False"/>
+        <CheckBox x:Name="checktrail" Content="Show Package Trail" HorizontalAlignment="Left" Margin="935,653,0,0" VerticalAlignment="Top" IsChecked="True" Checked="checktrail_CheckedChanged" Unchecked="checktrail_CheckedChanged"/>
+        <CheckBox x:Name="checkairplanes" Content="Show Airplanes Only" HorizontalAlignment="Left" Margin="1086,653,0,0" VerticalAlignment="Top" IsChecked="False" Checked="checkairplanes_CheckedChanged" Unchecked="checkairplanes_CheckedChanged"/>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="217" Margin="931,31,0,0" VerticalAlignment="Top" Width="387">
+            <Grid>
+                <TextBlock x:Name="clockbox" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Height="55" Width="182" FontSize="40" Margin="45,32,100,0"/>
+                <Button x:Name="playbut" HorizontalAlignment="Left" Background="{x:Null}" VerticalAlignment="Top" Width="45" Height="45" Click="playbut_Click" BorderBrush="White" Margin="70,103,150,0">
+                    <Image Source="Resources/play.png" Stretch="Uniform"/>
+                </Button>
+                <Button x:Name="stopbut" HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}" Width="45" Height="45" Click="stopbut_Click" BorderBrush="#FFFCFAFA" Margin="115,102,100,0">
+                    <Image Source="Resources/pause.png" Stretch="Uniform" HorizontalAlignment="Center"/>
+                </Button>
+                <Button x:Name="resetbut" HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}" Width="46" Height="46" BorderBrush="White" Click="resetbut_Click" Margin="160,101,50,0">
+                    <Image Source="Resources/reset.png" Stretch="Uniform" Height="40" Width="38"/>
+                </Button>
+                <Button x:Name="speed1but" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Content="x1" Click="speed1but_Click" Background="{x:Null}" Margin="20,160,200,0" />
+                <Button x:Name="speed2but" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Content="x2" Click="speed4but_Click" Background="{x:Null}" Margin="100,160,0,0"/>
+                <Button x:Name="speed4but" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Content="x4" Click="speed2but_Click" Background="{x:Null}" Margin="180,160,50,0"/>
+                <Button x:Name="elpratbut" HorizontalAlignment="Right" VerticalAlignment="Top" Width="40" Margin="285,20,25,0" Height="40" Click="elpratbut_Click" Background="{x:Null}">
+                    <Image Source="Resources/elprat.png" Stretch="Uniform"/>
+                </Button>
+                <Button x:Name="bcnbut" HorizontalAlignment="Right" VerticalAlignment="Top" Width="40" Margin="285,65,25,0" Height="40" Click="bcnbut_Click" Background="{x:Null}">
+                    <Image Source="Resources/bcn.png" Stretch="Uniform"/>
+                </Button>
+                <Button x:Name="catbut" HorizontalAlignment="Right" VerticalAlignment="Top" Width="40" Margin="285,110,25,0" Height="40" Click="catbut_Click" Background="{x:Null}">
+                    <Image Source="Resources/cat.png" Stretch="Uniform"/>
+                </Button>
+            </Grid>
+        </Border>
+        <TextBlock HorizontalAlignment="Left" Margin="931,9,0,0" TextWrapping="Wrap" Text="Map Controls" VerticalAlignment="Top" Width="104"/>
+        <TextBlock HorizontalAlignment="Left" Margin="932,257,0,0" TextWrapping="Wrap" Text="Recorded Flights" VerticalAlignment="Top" Width="104"/>
     </Grid>
 </Window>

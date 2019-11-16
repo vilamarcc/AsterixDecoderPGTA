@@ -453,6 +453,7 @@ namespace AsterixDecoder
         public void computeFlights()
         {
             List<String> tracknums = new List<string>();
+            List<String> callsigns = new List<string>();
 
             if (this.listaCAT20.Count != 0)
             {
@@ -510,16 +511,16 @@ namespace AsterixDecoder
                 {
 
 
-                    if (tracknums.Contains(Convert.ToString(this.listaCAT21[c].TrackNumber)) == false)
+                    if (callsigns.Contains(Convert.ToString(this.listaCAT21[c].TargetID)) == false)
                     {
-                        tracknums.Add(Convert.ToString(this.listaCAT21[c].TrackNumber));
+                        callsigns.Add(Convert.ToString(this.listaCAT21[c].TargetID));
                         listflights.Add(new Flight(this.listaCAT21[c], c));
                     }
                     else
                     {
                         foreach (Flight flight in this.listflights)
                         {
-                            if (flight.tracknumber == Convert.ToString(listaCAT21[c].TrackNumber))
+                            if (flight.callsign == Convert.ToString(listaCAT21[c].TargetID))
                             {
                                 flight.updateFlight(listaCAT21[c], c);
                             }

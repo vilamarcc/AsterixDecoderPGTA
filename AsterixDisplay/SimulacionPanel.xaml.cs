@@ -50,12 +50,20 @@ namespace AsterixDisplay
             SMRcoords[0] = 41.29561833;
             SMRcoords[1] = 2.095114167;
             contador = 0;
+            this.flightdata = new DataTable();
             this.CAT20s = cat20s;
             this.CAT10s = cat10s;
             this.CAT21s = cat21s;
             this.flights = listflights;
             this.iscat = cat;
             this.speed = 1000;
+
+            //Set up the table:
+            flightdata.Columns.Add(new DataColumn("CallSign"));
+            flightdata.Columns.Add(new DataColumn("Track Number"));
+            if (this.iscat == 21) { flightdata.Columns.Add(new DataColumn("Position in WSG-84 [Lat, Lng]")); }
+            else { flightdata.Columns.Add(new DataColumn("Local Position [X, Y]")); }
+            flightdata.Columns.Add(new DataColumn("Flight Level"));
 
             resetbut.Click += resetbut_Click; ;
         }
@@ -65,7 +73,7 @@ namespace AsterixDisplay
 
             GMap.NET.GMaps.Instance.Mode = GMap.NET.AccessMode.ServerAndCache;
             mapView.MapProvider = OpenStreetMapProvider.Instance;
-            mapView.MinZoom = 8;
+            mapView.MinZoom = 7;
             mapView.MaxZoom = 16;
             // whole world zoom
             mapView.Zoom = 13;
@@ -142,11 +150,13 @@ namespace AsterixDisplay
         {
             GMapMarker marker = new GMapMarker((fromXYtoLatLongSMR(X, Y)));
             marker.Position = (fromXYtoLatLongSMR(X, Y));
-            marker.Shape = new System.Windows.Controls.Image
+            marker.Shape = new Ellipse
             {
-                Width = 15,
+                StrokeThickness = 2,
+                Stroke = System.Windows.Media.Brushes.Black,
                 Height = 15,
-                Source = new BitmapImage(new System.Uri("pack://application:,,,/Resources/airplane1.png"))
+                Width = 15,
+                Fill = System.Windows.Media.Brushes.Black
             };
             marker.ZIndex = 0; //Indice = 0, airplane
             marker.Offset = new System.Windows.Point(-7.5, -7.5);
@@ -198,8 +208,8 @@ namespace AsterixDisplay
                     {
                         mapView.Markers[mapView.Markers.Count - 200].Clear();
                     }
+                    
                 }
-
                 else
                 {
                     t = false;
@@ -207,6 +217,8 @@ namespace AsterixDisplay
                 }
                 clockUpdate(this.tiempo);
             }
+            flightdata.Rows.Clear();
+            fillGridFlightsCAT20();
         }
 
         private void dispatcherTimer_TickCAT10(object sender, EventArgs e)
@@ -235,6 +247,8 @@ namespace AsterixDisplay
                 
                 clockUpdate(this.tiempo);
             }
+            flightdata.Rows.Clear();
+            fillGridFlightsCAT10();
         }
 
         private void dispatcherTimer_TickCAT21(object sender, EventArgs e)
@@ -262,6 +276,8 @@ namespace AsterixDisplay
 
                 clockUpdate(this.tiempo);
             }
+            flightdata.Rows.Clear();
+            fillGridFlightsCAT21();
         }
 
         /*
@@ -411,6 +427,93 @@ namespace AsterixDisplay
             if(this.CAT10s.Count != 0) { clockUpdate(CAT10s[0].TimeOfDay.Split(':')); }
             if (this.CAT20s.Count != 0) { clockUpdate(CAT20s[0].TOD.Split(':')); }
             if (this.CAT21s.Count != 0) { clockUpdate(CAT21s[0].TOD.Split(':')); }
+        }
+
+        private void fillGridFlightsCAT20()
+        {
+            foreach (Flight f in flights)
+            {
+                int i = 0;
+                int pf = 0;
+                bool act = false;
+                while (i < f.TODs.Count())
+                {
+                    string[] t = f.TODs[i].Split(':');
+                    if (t[0] == this.tiempo[0] && t[1] == this.tiempo[1] && t[2] == this.tiempo[2])
+                    {
+                        pf = i;
+                        i = f.TODs.Count();
+                        act = true;
+                    }
+                    i++;
+                }
+                if (act == true) { flightdata.Rows.Add(f.callsign, f.tracknumber, "[" + f.Xs[pf] + "," + f.Ys[pf] + "]", "FL " + f.fls[pf]); }
+            }
+            gridFlights.ItemsSource = flightdata.DefaultView;
+        }
+
+        private void fillGridFlightsCAT10()
+        {
+            foreach (Flight f in flights)
+            {
+                int i = 0;
+                int pf = 0;
+                bool act = false;
+                while (i < f.TODs.Count())
+                {
+                    string[] t = f.TODs[i].Split(':');
+                    if (t[0] == this.tiempo[0] && t[1] == this.tiempo[1] && t[2] == this.tiempo[2])
+                    {
+                        pf = i;
+                        i = f.TODs.Count();
+                        act = true;
+                    }
+                    i++;
+                }
+                if (act == true) { flightdata.Rows.Add(f.callsign, f.tracknumber, "[" + f.Xs[pf] + "," + f.Ys[pf] + "]", "FL " + f.fls[pf]); }
+            }
+            gridFlights.ItemsSource = flightdata.DefaultView;
+        }
+
+        private void fillGridFlightsCAT21()
+        {
+            foreach (Flight f in flights)
+            {
+                int i = 0;
+                int pf = 0;
+                bool act = false;
+                while (i < f.TODs.Count())
+                {
+                    string[] t = f.TODs[i].Split(':');
+                    if (t[0] == this.tiempo[0] && t[1] == this.tiempo[1] && t[2] == this.tiempo[2])
+                    {
+                        pf = i;
+                        i = f.TODs.Count();
+                        act = true;
+                    }
+                    i++;
+                }
+                if (act == true) { flightdata.Rows.Add(f.callsign, f.tracknumber, "[" + f.lats[pf] + "," + f.lngs[pf] + "]", "FL " + f.fls[pf]); }
+            }
+            gridFlights.ItemsSource = flightdata.DefaultView;
+        }
+
+        private void elpratbut_Click(object sender, RoutedEventArgs e)
+        {
+            mapView.Zoom = 13;
+            mapView.Position = new PointLatLng(MLATcoords[0], MLATcoords[1]);
+        }
+
+        private void bcnbut_Click(object sender, RoutedEventArgs e)
+        {
+            mapView.Zoom = 11;
+            mapView.Position = new PointLatLng(MLATcoords[0], MLATcoords[1]);
+        }
+
+        private void catbut_Click(object sender, RoutedEventArgs e)
+        {
+            mapView.Zoom = 8;
+            mapView.Position = new PointLatLng(MLATcoords[0], MLATcoords[1]);
         }
     }
 }
