@@ -43,18 +43,18 @@
                 </Style>
             </DataGrid.CellStyle>
         </DataGrid>
-        <Menu IsMainMenu="True" Background="{x:Null}" Width="1350" Height="25" Grid.ColumnSpan="8" Grid.Row="0" Grid.Column="0">
+        <Menu IsMainMenu="True" Background="{x:Null}" Width="1350" Height="25" Grid.ColumnSpan="8" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top">
             <MenuItem Header="_Open File" Click="cargarbut_Click"></MenuItem>
             <MenuItem Header="_Simulate" Click="MenuItem_Click"></MenuItem>
             <MenuItem Header="_Help"></MenuItem>
             <MenuItem Header="_About Us" Click="MenuItem_Click_1"></MenuItem>
         </Menu>
-        <DataGrid x:Name="dataexpanded" Grid.Column="5" HorizontalAlignment="Center" Height="380" Margin="89.333,23,62.667,27" Grid.Row="4" Grid.RowSpan="8" VerticalAlignment="Center" Width="350" Grid.ColumnSpan="4" CanUserReorderColumns="False" CanUserSortColumns="False" ItemsSource="{Binding}" HeadersVisibility="None" CanUserAddRows="False" ColumnWidth="Auto">
+        <DataGrid x:Name="dataexpanded" Grid.Column="5" HorizontalAlignment="Center" Height="380" Margin="39,34.667,37.333,38.5" Grid.Row="4" Grid.RowSpan="8" VerticalAlignment="Center" Width="427" Grid.ColumnSpan="3" CanUserReorderColumns="False" CanUserSortColumns="False" ItemsSource="{Binding}" HeadersVisibility="None" CanUserAddRows="False" ColumnWidth="Auto">
         </DataGrid>
         <TextBox x:Name="searchbox" Text="Package #" Grid.Column="7" HorizontalAlignment="Left" Height="23" Margin="39.333,22,0,12" Grid.Row="3" TextWrapping="Wrap" VerticalAlignment="Center" Width="100" FontStyle="Italic" FontSize="14" GotFocus="searchbox_GotFocus"/>
         <Button x:Name="clearsearchbut" Content="Clear" Grid.Column="7" Height="23" HorizontalAlignment="Right" Margin="0,23,40,12" Grid.Row="3" VerticalAlignment="Center" Width="70" Click="clearsearchbut_Click" Background="{x:Null}"/>
         <Button x:Name="searchbut" Content="Search" Grid.Column="7" Height="23" HorizontalAlignment="Center" Margin="300,23,122,12" Grid.Row="3" VerticalAlignment="Center" Width="70" Click="searchbut_Click" Background="{x:Null}"/>
-        <ProgressBar x:Name="progressbar1" Grid.Column="1" Grid.Row="14" HorizontalAlignment="Left" VerticalAlignment="Center" Width="200" Height="10" Minimum="0" Maximum="100" Margin="2,18,0,1"/>
+        <ProgressBar x:Name="progressbar1" Grid.Column="1" Grid.Row="14" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="200" Height="10" Minimum="0" Maximum="100" Margin="2,18,0,1"/>
         <RadioButton x:Name="cat10_butt" Content="CAT10" Grid.Column="7" HorizontalAlignment="Left" Margin="110,21,0,0" Grid.Row="11" VerticalAlignment="Bottom" Click="cat10_butt_Click"/>
         <RadioButton x:Name="cat20_butt" Content="CAT20" Grid.Column="7" HorizontalAlignment="Left" Margin="110,21,0,0" Grid.Row="12" VerticalAlignment="Bottom" Click="cat20_butt_Click"/>
         <RadioButton x:Name="cat21_butt" Content="CAT21" Grid.Column="7" HorizontalAlignment="Left" Margin="110,21,0,0" Grid.Row="13" VerticalAlignment="Bottom" Click="cat21_butt_Click"/>
@@ -65,3 +65,4 @@
         </ComboBox>
     </Grid>
 </Window>
+

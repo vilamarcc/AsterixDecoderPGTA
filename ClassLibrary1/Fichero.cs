@@ -867,5 +867,16 @@ namespace AsterixDecoder
 
             return tablaCAT21i;
         }
+
+        public Boolean checkMultiplecat()
+        {
+            int i = 0;
+            if (listaCAT10.Count != 0) { i++; }
+            if(listaCAT20.Count != 0) { i++; }
+            if(listaCAT21.Count != 0) { i++; }
+
+            if (i == 1) { return false; }
+            else { return true; }
+        }
     }
 }

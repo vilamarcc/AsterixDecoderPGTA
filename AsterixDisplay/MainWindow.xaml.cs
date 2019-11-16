@@ -95,7 +95,7 @@ namespace AsterixDisplay
                     ((IProgress<int>)progress).Report(70);
 
                     //decimos que se ha cargado ya el fichero
-                    MessageBox.Show("Loaded file");
+                    MessageBox.Show("File Loaded","AsterixDecoder",MessageBoxButton.OK,MessageBoxImage.Information);
                     ((IProgress<int>)progress).Report(75);
 
                     //guardamos las tablas y mostramos la que toque (this.cat)
@@ -528,12 +528,24 @@ namespace AsterixDisplay
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            this.f.computeFlights();
-            List<Flight> flightsim = f.getFlightList();
-            SimulacionPanel sim = new SimulacionPanel(f.getListCAT20(),f.getListCAT10(),f.getListCAT21(),this.cat, flightsim);
-            this.Hide();
-            sim.ShowDialog();
-            this.Show();
+            if (f != null)
+            {
+                if (f.checkMultiplecat() == false)
+                {
+
+                    this.f.computeFlights();
+                    List<Flight> flightsim = f.getFlightList();
+                    SimulacionPanel sim = new SimulacionPanel(f.getListCAT20(), f.getListCAT10(), f.getListCAT21(), this.cat, flightsim);
+                    this.Hide();
+                    sim.ShowDialog();
+                    this.Show();
+                }
+                else
+                {
+                    MessageBox.Show("The file you are trying to load into simualtion window may contain multiple CATs in the same file or might be of a CAT not supported yet\nPlease wait for future updates or contact the developers \n        Sorry for the inconvenience", "Simulation", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+            else { MessageBox.Show("File not loaded", "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
         }
 
         private void cat10_butt_Click(object sender, RoutedEventArgs e)
@@ -551,7 +563,7 @@ namespace AsterixDisplay
             }
             else
             {
-                MessageBox.Show("There is no CAT10 packages");
+                MessageBox.Show("No CAT10 packages found");
 
                 cat10_butt.IsChecked = false;
                 if (this.cat == 20)
@@ -576,7 +588,7 @@ namespace AsterixDisplay
             }
             else
             {
-                MessageBox.Show("There is no CAT20 packages");
+                MessageBox.Show("No CAT20 packages found");
 
                 cat20_butt.IsChecked = false;
                 if (this.cat == 10)
@@ -601,7 +613,7 @@ namespace AsterixDisplay
             }
             else
             {
-                MessageBox.Show("There is no CAT21 packages");
+                MessageBox.Show("No CAT21 packages found");
 
                 cat21_butt.IsChecked = false;
                 if (this.cat == 20)
