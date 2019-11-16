@@ -274,7 +274,7 @@ namespace AsterixDisplay
             while (t == true)
             {
                 CAT21 cat21 = CAT21s[this.contador];
-                this.tiempo = cat21.TOD.Split(':');
+                this.tiempo = cat21.TimeOfAsterixReportTransmission_.Split(':');
                 if (Convert.ToInt32(tiempo[2]) == secact)
                 {
                     addMarkerADSB(cat21.LatitudeWGS, cat21.LongitudeWGS, cat21.TargetID);
