@@ -274,7 +274,7 @@ namespace AsterixDisplay
             while (t == true)
             {
                 CAT21 cat21 = CAT21s[this.contador];
-                this.tiempo = cat21.TimeOfAsterixReportTransmission_.Split(':');
+                this.tiempo = cat21.TOD.Split(':');
                 if (Convert.ToInt32(tiempo[2]) == secact)
                 {
                     addMarkerADSB(cat21.LatitudeWGS, cat21.LongitudeWGS, cat21.TargetID);
@@ -417,6 +417,8 @@ namespace AsterixDisplay
             if(this.CAT10s.Count != 0) { clockUpdate(CAT10s[0].TimeOfDay.Split(':')); }
             if (this.CAT20s.Count != 0) { clockUpdate(CAT20s[0].TOD.Split(':')); }
             if (this.CAT21s.Count != 0) { clockUpdate(CAT21s[0].TOD.Split(':')); }
+            flightdata.Rows.Clear();
+            gridFlights.ItemsSource = flightdata.DefaultView;
         }
 
         private void fillGridFlightsCAT20()

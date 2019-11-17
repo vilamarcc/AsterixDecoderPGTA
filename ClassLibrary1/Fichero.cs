@@ -295,11 +295,9 @@ namespace AsterixDecoder
             tablaCAT10i.Columns.Add(new DataColumn("Position Cartesian Coords\n(X, Y)"));
             tablaCAT10i.Columns.Add(new DataColumn("Track Velocity Polar Coords\n(Ground Speed, Track Angle)"));
             tablaCAT10i.Columns.Add(new DataColumn("Track Velocity Cartesian Coords\n(Vx, Vy)"));
-            tablaCAT10i.Columns.Add(new DataColumn("Track Number"));
             tablaCAT10i.Columns.Add(new DataColumn("Track Status"));
             tablaCAT10i.Columns.Add(new DataColumn("Mode 3A Code"));
             tablaCAT10i.Columns.Add(new DataColumn("Target Address"));
-            tablaCAT10i.Columns.Add(new DataColumn("Target ID"));
             tablaCAT10i.Columns.Add(new DataColumn("Mode S MB Data"));
             tablaCAT10i.Columns.Add(new DataColumn("Vehicle Fleet ID"));
             tablaCAT10i.Columns.Add(new DataColumn("Flight Level"));
@@ -564,11 +562,9 @@ namespace AsterixDecoder
             tablaCAT10i.Columns.Add(new DataColumn("Position Cartesian Coords\n(X, Y)"));
             tablaCAT10i.Columns.Add(new DataColumn("Track Velocity Polar Coords\n(Ground Speed, Track Angle)"));
             tablaCAT10i.Columns.Add(new DataColumn("Track Velocity Cartesian Coords\n(Vx, Vy)"));
-            tablaCAT10i.Columns.Add(new DataColumn("Track Number"));
             tablaCAT10i.Columns.Add(new DataColumn("Track Status"));
             tablaCAT10i.Columns.Add(new DataColumn("Mode 3A Code"));
             tablaCAT10i.Columns.Add(new DataColumn("Target Address"));
-            tablaCAT10i.Columns.Add(new DataColumn("Target ID"));
             tablaCAT10i.Columns.Add(new DataColumn("Mode S MB Data"));
             tablaCAT10i.Columns.Add(new DataColumn("Vehicle Fleet ID"));
             tablaCAT10i.Columns.Add(new DataColumn("Flight Level"));
@@ -632,7 +628,7 @@ namespace AsterixDecoder
             while (q < listaCAT20.Count)
             {
                 CAT20 newcat20 = listaCAT20[q];
-                if (newcat20.callsign == callsign)
+                if (newcat20.callsign == callsign + " ")
                     tablaCAT20i.Rows.Add(q + 1, newcat20.SAC, newcat20.SIC, newcat20.callsign, newcat20.TrackNum, newcat20.getMessageType(), newcat20.targetreport, newcat20.TOD, newcat20.LonWSG, "[" + newcat20.coordscc[0].ToString() + "," + newcat20.coordscc[1].ToString() + "] m", newcat20.trackstatus, newcat20.Mode3A, "[" + newcat20.Velocitycc[0].ToString() + "," + newcat20.Velocitycc[1].ToString() + "] m/s", newcat20.FL[2], newcat20.ModeC, newcat20.TargetAddress, newcat20.MeasuredHeight, newcat20.geoHeight, newcat20.calcAccel, newcat20.VehicleFleetID, newcat20.PPMsg, newcat20.posaccuracy, newcat20.Receivers, newcat20.ModeSData, newcat20.ACAScap, newcat20.ACASRAreport, newcat20.warning, newcat20.Mode1Code, newcat20.Mode2Code);
                 q++;
             }
@@ -725,11 +721,9 @@ namespace AsterixDecoder
             tablaCAT10i.Columns.Add(new DataColumn("Position Cartesian Coords\n(X, Y)"));
             tablaCAT10i.Columns.Add(new DataColumn("Track Velocity Polar Coords\n(Ground Speed, Track Angle)"));
             tablaCAT10i.Columns.Add(new DataColumn("Track Velocity Cartesian Coords\n(Vx, Vy)"));
-            tablaCAT10i.Columns.Add(new DataColumn("Track Number"));
             tablaCAT10i.Columns.Add(new DataColumn("Track Status"));
             tablaCAT10i.Columns.Add(new DataColumn("Mode 3A Code"));
             tablaCAT10i.Columns.Add(new DataColumn("Target Address"));
-            tablaCAT10i.Columns.Add(new DataColumn("Target ID"));
             tablaCAT10i.Columns.Add(new DataColumn("Mode S MB Data"));
             tablaCAT10i.Columns.Add(new DataColumn("Vehicle Fleet ID"));
             tablaCAT10i.Columns.Add(new DataColumn("Flight Level"));

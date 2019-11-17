@@ -1345,6 +1345,7 @@ namespace AsterixDecoder
             TimeSpan time = TimeSpan.FromSeconds(segundos);
 
             this.TimeOfAsterixReportTransmission_ = time.ToString(@"hh\:mm\:ss\:fff");
+            this.TOD = this.TimeOfAsterixReportTransmission_;
         }
 
         public void ComputeTargetAddress(string octetos) // Data Item I021/080

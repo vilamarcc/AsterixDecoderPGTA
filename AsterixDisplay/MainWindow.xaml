@@ -36,7 +36,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
-        <DataGrid x:Name="gridCAT" HorizontalAlignment="Left" Height="600" VerticalAlignment="Top" Width="800" Margin="0,20,0,0" IsReadOnly="True" CanUserReorderColumns="False" CanUserSortColumns="True" Grid.ColumnSpan="3" Grid.RowSpan="11" Grid.Row="3" Grid.Column="1" CanUserAddRows="False" ItemsSource="{Binding Path =.}">
+        <DataGrid x:Name="gridCAT" HorizontalAlignment="Left" Height="600" VerticalAlignment="Top" Width="800" Margin="0,20,0,0" IsReadOnly="True" CanUserReorderColumns="False" CanUserSortColumns="True" Grid.ColumnSpan="3" Grid.RowSpan="12" Grid.Row="3" Grid.Column="1" CanUserAddRows="False" ItemsSource="{Binding Path =.}">
             <DataGrid.CellStyle>
                 <Style TargetType="DataGridCell">
                     <EventSetter Event="PreviewMouseDown" Handler="ClikDataGrid"/>
@@ -63,6 +63,7 @@
             <ComboBoxItem IsSelected="False">Callsign</ComboBoxItem>
             <ComboBoxItem IsSelected="False">Track Number</ComboBoxItem>
         </ComboBox>
+        <TextBlock x:Name="filenamebox" Grid.Column="3" HorizontalAlignment="Right" Margin="0" Grid.Row="15" TextWrapping="Wrap" Text="File:" VerticalAlignment="Center" Width="291"/>
     </Grid>
 </Window>
 

@@ -51,6 +51,7 @@ namespace AsterixDisplay
             cat10_butt.Visibility = Visibility.Hidden;
             cat20_butt.Visibility = Visibility.Hidden;
             cat21_butt.Visibility = Visibility.Hidden;
+            filenamebox.Visibility = Visibility.Hidden;
         }
 
         private async void cargarbut_Click(object sender, RoutedEventArgs e) // botón OPEN FILE
@@ -76,7 +77,7 @@ namespace AsterixDisplay
             if (combobox.SelectedIndex == 1)
                 searchbox.Text = "Callsign";
             if (combobox.SelectedIndex == 2)
-                searchbox.Text = "Track Number";
+                searchbox.Text = "Track #";
 
             //mostramos la barra de progreso
             var progress = new Progress<int>(value => progressbar1.Value = value);
@@ -84,12 +85,14 @@ namespace AsterixDisplay
 
             //que sea un archivo asterix
             ofd.Filter = "AST |*.ast";
-            if (ofd.ShowDialog() == true)
+            if (ofd.ShowDialog() == true & ofd.SafeFileName != null)
             {
                 //preguntamos versión de la cat21
-                versionCAT21 vc = new versionCAT21();
+                versionCAT21 vc = new versionCAT21(ofd.SafeFileName);
                 vc.ShowDialog();
                 int version = vc.GetVersion();
+                filenamebox.Visibility = Visibility.Visible;
+                filenamebox.Text = "File: " + ofd.SafeFileName;
                 
                 await Task.Run(() =>
                 {
@@ -175,16 +178,16 @@ namespace AsterixDisplay
                 CAT10 paquete = f.getCAT10(fil);
 
                 //expandimos información:
-                if (c == 5 && paquete.DataCharacteristics!=null) // Target Report - Data Characteristics
-                    MessageBox.Show(paquete.DataCharacteristics);
-                if (c == 13 && paquete.TrackStatus != null) // Track Status
-                    MessageBox.Show(paquete.TrackStatus);
+                if (c == 7 && paquete.DataCharacteristics!=null) // Target Report - Data Characteristics
+                    MessageBox.Show(paquete.DataCharacteristics, "Data Characteristics");
+                if (c == 14 && paquete.TrackStatus != null) // Track Status
+                    MessageBox.Show(paquete.TrackStatus, "Track Status");
                 if (c == 27 && paquete.Presence != null) // Presence
-                    MessageBox.Show(paquete.Presence);
+                    MessageBox.Show(paquete.Presence, "Presence");
                 if (c == 17 && paquete.ModeS != null) // Mode S MB Data
-                    MessageBox.Show(paquete.ModeS);
+                    MessageBox.Show(paquete.ModeS, "Mode S MB Data");
                 if (c == 23 && paquete.SystemStatus != null) // System Status
-                    MessageBox.Show(paquete.SystemStatus);
+                    MessageBox.Show(paquete.SystemStatus,"System Status");
 
                 //mostramos las características de ese paquete a parte:
                 filldataexpandedCAT10(fil);
@@ -194,12 +197,12 @@ namespace AsterixDisplay
                 CAT20 paquete = f.getCAT20(fil);
 
                 //expandimos información:
-                if (c == 4 && paquete.getTargetReportDescriptortoString() != null)
-                    MessageBox.Show(paquete.getTargetReportDescriptortoString());
-                if (c == 9 && paquete.getTrackStatusToString() != null) //Track status
-                    MessageBox.Show(paquete.getTrackStatusToString());
+                if (c == 6 && paquete.getTargetReportDescriptortoString() != null)
+                    MessageBox.Show(paquete.getTargetReportDescriptortoString(),"Target Report Descriptor");
+                if (c == 10 && paquete.getTrackStatusToString() != null) //Track status
+                    MessageBox.Show(paquete.getTrackStatusToString(),"Track Status");
                 if (c == 21 && paquete.getPositionAccuracyToString() != null) //Pos Accuracy
-                    MessageBox.Show(paquete.getPositionAccuracyToString());
+                    MessageBox.Show(paquete.getPositionAccuracyToString(),"Position Accuracy");
 
                 //mostramos las características de ese paquete a parte:
                 filldataexpandedCAT20(fil);
@@ -209,28 +212,28 @@ namespace AsterixDisplay
                 CAT21 paquete = f.getCAT21(fil);
 
                 //expandimos información:
-                if (c == 4 && paquete.TargetReport != null) //Target Report Descriptor
-                    MessageBox.Show(paquete.TargetReport);
-                if (c == 10 && paquete.OperationalStatus != null) //Operational Status
-                    MessageBox.Show(paquete.OperationalStatus);
-                if (c == 45 && paquete.FigureOfMerit != null) //Figure Of Merit
-                    MessageBox.Show(paquete.FigureOfMerit);
-                if (c == 46 && paquete.ages != null) //Data ages
-                    MessageBox.Show(paquete.ages);
+                if (c == 5 && paquete.TargetReport != null) //Target Report Descriptor
+                    MessageBox.Show(paquete.TargetReport, "Target Report Descriptor");
+                if (c == 11 && paquete.OperationalStatus != null) //Operational Status
+                    MessageBox.Show(paquete.OperationalStatus,"Operational Status");
+                if (c == 48 && paquete.FigureOfMerit != null) //Figure Of Merit
+                    MessageBox.Show(paquete.FigureOfMerit,"Figure of Merit");
+                if (c == 49 && paquete.ages != null) //Data ages
+                    MessageBox.Show(paquete.ages,"Data Ages");
                 if (c == 41 && paquete.TrajectoryIntentData != null) //Trajectory Intent Data
-                    MessageBox.Show(paquete.TrajectoryIntentData);
-                if (c == 29 && paquete.LinkTech != null) //Link Technology
-                    MessageBox.Show(paquete.LinkTech);
-                if (c == 23 && paquete.TargetStatus != null) //Target Status
-                    MessageBox.Show(paquete.TargetStatus);
+                    MessageBox.Show(paquete.TrajectoryIntentData,"Trajectory Intent Data");
+                if (c == 32 && paquete.LinkTech != null) //Link Technology
+                    MessageBox.Show(paquete.LinkTech, "Link Technology");
+                if (c == 26 && paquete.TargetStatus != null) //Target Status
+                    MessageBox.Show(paquete.TargetStatus,"Target Status");
                 if (c == 21 && paquete.MetReport != null) //Met Report
-                    MessageBox.Show(paquete.MetReport);
-                if (c == 27 && paquete.QualityIndicators != null) //Quality Indicators
-                    MessageBox.Show(paquete.QualityIndicators);
+                    MessageBox.Show(paquete.MetReport, "Met Report");
+                if (c == 30 && paquete.QualityIndicators != null) //Quality Indicators
+                    MessageBox.Show(paquete.QualityIndicators, "Quality Indicators");
                 if (c == 28 && paquete.ModeS != null) //Mode S
-                    MessageBox.Show(paquete.ModeS);
-                if (c == 16 && paquete.MOPS != null) //MOPS version
-                    MessageBox.Show(paquete.MOPS);
+                    MessageBox.Show(paquete.ModeS, "Mode S");
+                if (c == 18 && paquete.MOPS != null) //MOPS version
+                    MessageBox.Show(paquete.MOPS, "MOPS Version");
 
                 //mostramos las características de ese paquete a parte:
                 filldataexpandedCAT21(fil);
@@ -526,7 +529,7 @@ namespace AsterixDisplay
                 if (combobox.SelectedIndex == 1)
                     searchbox.Text = "Callsign";
                 if (combobox.SelectedIndex == 2)
-                    searchbox.Text = "Track Number";
+                    searchbox.Text = "Track #";
             }
             catch
             {
@@ -659,7 +662,7 @@ namespace AsterixDisplay
             if (combobox.SelectedIndex == 1)
                 searchbox.Text = "Callsign";
             if (combobox.SelectedIndex == 2)
-                searchbox.Text = "Track Number";
+                searchbox.Text = "Track #";
         }
 
         private void MenuItem_Click_2(object sender, RoutedEventArgs e) //botón HELP

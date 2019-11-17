@@ -20,9 +20,10 @@ namespace AsterixDisplay
     public partial class versionCAT21 : Window
     {
         int version;
-        public versionCAT21()
+        public versionCAT21(string safefilename)
         {
             InitializeComponent();
+            filenamebox.Text = "The File: " + safefilename;
         }
 
         private void buttonOK_Click(object sender, RoutedEventArgs e) // botón OK

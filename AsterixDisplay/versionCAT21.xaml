@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="versionCAT21" Height="267" Width="299">
     <Grid>
-        <Label Content="Maybe this file may contain some packages of CAT21" HorizontalAlignment="Center" Margin="0,7,-1,0" VerticalAlignment="Top" Width="293"/>
+        <Label Content="May contain some packages of CAT21" HorizontalAlignment="Center" Margin="6,34,-7,0" VerticalAlignment="Top" Width="293"/>
         <Label Content="In affirmative case, which CAT21 version" HorizontalAlignment="Left" Margin="5,65,0,0" VerticalAlignment="Top"/>
         <Label Content="are these packages using?" HorizontalAlignment="Left" Margin="5,80,0,0" VerticalAlignment="Top"/>
         <CheckBox Content="v023" Name="v23" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="40,110,0,0" Click="v23_Click"/>
@@ -17,6 +17,7 @@
         <Label Content="CAT21 packages, it will not decode it" HorizontalAlignment="Left" Margin="5,175,0,0" VerticalAlignment="Top" FontSize="10"/>
         <Label Content="(2) If you select one of them and the file contains CAT21" HorizontalAlignment="Left" Margin="5,195,0,0" VerticalAlignment="Top" FontSize="10"/>
         <Label Content="packages of the other version, the data will be incorrect" HorizontalAlignment="Left" Margin="5,205,0,0" VerticalAlignment="Top" FontSize="10"/>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="If not, just click OK" VerticalAlignment="Top" Margin="38,35,-5,0" Width="259"/>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="If not, just click OK" VerticalAlignment="Top" Margin="11,54,0,0" Width="259"/>
+        <TextBlock x:Name="filenamebox" HorizontalAlignment="Left" Margin="12,11,0,0" TextWrapping="Wrap" Text="The File: " VerticalAlignment="Top" Width="262"/>
     </Grid>
 </Window>
