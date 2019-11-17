@@ -5,22 +5,46 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AsterixDisplay"
         mc:Ignorable="d"
-        Title="Help" Height="817" Width="1259">
+        Title="Help" Height="547" Width="1279">
     <Grid>
-        <Label Content="Main Window" HorizontalAlignment="Left" Margin="50,50,0,0" VerticalAlignment="Top" FontSize="20"/>
-        <Label Content="First of all, you have to select an .ast file in the top left button 'Select file'." HorizontalAlignment="Left" Margin="20,100,0,0" VerticalAlignment="Top" FontSize="15"/>
-        <Label Content="The data of each package of the selected file will be shown in the main table. This" HorizontalAlignment="Left" Margin="20,120,0,0" VerticalAlignment="Top" FontSize="15"/>
-        <Label Content="table has a column for each possible data, depending of the category. If you click" HorizontalAlignment="Left" Margin="20,140,0,0" VerticalAlignment="Top" FontSize="15"/>
-        <Label Content="on any package, the data of this package will appear expanded on the smaller table." HorizontalAlignment="Left" Margin="20,160,0,0" VerticalAlignment="Top" FontSize="15"/>
-        <Image HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,105,21,0" Source="/Resources/MainWindowHelp.JPG" Height="330" Width="650"/>
-        <Label Content="If the file contains more than one category packages," HorizontalAlignment="Left" Margin="100,210,0,0" VerticalAlignment="Top" FontSize="15"/>
-        <Label Content="you will be able to select which category packages" HorizontalAlignment="Left" Margin="100,230,0,0" VerticalAlignment="Top" FontSize="15"/>
-        <Label Content="do you want it to show, with the buttons of the left picture." HorizontalAlignment="Left" Margin="100,250,0,0" VerticalAlignment="Top" FontSize="15"/>
-        <Image HorizontalAlignment="Left" VerticalAlignment="Top" Margin="30,200,0,0" Source="/Resources/CATbuttonsHelp.JPG" Height="100" Width="60"/>
-        <Label Content="On the top right side of the window, you can filter the data shown in the main" HorizontalAlignment="Left" Margin="20,300,0,0" VerticalAlignment="Top" FontSize="15"/>
-        <Label Content="table by package number, by callsign or by track number. With the 'Search'" HorizontalAlignment="Left" Margin="20,320,0,0" VerticalAlignment="Top" FontSize="15"/>
-        <Label Content="button, this filtered data will be shown and with the 'Clear' button the table will" HorizontalAlignment="Left" Margin="20,340,0,0" VerticalAlignment="Top" FontSize="15"/>
-        <Label Content="show again all the packages of the file." HorizontalAlignment="Left" Margin="20,360,0,0" VerticalAlignment="Top" FontSize="15"/>
-        <Image HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,390,0,0" Source="/Resources/DataFilterHelp.JPG" Height="100" Width="400"/>
+        <TabControl HorizontalAlignment="Left" Height="520" Margin="5,0,0,-4" VerticalAlignment="Top" Width="1265">
+            <TabItem Header="Main Window Help">
+                <Grid>
+                    <Label Content="About Main Window" HorizontalAlignment="Left" Margin="50,20,0,0" VerticalAlignment="Top" FontSize="20"/>
+                    <Label Content="First of all, you have to select an .ast file in the top left button 'Select file'." HorizontalAlignment="Left" Margin="20,60,0,0" VerticalAlignment="Top" FontSize="15"/>
+                    <Label Content="The data of each package of the selected file will be shown in the main table. This" HorizontalAlignment="Left" Margin="20,90,0,0" VerticalAlignment="Top" FontSize="15"/>
+                    <Label Content="table has a column for each possible data, depending of the category. If you click" HorizontalAlignment="Left" Margin="20,110,0,0" VerticalAlignment="Top" FontSize="15"/>
+                    <Label Content="on any package, the data of this package will appear expanded on the smaller table." HorizontalAlignment="Left" Margin="20,130,0,0" VerticalAlignment="Top" FontSize="15"/>
+                    <Image HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,100,21,0" Source="/Resources/MainWindowHelp.JPG" Height="330" Width="650"/>
+                    <Label Content="If the file contains more than one category packages," HorizontalAlignment="Left" Margin="130,180,0,0" VerticalAlignment="Top" FontSize="15"/>
+                    <Label Content="you will be able to select which category packages" HorizontalAlignment="Left" Margin="130,200,0,0" VerticalAlignment="Top" FontSize="15"/>
+                    <Label Content="do you want it to show, with the buttons of the left picture." HorizontalAlignment="Left" Margin="130,220,0,0" VerticalAlignment="Top" FontSize="15"/>
+                    <Image HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,170,0,0" Source="/Resources/CATbuttonsHelp.JPG" Height="100" Width="60"/>
+                    <Label Content="On the top right side of the window, you can filter the data shown in the main" HorizontalAlignment="Left" Margin="20,280,0,0" VerticalAlignment="Top" FontSize="15"/>
+                    <Label Content="table by package number, by callsign or by track number. With the 'Search'" HorizontalAlignment="Left" Margin="20,300,0,0" VerticalAlignment="Top" FontSize="15"/>
+                    <Label Content="button, this filtered data will be shown and with the 'Clear' button the table will" HorizontalAlignment="Left" Margin="20,320,0,0" VerticalAlignment="Top" FontSize="15"/>
+                    <Label Content="show again all the packages of the file." HorizontalAlignment="Left" Margin="20,340,0,0" VerticalAlignment="Top" FontSize="15"/>
+                    <Image HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,365,0,0" Source="/Resources/DataFilterHelp.JPG" Height="100" Width="400"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Simulation Window Help">
+                <Grid>
+                    <Label Content="About Simulation Window" HorizontalAlignment="Left" Margin="8,20,0,0" VerticalAlignment="Top" FontSize="20" Grid.Column="1"/>
+                    <Label Content="First of all, if you have not selected a file in the top left button 'Select file', the simulation window could not be opened." HorizontalAlignment="Left" Margin="20,60,0,0" VerticalAlignment="Top" FontSize="15" Grid.ColumnSpan="2"/>
+                    
+                    <Label Content="In the Map Controls you can play, stop or restart the simulation and choose" HorizontalAlignment="Left" Margin="20,90,0,0" VerticalAlignment="Top" FontSize="15" Grid.ColumnSpan="2"/>
+                    <Label Content="to speed up the simulation up to four times the real velocity. Here you can also" HorizontalAlignment="Left" Margin="20,110,0,0" VerticalAlignment="Top" FontSize="15" Grid.ColumnSpan="2"/>
+                    <Label Content="choose the zoom in the map between the Barcelona airport, the city of Barcelona" HorizontalAlignment="Left" Margin="20,130,0,0" VerticalAlignment="Top" FontSize="15" Grid.ColumnSpan="2"/>
+                    <Label Content="and the entire Catalonia with the buttons (pictures) on the right side." HorizontalAlignment="Left" Margin="20,150,0,0" VerticalAlignment="Top" FontSize="15" Grid.ColumnSpan="2"/>
+
+                    <Label Content="On the right bottom side of the window you can choose between showing all" HorizontalAlignment="Left" Margin="20,300,0,0" VerticalAlignment="Top" FontSize="15" Grid.ColumnSpan="2"/>
+                    <Label Content="vehicles or only the aircrafts and choose between showing the current position" HorizontalAlignment="Left" Margin="20,320,0,0" VerticalAlignment="Top" FontSize="15" Grid.ColumnSpan="2"/>
+                    <Label Content="of the vehicles or the last fragment of the trail (including current position)." HorizontalAlignment="Left" Margin="20,340,0,0" VerticalAlignment="Top" FontSize="15" Grid.ColumnSpan="2"/>
+                    <Image HorizontalAlignment="Left" VerticalAlignment="Top" Margin="110,365,0,0" Source="/Resources/MapOptions.JPG" Height="30" Width="300"/>
+                    <Label Content="Finally, you have a table ('Recorded Flights' in order to see the" HorizontalAlignment="Left" Margin="20,390,0,0" VerticalAlignment="Top" FontSize="15" Grid.ColumnSpan="2"/>
+                    <Label Content="data corresponding to all vehicles that appear on the map." HorizontalAlignment="Left" Margin="20,410,0,0" VerticalAlignment="Top" FontSize="15" Grid.ColumnSpan="2"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>
