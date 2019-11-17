@@ -183,6 +183,16 @@ namespace AsterixDisplay.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap MapControlHelp {
+            get {
+                object obj = ResourceManager.GetObject("MapControlHelp", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap MapOptions {
             get {
                 object obj = ResourceManager.GetObject("MapOptions", resourceCulture);
@@ -236,6 +246,16 @@ namespace AsterixDisplay.Properties {
         internal static System.Drawing.Bitmap reset {
             get {
                 object obj = ResourceManager.GetObject("reset", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SimulationWindowHelp {
+            get {
+                object obj = ResourceManager.GetObject("SimulationWindowHelp", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

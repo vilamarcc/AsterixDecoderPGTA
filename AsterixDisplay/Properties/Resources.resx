@@ -154,6 +154,9 @@
   <data name="MainWindowHelp" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\MainWindowHelp.JPG;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="MapControlHelp" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\MapControlHelp.JPG;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="MapOptions" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\MapOptions.JPG;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -171,6 +174,9 @@
   </data>
   <data name="reset" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\reset.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SimulationWindowHelp" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SimulationWindowHelp.JPG;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="UPC_logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\UPC-logo.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

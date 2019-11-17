@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AsterixDisplay"
         mc:Ignorable="d"
-        Title="Help" Height="547" Width="1279">
+        Title="Help" Height="550" Width="1278">
     <Grid>
-        <TabControl HorizontalAlignment="Left" Height="520" Margin="5,0,0,-4" VerticalAlignment="Top" Width="1265">
+        <TabControl HorizontalAlignment="Left" Height="500" Margin="5,5,5,5" VerticalAlignment="Top" Width="1250">
             <TabItem Header="Main Window Help">
                 <Grid>
                     <Label Content="About Main Window" HorizontalAlignment="Left" Margin="50,20,0,0" VerticalAlignment="Top" FontSize="20"/>
@@ -29,20 +29,20 @@
             </TabItem>
             <TabItem Header="Simulation Window Help">
                 <Grid>
-                    <Label Content="About Simulation Window" HorizontalAlignment="Left" Margin="8,20,0,0" VerticalAlignment="Top" FontSize="20" Grid.Column="1"/>
+                    <Label Content="About Simulation Window" HorizontalAlignment="Left" Margin="50,20,0,0" VerticalAlignment="Top" FontSize="20" Grid.Column="1"/>
                     <Label Content="First of all, if you have not selected a file in the top left button 'Select file', the simulation window could not be opened." HorizontalAlignment="Left" Margin="20,60,0,0" VerticalAlignment="Top" FontSize="15" Grid.ColumnSpan="2"/>
-                    
+                    <Image HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,100,21,0" Source="/Resources/SimulationWindowHelp.JPG" Height="350" Width="700"/>
                     <Label Content="In the Map Controls you can play, stop or restart the simulation and choose" HorizontalAlignment="Left" Margin="20,90,0,0" VerticalAlignment="Top" FontSize="15" Grid.ColumnSpan="2"/>
                     <Label Content="to speed up the simulation up to four times the real velocity. Here you can also" HorizontalAlignment="Left" Margin="20,110,0,0" VerticalAlignment="Top" FontSize="15" Grid.ColumnSpan="2"/>
                     <Label Content="choose the zoom in the map between the Barcelona airport, the city of Barcelona" HorizontalAlignment="Left" Margin="20,130,0,0" VerticalAlignment="Top" FontSize="15" Grid.ColumnSpan="2"/>
                     <Label Content="and the entire Catalonia with the buttons (pictures) on the right side." HorizontalAlignment="Left" Margin="20,150,0,0" VerticalAlignment="Top" FontSize="15" Grid.ColumnSpan="2"/>
-
-                    <Label Content="On the right bottom side of the window you can choose between showing all" HorizontalAlignment="Left" Margin="20,300,0,0" VerticalAlignment="Top" FontSize="15" Grid.ColumnSpan="2"/>
-                    <Label Content="vehicles or only the aircrafts and choose between showing the current position" HorizontalAlignment="Left" Margin="20,320,0,0" VerticalAlignment="Top" FontSize="15" Grid.ColumnSpan="2"/>
-                    <Label Content="of the vehicles or the last fragment of the trail (including current position)." HorizontalAlignment="Left" Margin="20,340,0,0" VerticalAlignment="Top" FontSize="15" Grid.ColumnSpan="2"/>
-                    <Image HorizontalAlignment="Left" VerticalAlignment="Top" Margin="110,365,0,0" Source="/Resources/MapOptions.JPG" Height="30" Width="300"/>
-                    <Label Content="Finally, you have a table ('Recorded Flights' in order to see the" HorizontalAlignment="Left" Margin="20,390,0,0" VerticalAlignment="Top" FontSize="15" Grid.ColumnSpan="2"/>
-                    <Label Content="data corresponding to all vehicles that appear on the map." HorizontalAlignment="Left" Margin="20,410,0,0" VerticalAlignment="Top" FontSize="15" Grid.ColumnSpan="2"/>
+                    <Image HorizontalAlignment="Left" VerticalAlignment="Top" Margin="150,175,0,0" Source="/Resources/MapControlHelp.JPG" Height="150" Width="230"/>
+                    <Label Content="On the right bottom side of the window you can choose between showing all" HorizontalAlignment="Left" Margin="20,305,0,0" VerticalAlignment="Top" FontSize="15" Grid.ColumnSpan="2"/>
+                    <Label Content="vehicles or only the aircrafts and choose between showing the current position" HorizontalAlignment="Left" Margin="20,325,0,0" VerticalAlignment="Top" FontSize="15" Grid.ColumnSpan="2"/>
+                    <Label Content="of the vehicles or the last fragment of the trail (including current position)." HorizontalAlignment="Left" Margin="20,345,0,0" VerticalAlignment="Top" FontSize="15" Grid.ColumnSpan="2"/>
+                    <Image HorizontalAlignment="Left" VerticalAlignment="Top" Margin="110,370,0,0" Source="/Resources/MapOptions.JPG" Height="30" Width="300"/>
+                    <Label Content="Finally, you have a table ('Recorded Flights' in order to see the" HorizontalAlignment="Left" Margin="20,395,0,0" VerticalAlignment="Top" FontSize="15" Grid.ColumnSpan="2"/>
+                    <Label Content="data corresponding to all vehicles that appear on the map." HorizontalAlignment="Left" Margin="20,415,0,0" VerticalAlignment="Top" FontSize="15" Grid.ColumnSpan="2"/>
                 </Grid>
             </TabItem>
         </TabControl>
