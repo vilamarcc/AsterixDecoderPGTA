@@ -1559,8 +1559,8 @@ namespace AsterixDecoder
             string lon = Convert.ToString(Convert.ToInt32(OctLonWGS, 16), 2).PadLeft(32, '0');
 
             //fem el complement a2 que ens torna els bit en doubles i multipliquem per la resolució
-            this.LatitudeWGS_HR = Math.Round(1000 * this.ComputeComplementoA2(lat) * (180 / Math.Pow(2, 31))) / 1000;
-            this.LongitudeWGS_HR = Math.Round(1000 * this.ComputeComplementoA2(lon) * (180 / Math.Pow(2, 31))) / 1000;
+            this.LatitudeWGS_HR = Math.Round(1000 * this.ComputeComplementoA2(lat) * (180 / Math.Pow(2, 30))) / 1000;
+            this.LongitudeWGS_HR = Math.Round(1000 * this.ComputeComplementoA2(lon) * (180 / Math.Pow(2, 30))) / 1000;
 
             this.HRpositionWGS = "[" + this.LatitudeWGS_HR.ToString() + "º, " + this.LongitudeWGS_HR.ToString() + "º]";
         }
