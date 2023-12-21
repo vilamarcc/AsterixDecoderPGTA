@@ -2129,6 +2129,7 @@ namespace AsterixDecoder
 
                 //llegim octeto 2 - First Extension
                 this.LmasW = Convert.ToInt32(bits2.Substring(0, 4), 2);
+                cont++;
             }
 
             return cont;
